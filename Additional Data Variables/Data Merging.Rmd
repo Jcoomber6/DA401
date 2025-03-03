@@ -1,0 +1,143 @@
+---
+title: "Final Project - Lack of Access to Needed Medical Care"
+author: "Jessica Coomber and Mia Treboni Hogan"
+institute: "Denison University"
+format: 
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    number-depth: 2
+    theme: lux # Check here for more themes: https://quarto.org/docs/output-formats/html-themes.html
+    code-tools: true
+    code-fold: true
+    code-summary: "Code"
+    code-copy: hover
+    link-external-newwindow: true
+    tbl-cap-location: top
+    fig-cap-location: bottom
+
+self-contained: true
+editor: source
+---
+
+```{r setup, include=FALSE}
+# DO NOT EDIT THIS
+
+knitr::opts_chunk$set(fig.align = 'center')
+knitr::opts_chunk$set(out.width = '90%')
+knitr::opts_chunk$set(results = 'hold')
+knitr::opts_chunk$set(fig.show = 'hold')
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+par(mar = c(4.1, 4.1, 1.1, 4.1))
+
+hooks = knitr::knit_hooks$get()
+hook_foldable = function(type) {
+  force(type)
+  function(x, options) {
+    res = hooks[[type]](x, options)
+    
+    if (isFALSE(options[[paste0("fold.", type)]])) return(res)
+    
+    paste0(
+      "<details open><summary>", gsub("^p", "P", gsub("^o", "O", type)), "</summary>\n\n",
+      res,
+      "\n\n</details>"
+    )
+  }
+}
+
+knitr::knit_hooks$set(
+  output = hook_foldable("output"),
+  plot = hook_foldable("plot")
+)
+
+Q <- 0
+```
+
+```{r include=FALSE}
+q <- 0
+```
+
+# Introduction
+
+## Research Question
+
+How has the use of Telehealth in the US increased access to medical care for low income populations?
+
+
+```{r}
+# Load necessary packages
+library(caret)
+library(modelsummary)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(fpp3)
+library(tidyverse)
+library(patchwork)
+library(gganimate)
+library(readxl)
+library(forecast)
+library(ggplot2)
+library(purrr)
+library(transformr) # Just to get it on renv
+library(latex2exp)
+library(scales)
+library(tsibble)
+library(fable)
+library(fabletools)
+library(FNN)
+library(MASS)
+```
+
+
+```{r}
+# Telehealth Data Cleaning
+
+# Load the data
+Telehealth <- read.csv("Medicare Telehealth Trends.csv", header = TRUE, sep = ",")
+# Remove all rows with any missing (NA) values
+Telehealth <- na.omit(Telehealth)
+
+```
+
+```{r}
+# Telehealth rename variables
+Telehealth <- Telehealth %>% rename(Quarter = quarter)
+Telehealth <- Telehealth %>% rename(State = Bene_Geo_Desc)
+Telehealth <- Telehealth %>% rename(EnrollmentStatus = Bene_Mdcd_Mdcr_Enrl_Stus)
+Telehealth <- Telehealth %>% rename(Race = Bene_Race_Desc)
+Telehealth <- Telehealth %>% rename(Sex = Bene_Sex_Desc)
+Telehealth <- Telehealth %>% rename(MedicareAccessForInsured = Bene_Mdcr_Entlmt_Stus)
+Telehealth <- Telehealth %>% rename(Age = Bene_Age_Desc)
+Telehealth <- Telehealth %>% rename(RuralUrban = Bene_RUCA_Desc)
+Telehealth <- Telehealth %>% rename(EligibleServicesCount = Total_Bene_TH_Elig)
+Telehealth <- Telehealth %>% rename(EnrollmentPartB = Total_PartB_Enrl)
+Telehealth <- Telehealth %>% rename(TelehealthVisits = Total_Bene_Telehealth)
+Telehealth <- Telehealth %>% rename(PercentTelehealthPartB = Pct_Telehealth)
+```
+
+
+```{r}
+# Load the data
+Telehealth <- read.csv("Medicare Telehealth Trends.csv", header = TRUE, sep = ",")
+Population <- read.csv("Annual Estimates of the Resident Population for the United States.csv", header = TRUE, sep = ",")
+
+# Remove leading dots from state names in both datasets
+Population$State <- gsub("^\\.+", "", Population$State)
+
+# Standardize 'District of Columbia' in both datasets to ensure a match
+Population$State <- gsub("District of Columbia", "DISTRICT OF COLUMBIA", Population$State)
+Telehealth$State <- gsub("District Of Columbia", "DISTRICT OF COLUMBIA", Telehealth$State)
+
+# Merge the datasets on the state name
+Merged_Data <- merge(Telehealth, Population, by = "State", all = TRUE)
+
+# Remove all rows with any missing (NA) values - includes States labeled National, Virgin Islands, Midwest, West, South, Northeast, Territories
+Merged_Data <- na.omit(Merged_Data)
+
+```
+
