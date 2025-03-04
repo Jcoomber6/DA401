@@ -326,3 +326,84 @@ Internet_transposed$State <- gsub("New.York", "New York", Internet_transposed$St
 ```{r}
 Telehealth_Population_Vehicle_Internet <- merge(Telehealth_Population_Vehicle, Internet_transposed, by = "State", all = TRUE)
 ```
+
+
+### Exploration
+
+```{r}
+# Create bar plot
+Telehealth_Population_Vehicle_Internet %>%
+    filter(Sex != "All") %>%
+  ggplot(aes(x = Sex, y = TelehealthVisits, fill = Sex)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Telehealth Visits by Sex Category",
+       x = "Sex Category",
+       y = "Number of Telehealth Visits") +
+  theme_minimal()
+```
+
+```{r}
+# Create bar plot
+Telehealth_Population_Vehicle_Internet %>%
+    filter(Race != "All") %>%
+  ggplot(aes(x = Race, y = TelehealthVisits, fill = Race)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Telehealth Visits by Race Category",
+       x = "Race Category",
+       y = "Number of Telehealth Visits") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
+```
+
+```{r}
+# Create bar plot
+Telehealth_Population_Vehicle_Internet %>%
+  filter(EnrollmentStatus != "All") %>%
+  ggplot(aes(x = EnrollmentStatus, y = TelehealthVisits, fill = EnrollmentStatus)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Telehealth Visits by Enrollment Status",
+       x = "Enrollment Status",
+       y = "Number of Telehealth Visits") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
+
+```
+
+```{r}
+# Create bar plot
+Telehealth_Population_Vehicle_Internet %>%
+  ggplot(aes(x = Year, y = TelehealthVisits, fill = Year)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Telehealth Visits by Year",
+       x = "Year",
+       y = "Number of Telehealth Visits") +
+  theme_minimal()
+
+```
+
+```{r}
+# Create bar plot
+Telehealth_Population_Vehicle_Internet %>%
+  ggplot(aes(x = Year, y = EligibleServicesCount, fill = Year)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Eligible Services by Year",
+       x = "Year",
+       y = "Number of Eligible Services ") +
+  theme_minimal()
+
+```
+
+```{r}
+# Create bar plot
+Telehealth_Population_Vehicle_Internet %>%
+  arrange(desc(TelehealthVisits)) %>%  # Arrange in descending order
+  ggplot(aes(x = fct_reorder(State, TelehealthVisits, .desc = TRUE), y = TelehealthVisits, fill = State)) +
+  geom_bar(stat = "identity") +
+    scale_fill_viridis_d(option = "turbo") +  # Ensures distinct colors
+  labs(title = "Telehealth Visits by State",
+       x = "State",
+       y = "Number of Telehealth Visits") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
+```
+
