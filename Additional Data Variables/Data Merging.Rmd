@@ -339,6 +339,7 @@ Telehealth_Population_Vehicle_Internet %>%
   labs(title = "Telehealth Visits by Sex Category",
        x = "Sex Category",
        y = "Number of Telehealth Visits") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal()
 ```
 
@@ -351,9 +352,25 @@ Telehealth_Population_Vehicle_Internet %>%
   labs(title = "Telehealth Visits by Race Category",
        x = "Race Category",
        y = "Number of Telehealth Visits") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
 ```
+
+```{r}
+# Create bar plot
+Telehealth_Population_Vehicle_Internet %>%
+    filter(Race != "All") %>%
+  ggplot(aes(x = Race, y = EligibleServicesCount, fill = Race)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Eligible Services by Race Category",
+       x = "Race Category",
+       y = "Number of Telehealth Visits") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
+```
+
 
 ```{r}
 # Create bar plot
@@ -364,6 +381,7 @@ Telehealth_Population_Vehicle_Internet %>%
   labs(title = "Telehealth Visits by Enrollment Status",
        x = "Enrollment Status",
        y = "Number of Telehealth Visits") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
 
@@ -372,11 +390,12 @@ Telehealth_Population_Vehicle_Internet %>%
 ```{r}
 # Create bar plot
 Telehealth_Population_Vehicle_Internet %>%
-  ggplot(aes(x = Year, y = TelehealthVisits, fill = Year)) +
+  ggplot(aes(x = Year, y = TelehealthVisits, fill = factor(Year))) +  # Assign unique color per year
   geom_bar(stat = "identity") +
   labs(title = "Telehealth Visits by Year",
        x = "Year",
        y = "Number of Telehealth Visits") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal()
 
 ```
@@ -384,13 +403,27 @@ Telehealth_Population_Vehicle_Internet %>%
 ```{r}
 # Create bar plot
 Telehealth_Population_Vehicle_Internet %>%
-  ggplot(aes(x = Year, y = EligibleServicesCount, fill = Year)) +
+  ggplot(aes(x = Year, y = EligibleServicesCount, fill = factor(Year))) +
   geom_bar(stat = "identity") +
   labs(title = "Eligible Services by Year",
        x = "Year",
        y = "Number of Eligible Services ") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal()
 
+```
+
+```{r}
+Telehealth_Population_Vehicle_Internet %>%
+  ggplot(aes(x = factor(Year), y = TelehealthVisits, fill = factor(Quarter))) +  
+  geom_bar(stat = "identity", position = "dodge") +  # Places Q1–Q4 next to each other for each Year
+  labs(title = "Telehealth Visits by Quarter and Year",
+       x = "Year",
+       y = "Number of Telehealth Visits",
+       fill = "Quarter") +
+  scale_y_continuous(labels = scales::comma) +  # Format y-axis with commas
+  scale_fill_brewer(palette = "Paired") +  # Use a high-contrast color palette
+  theme_minimal()
 ```
 
 ```{r}
@@ -403,7 +436,36 @@ Telehealth_Population_Vehicle_Internet %>%
   labs(title = "Telehealth Visits by State",
        x = "State",
        y = "Number of Telehealth Visits") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
 ```
+
+```{r}
+
+model1<-lm(TelehealthVisits~EnrollmentStatus, Telehealth_Population_Vehicle_Internet) # without Income fixed effects
+model2 <- lm(TelehealthVisits~EnrollmentStatus + State, Telehealth_Population_Vehicle_Internet) # with State fixed effects
+model3<-lm(TelehealthVisits~EnrollmentStatus + State + Year, Telehealth_Population_Vehicle_Internet) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TelehealthVisits" = "Telehealth Visits")
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = T, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
+
+modelsummary(regz,
+             title = "Effect of State and Year on Enrollment Status' impact on Number of Telehelath Visits",
+             estimate = "{estimate}{stars}",
+             coef_map = coefz,
+             gof_map = gofz,
+             add_rows = rowz)
+
+```
+
 
