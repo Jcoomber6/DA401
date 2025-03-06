@@ -232,10 +232,6 @@ Vehicle_transposed2023$State <- gsub("New.Jersey", "New Jersey", Vehicle_transpo
 Vehicle_transposed2023$State <- gsub("New.York", "New York", Vehicle_transposed2023$State)
 ```
 
-```{r}
-Telehealth_Population_Vehicle <- merge(TelehealthandPopulation, Vehicle_transposed2023, by = "State", all = TRUE)
-```
-
 ### Cleaning Vehicle 2022 Dataset
 
 ```{r}
@@ -379,7 +375,6 @@ Vehicle_transposed2021$State <- gsub("New.Jersey", "New Jersey", Vehicle_transpo
 Vehicle_transposed2021$State <- gsub("New.York", "New York", Vehicle_transposed2021$State)
 ```
 
-
 ### Cleaning Vehicle 2020 Dataset
 
 ```{r}
@@ -451,7 +446,7 @@ Vehicle_transposed2020$State <- gsub("New.Jersey", "New Jersey", Vehicle_transpo
 Vehicle_transposed2020$State <- gsub("New.York", "New York", Vehicle_transposed2020$State)
 ```
 
-### Merging all the transposed data
+## Merging all the Vehicle transposed data
 ```{r}
 # Remove 2024 from TelehealthandPopulation before merging
 TelehealthandPopulation <- TelehealthandPopulation %>%
@@ -481,85 +476,316 @@ TelehealthandPopulation_Vehicle <- merge(TelehealthandPopulation, Vehicle_long, 
 
 ```
 
-
-### Cleaning Internet Dataset
+## Cleaning Internet 2023 Dataset
 
 ```{r}
-InternetSubs <- read.csv("Presence and Types of Internet Subscriptions.csv", header = TRUE, sep = ",")
+InternetSubs2023 <- read.csv("Presence and Types of Internet Subscriptions_2023.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
 # Transpose using pivot_longer and pivot_wider
-Internet_transposed <- InternetSubs %>%
+Internet_transposed2023 <- InternetSubs2023 %>%
   t() %>%
   as.data.frame(stringsAsFactors = FALSE)
 
 # Store original column names as a new column
-Internet_transposed <- Internet_transposed %>%
-  mutate(Original_Column_Names = rownames(Internet_transposed))
+Internet_transposed2023 <- Internet_transposed2023 %>%
+  mutate(Original_Column_Names = rownames(Internet_transposed2023))
 
 # Set first row as column names
-colnames(Internet_transposed) <- Internet_transposed[1, ]
+colnames(Internet_transposed2023) <- Internet_transposed2023[1, ]
 
 # Remove the first row, keeping the new column names
-Internet_transposed <- Internet_transposed[-1, ] 
+Internet_transposed2023 <- Internet_transposed2023[-1, ] 
 
 # Remove all non-letter characters from column names
-colnames(Internet_transposed) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed))
+colnames(Internet_transposed2023) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed2023))
 
-colnames(Internet_transposed) <- make.unique(colnames(Internet_transposed))
+colnames(Internet_transposed2023) <- make.unique(colnames(Internet_transposed2023))
 
 ```
 
 ```{r}
-Internet_transposed <- Internet_transposed %>% rename(State = LabelGrouping)
-Internet_transposed <- Internet_transposed %>% rename(WithInternet = WithanInternetsubscription)
-Internet_transposed <- Internet_transposed %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
-Internet_transposed <- Internet_transposed %>% rename(BroadBandAnyType = Broadbandofanytype)
-Internet_transposed <- Internet_transposed %>% rename(CellularData = Cellulardataplan)
-Internet_transposed <- Internet_transposed %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
-Internet_transposed <- Internet_transposed %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
-Internet_transposed <- Internet_transposed %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
-Internet_transposed <- Internet_transposed %>% rename(SatelliteInternet = SatelliteInternetservice)
-Internet_transposed <- Internet_transposed %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
-Internet_transposed <- Internet_transposed %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
-Internet_transposed <- Internet_transposed %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
-Internet_transposed <- Internet_transposed %>% rename(NoInternet = NoInternetaccess)
-Internet_transposed <- Internet_transposed %>% rename(TotalWithInternet = Total)
-
-
-unique(colnames(Internet_transposed))
-
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(State = LabelGrouping)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(WithInternet = WithanInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(BroadBandAnyType = Broadbandofanytype)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(CellularData = Cellulardataplan)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(SatelliteInternet = SatelliteInternetservice)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(NoInternet = NoInternetaccess)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(TotalWithInternet = Total)
 ```
 
 ```{r}
 # Keep only rows with "Estimate" and remove "Margin.of.Error"
-Internet_transposed <- Internet_transposed[!grepl("Margin.of.Error", rownames(Internet_transposed)), ]
+Internet_transposed2023 <- Internet_transposed2023[!grepl("Margin.of.Error", rownames(Internet_transposed2023)), ]
 
 # Rename row names by removing "..Estimate"
-rownames(Internet_transposed) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed))
+rownames(Internet_transposed2023) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed2023))
 
-Internet_transposed$State <- gsub("\\.\\.Estimate", "", Internet_transposed$State)
+Internet_transposed2023$State <- gsub("\\.\\.Estimate", "", Internet_transposed2023$State)
 ```
 
 ```{r}
-Internet_transposed$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed$State)
-Internet_transposed$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed$State)
-Internet_transposed$State <- gsub("West.Virginia", "West Virginia", Internet_transposed$State)
-Internet_transposed$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed$State)
-Internet_transposed$State <- gsub("North.Carolina", "North Carolina", Internet_transposed$State)
-Internet_transposed$State <- gsub("South.Carolina", "South Carolina", Internet_transposed$State)
-Internet_transposed$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed$State)
-Internet_transposed$State <- gsub("North.Dakota", "North Dakota", Internet_transposed$State)
-Internet_transposed$State <- gsub("South.Dakota", "South Dakota", Internet_transposed$State)
-Internet_transposed$State <- gsub("New.Mexico", "New Mexico", Internet_transposed$State)
-Internet_transposed$State <- gsub("New.Jersey", "New Jersey", Internet_transposed$State)
-Internet_transposed$State <- gsub("New.York", "New York", Internet_transposed$State)
+Internet_transposed2023$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("West.Virginia", "West Virginia", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("North.Carolina", "North Carolina", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("South.Carolina", "South Carolina", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("North.Dakota", "North Dakota", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("South.Dakota", "South Dakota", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("New.Mexico", "New Mexico", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("New.Jersey", "New Jersey", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("New.York", "New York", Internet_transposed2023$State)
+```
+
+### Cleaning Internet 2022 Dataset
+
+```{r}
+InternetSubs2022 <- read.csv("Presence and Types of Internet Subscriptions_2022.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
-Telehealth_Population_Vehicle_Internet <- merge(Telehealth_Population_Vehicle, Internet_transposed, by = "State", all = TRUE)
+# Transpose using pivot_longer and pivot_wider
+Internet_transposed2022 <- InternetSubs2022 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Internet_transposed2022 <- Internet_transposed2022 %>%
+  mutate(Original_Column_Names = rownames(Internet_transposed2022))
+
+# Set first row as column names
+colnames(Internet_transposed2022) <- Internet_transposed2022[1, ]
+
+# Remove the first row, keeping the new column names
+Internet_transposed2022 <- Internet_transposed2022[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Internet_transposed2022) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed2022))
+
+colnames(Internet_transposed2022) <- make.unique(colnames(Internet_transposed2022))
+
 ```
+
+```{r}
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(State = LabelGrouping)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(WithInternet = WithanInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(BroadBandAnyType = Broadbandofanytype)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(CellularData = Cellulardataplan)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(SatelliteInternet = SatelliteInternetservice)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(NoInternet = NoInternetaccess)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(TotalWithInternet = Total)
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Internet_transposed2022 <- Internet_transposed2022[!grepl("Margin.of.Error", rownames(Internet_transposed2022)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Internet_transposed2022) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed2022))
+
+Internet_transposed2022$State <- gsub("\\.\\.Estimate", "", Internet_transposed2022$State)
+```
+
+```{r}
+Internet_transposed2022$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("West.Virginia", "West Virginia", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("North.Carolina", "North Carolina", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("South.Carolina", "South Carolina", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("North.Dakota", "North Dakota", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("South.Dakota", "South Dakota", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("New.Mexico", "New Mexico", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("New.Jersey", "New Jersey", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("New.York", "New York", Internet_transposed2022$State)
+```
+
+### Cleaning Internet 2021 Dataset
+
+```{r}
+InternetSubs2021 <- read.csv("Presence and Types of Internet Subscriptions_2021.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Internet_transposed2021 <- InternetSubs2021 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Internet_transposed2021 <- Internet_transposed2021 %>%
+  mutate(Original_Column_Names = rownames(Internet_transposed2021))
+
+# Set first row as column names
+colnames(Internet_transposed2021) <- Internet_transposed2021[1, ]
+
+# Remove the first row, keeping the new column names
+Internet_transposed2021 <- Internet_transposed2021[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Internet_transposed2021) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed2021))
+
+colnames(Internet_transposed2021) <- make.unique(colnames(Internet_transposed2021))
+
+```
+
+```{r}
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(State = LabelGrouping)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(WithInternet = WithanInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(BroadBandAnyType = Broadbandofanytype)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(CellularData = Cellulardataplan)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(SatelliteInternet = SatelliteInternetservice)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(NoInternet = NoInternetaccess)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(TotalWithInternet = Total)
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Internet_transposed2021 <- Internet_transposed2021[!grepl("Margin.of.Error", rownames(Internet_transposed2021)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Internet_transposed2021) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed2021))
+
+Internet_transposed2021$State <- gsub("\\.\\.Estimate", "", Internet_transposed2021$State)
+```
+
+```{r}
+Internet_transposed2021$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("West.Virginia", "West Virginia", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("North.Carolina", "North Carolina", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("South.Carolina", "South Carolina", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("North.Dakota", "North Dakota", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("South.Dakota", "South Dakota", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("New.Mexico", "New Mexico", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("New.Jersey", "New Jersey", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("New.York", "New York", Internet_transposed2021$State)
+```
+
+### Cleaning Internet 2020 Dataset
+
+```{r}
+InternetSubs2020 <- read.csv("Presence and Types of Internet Subscriptions_2020.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Internet_transposed2020 <- InternetSubs2020 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Internet_transposed2020 <- Internet_transposed2020 %>%
+  mutate(Original_Column_Names = rownames(Internet_transposed2020))
+
+# Set first row as column names
+colnames(Internet_transposed2020) <- Internet_transposed2020[1, ]
+
+# Remove the first row, keeping the new column names
+Internet_transposed2020 <- Internet_transposed2020[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Internet_transposed2020) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed2020))
+
+colnames(Internet_transposed2020) <- make.unique(colnames(Internet_transposed2020))
+
+```
+
+```{r}
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(State = LabelGrouping)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(WithInternet = WithanInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(BroadBandAnyType = Broadbandofanytype)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(CellularData = Cellulardataplan)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(SatelliteInternet = SatelliteInternetservice)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(NoInternet = NoInternetaccess)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(TotalWithInternet = Total)
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Internet_transposed2020 <- Internet_transposed2020[!grepl("Margin.of.Error", rownames(Internet_transposed2020)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Internet_transposed2020) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed2020))
+
+Internet_transposed2020$State <- gsub("\\.\\.Estimate", "", Internet_transposed2020$State)
+```
+
+```{r}
+Internet_transposed2020$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("West.Virginia", "West Virginia", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("North.Carolina", "North Carolina", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("South.Carolina", "South Carolina", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("North.Dakota", "North Dakota", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("South.Dakota", "South Dakota", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("New.Mexico", "New Mexico", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("New.Jersey", "New Jersey", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("New.York", "New York", Internet_transposed2020$State)
+```
+
+## Merging all the Vehicle transposed data
+
+
+```{r}
+# Create a list of the vehicle datasets
+Internet_data <- list(
+  "2020" = Internet_transposed2020,
+  "2021" = Internet_transposed2021,
+  "2022" = Internet_transposed2022,
+  "2023" = Internet_transposed2023
+)
+
+# Convert each year’s vehicle data into a long format and combine
+Internet_long <- bind_rows(
+  lapply(names(Internet_data), function(year) {
+    Internet_data[[year]] %>%
+      mutate(Year = as.numeric(year)) # Add the year as a column
+  })
+)
+
+# Merge the reshaped Internet dataset with TelehealthandPopulation_Vehicle on State and Year
+TelehealthandPopulation_VehicleInternet <- merge(TelehealthandPopulation_Vehicle, Internet_long, by = c("State", "Year"), all = TRUE)
+```
+
+
+
 
 ### Cleaning Hospital Dataset
 
@@ -585,7 +811,7 @@ Hospitals <- dplyr::select(Hospitals, -Telephone, -ZIPCode, -StreetAddress, - Pr
 
 ```{r}
 # Create bar plot
-Telehealth_Population_Vehicle_Internet %>%
+TelehealthandPopulation_VehicleInternet %>%
     filter(Sex != "All") %>%
   ggplot(aes(x = Sex, y = TelehealthVisits, fill = Sex)) +
   geom_bar(stat = "identity") +
@@ -598,7 +824,7 @@ Telehealth_Population_Vehicle_Internet %>%
 
 ```{r}
 # Create bar plot
-Telehealth_Population_Vehicle_Internet %>%
+TelehealthandPopulation_VehicleInternet %>%
     filter(Race != "All") %>%
   ggplot(aes(x = Race, y = TelehealthVisits, fill = Race)) +
   geom_bar(stat = "identity") +
@@ -612,7 +838,7 @@ Telehealth_Population_Vehicle_Internet %>%
 
 ```{r}
 # Create bar plot
-Telehealth_Population_Vehicle_Internet %>%
+TelehealthandPopulation_VehicleInternet %>%
     filter(Race != "All") %>%
   ggplot(aes(x = Race, y = EligibleServicesCount, fill = Race)) +
   geom_bar(stat = "identity") +
@@ -627,7 +853,7 @@ Telehealth_Population_Vehicle_Internet %>%
 
 ```{r}
 # Create bar plot
-Telehealth_Population_Vehicle_Internet %>%
+TelehealthandPopulation_VehicleInternet %>%
   filter(EnrollmentStatus != "All") %>%
   ggplot(aes(x = EnrollmentStatus, y = TelehealthVisits, fill = EnrollmentStatus)) +
   geom_bar(stat = "identity") +
@@ -642,7 +868,7 @@ Telehealth_Population_Vehicle_Internet %>%
 
 ```{r}
 # Create bar plot
-Telehealth_Population_Vehicle_Internet %>%
+TelehealthandPopulation_VehicleInternet %>%
   ggplot(aes(x = Year, y = TelehealthVisits, fill = factor(Year))) +  # Assign unique color per year
   geom_bar(stat = "identity") +
   labs(title = "Telehealth Visits by Year",
@@ -655,7 +881,7 @@ Telehealth_Population_Vehicle_Internet %>%
 
 ```{r}
 # Create bar plot
-Telehealth_Population_Vehicle_Internet %>%
+TelehealthandPopulation_VehicleInternet %>%
   ggplot(aes(x = Year, y = EligibleServicesCount, fill = factor(Year))) +
   geom_bar(stat = "identity") +
   labs(title = "Eligible Services by Year",
@@ -667,7 +893,7 @@ Telehealth_Population_Vehicle_Internet %>%
 ```
 
 ```{r}
-Telehealth_Population_Vehicle_Internet %>%
+TelehealthandPopulation_VehicleInternet %>%
   ggplot(aes(x = factor(Year), y = TelehealthVisits, fill = factor(Quarter))) +  
   geom_bar(stat = "identity", position = "dodge") +  # Places Q1–Q4 next to each other for each Year
   labs(title = "Telehealth Visits by Quarter and Year",
@@ -681,7 +907,7 @@ Telehealth_Population_Vehicle_Internet %>%
 
 ```{r}
 # Create bar plot
-Telehealth_Population_Vehicle_Internet %>%
+TelehealthandPopulation_VehicleInternet %>%
   arrange(desc(TelehealthVisits)) %>%  # Arrange in descending order
   ggplot(aes(x = fct_reorder(State, TelehealthVisits, .desc = TRUE), y = TelehealthVisits, fill = State)) +
   geom_bar(stat = "identity") +
@@ -696,9 +922,9 @@ Telehealth_Population_Vehicle_Internet %>%
 
 ```{r}
 
-model1<-lm(TelehealthVisits~EnrollmentStatus, Telehealth_Population_Vehicle_Internet) # without Income fixed effects
-model2 <- lm(TelehealthVisits~EnrollmentStatus + State, Telehealth_Population_Vehicle_Internet) # with State fixed effects
-model3<-lm(TelehealthVisits~EnrollmentStatus + State + Year, Telehealth_Population_Vehicle_Internet) # with State and Year fixed effects
+model1<-lm(TelehealthVisits~EnrollmentStatus, TelehealthandPopulation_VehicleInternet) # without Income fixed effects
+model2 <- lm(TelehealthVisits~EnrollmentStatus + State, TelehealthandPopulation_VehicleInternet) # with State fixed effects
+model3<-lm(TelehealthVisits~EnrollmentStatus + State + Year, TelehealthandPopulation_VehicleInternet) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
