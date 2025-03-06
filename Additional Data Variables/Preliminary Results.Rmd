@@ -192,6 +192,7 @@ Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(State = LabelGroupin
 Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(TotalOwned = Owneroccupied)
 Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(NoVehicleAvailable = Novehicleavailable)
 Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(OneVehicleAvailable = vehicleavailable)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(TwoVehicleAvailable = vehiclesavailable)
 Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(ThreeVehicleAvailable = vehiclesavailable.1)
 Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(FourVehicleAvailable = vehiclesavailable.2)
 Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(FiveOrMoreVehicleAvailable = ormorevehiclesavailable)
@@ -263,6 +264,7 @@ Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(State = LabelGroupin
 Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(TotalOwned = Owneroccupied)
 Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(NoVehicleAvailable = Novehicleavailable)
 Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(OneVehicleAvailable = vehicleavailable)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(TwoVehicleAvailable = vehiclesavailable)
 Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(ThreeVehicleAvailable = vehiclesavailable.1)
 Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(FourVehicleAvailable = vehiclesavailable.2)
 Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(FiveOrMoreVehicleAvailable = ormorevehiclesavailable)
@@ -335,6 +337,7 @@ Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(State = LabelGroupin
 Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(TotalOwned = Owneroccupied)
 Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(NoVehicleAvailable = Novehicleavailable)
 Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(OneVehicleAvailable = vehicleavailable)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(TwoVehicleAvailable = vehiclesavailable)
 Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(ThreeVehicleAvailable = vehiclesavailable.1)
 Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(FourVehicleAvailable = vehiclesavailable.2)
 Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(FiveOrMoreVehicleAvailable = ormorevehiclesavailable)
@@ -406,6 +409,7 @@ Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(State = LabelGroupin
 Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(TotalOwned = Owneroccupied)
 Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(NoVehicleAvailable = Novehicleavailable)
 Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(OneVehicleAvailable = vehicleavailable)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(TwoVehicleAvailable = vehiclesavailable)
 Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(ThreeVehicleAvailable = vehiclesavailable.1)
 Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(FourVehicleAvailable = vehiclesavailable.2)
 Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(FiveOrMoreVehicleAvailable = ormorevehiclesavailable)
@@ -796,7 +800,7 @@ colnames(TelehealthandPopulation_VehicleInternet)
 # Convert columns from character to numeric
 columns_to_convert <- c("POP", "TotalNumVehicles", "TotalOwned", 
                         "NoVehicleAvailable", "OneVehicleAvailable", 
-                        "vehiclesavailable", "ThreeVehicleAvailable", 
+                        "TwoVehicleAvailable", "ThreeVehicleAvailable", 
                         "FourVehicleAvailable", "FiveOrMoreVehicleAvailable", 
                         "TotalRent", "NoRentVehicleAvailable", 
                         "OneRentVehicleAvailable", "TwoRentVehicleAvailable", 
@@ -821,11 +825,82 @@ TelehealthandPopulation_VehicleInternet[columns_to_convert] <- lapply(Telehealth
 
 
 ```{r}
-
 #Create a new variable for TotalNumVehicles per 100,000 people
 TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
   mutate(
     TotalNumVehiclesPer100k = (TotalNumVehicles / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for TotalOwned per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TotalOwnedPer100k = (TotalOwned / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for NoVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    NoVehicleAvailablePer100k = (NoVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for OneVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    OneVehicleAvailablePer100k = (OneVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for TwoVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TwoVehicleAvailablePer100k = (TwoVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for ThreeVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    ThreeVehicleAvailablePer100k = (ThreeVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for FourVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    FourVehicleAvailablePer100k = (FourVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for FiveOrMoreVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    FiveOrMoreVehicleAvailablePer100k = (FiveOrMoreVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for TotalRent per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TotalRentPer100k = (TotalRent / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for NoRentVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    NoRentVehicleAvailablePer100k = (NoRentVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for OneRentVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    OneRentVehicleAvailablePer100k = (OneRentVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for TwoRentVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TwoRentVehicleAvailablePer100k = (TwoRentVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for ThreeRentVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    ThreeRentVehicleAvailablePer100k = (ThreeRentVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
   )
 
 ```
