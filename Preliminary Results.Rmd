@@ -214,12 +214,12 @@ Hospitals <- dplyr::select(Hospitals, -Telephone, -ZIPCode, -StreetAddress, - Pr
 ### Cleaning Vehicle Dataset
 
 ```{r}
-Vehicle <- read.csv("Tenure by Vehicles Available.csv", header = TRUE, sep = ",")
+Vehicle2023 <- read.csv("Tenure by Vehicles Available_2023.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
 # Transpose using pivot_longer and pivot_wider
-Vehicle_transposed <- Vehicle %>%
+Vehicle_transposed <- Vehicle2023 %>%
   t() %>%
   as.data.frame(stringsAsFactors = FALSE)
 
