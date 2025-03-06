@@ -785,6 +785,54 @@ TelehealthandPopulation_VehicleInternet <- merge(TelehealthandPopulation_Vehicle
 ```
 
 
+#### Internet and Vehicles per capita variables
+
+
+```{r}
+colnames(TelehealthandPopulation_VehicleInternet)
+```
+
+```{r}
+# Convert columns from character to numeric
+columns_to_convert <- c("POP", "TotalNumVehicles", "TotalOwned", 
+                        "NoVehicleAvailable", "OneVehicleAvailable", 
+                        "vehiclesavailable", "ThreeVehicleAvailable", 
+                        "FourVehicleAvailable", "FiveOrMoreVehicleAvailable", 
+                        "TotalRent", "NoRentVehicleAvailable", 
+                        "OneRentVehicleAvailable", "TwoRentVehicleAvailable", 
+                        "ThreeRentVehicleAvailable", "FourRentVehicleAvailable", 
+                        "FiveOrMoreRentVehicleAvailable", "TotalWithInternet", 
+                        "WithInternet", "DialUpNoInternetSubs", 
+                        "BroadBandAnyType", "CellularData", 
+                        "CellularDataAndAnotherType", "CableFiberOrDSL", 
+                        "CableFiberOrDSLOnly", "SatelliteInternet", 
+                        "SatelliteInternetOnly", "OtherServiceOnly", 
+                        "InternetAccessNoSubscrition", "NoInternet")
+
+# Apply gsub to clean each column before conversion
+TelehealthandPopulation_VehicleInternet[columns_to_convert] <- lapply(TelehealthandPopulation_VehicleInternet[columns_to_convert], function(x) {
+  # Remove non-numeric characters
+  cleaned_x <- gsub("[^0-9.-]", "", x)
+  # Convert to numeric
+  as.numeric(cleaned_x)
+})
+
+```
+
+
+```{r}
+
+#Create a new variable for TotalNumVehicles per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TotalNumVehiclesPer100k = (TotalNumVehicles / POP) * 100000  # Normalize per 100,000 people
+  )
+
+```
+
+
+
+
 
 
 ### Cleaning Hospital Dataset
