@@ -152,6 +152,43 @@ TelehealthandPopulation <- merge(Telehealth, Population, by = "State", all = TRU
 TelehealthandPopulation <- na.omit(TelehealthandPopulation)
 ```
 
+```{r}
+# Load the data
+Population <- read.csv("Annual Estimates of the Resident Population for the United States.csv", header = TRUE, sep = ",")
+
+# Remove leading dots from state names in both datasets
+Population$State <- gsub("^\\.+", "", Population$State)
+
+# Standardize 'District of Columbia' in both datasets to ensure a match
+Population$State <- gsub("District of Columbia", "District of Columbia", Population$State)
+Telehealth$State <- gsub("District Of Columbia", "District of Columbia", Telehealth$State)
+
+Population <- Population %>%
+  rename(
+    BasePopulation2020 = Base.Population.April.2020,
+    `2020POP` = X2020,
+    `2021POP` = X2021,
+    `2022POP` = X2022,
+    `2023POP` = X2023,
+    `2024POP` = X2024
+  )
+
+# Reshape Population: Convert wide format (multiple years as columns) to long format (single 'Year' and 'POP' columns)
+Population_long <- Population %>%
+  pivot_longer(cols = starts_with("20"), # Select columns with years
+               names_to = "Year",
+               values_to = "POP") %>%
+  mutate(Year = as.numeric(gsub("POP", "", Year))) # Convert 'Year' to numeric
+
+# Merge Telehealth and reshaped Population data on State and Year
+TelehealthandPopulation <- merge(Telehealth, Population_long, by = c("State", "Year"), all = TRUE)
+
+# Remove all rows with any missing (NA) values - includes States labeled National, Virgin Islands, Midwest, West, South, Northeast, Territories
+TelehealthandPopulation <- na.omit(TelehealthandPopulation)
+
+```
+
+
 
 ### Cleaning Hospital Dataset
 
@@ -451,7 +488,6 @@ regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
              `State and Year Fixed Effect` = model3)
 
-coefz <- c("TelehealthVisits" = "Telehealth Visits")
 gofz <- c("nobs", "r.squared")
 
 rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
@@ -462,10 +498,13 @@ attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 modelsummary(regz,
              title = "Effect of State and Year on Enrollment Status' impact on Number of Telehelath Visits",
              estimate = "{estimate}{stars}",
-             coef_map = coefz,
              gof_map = gofz,
              add_rows = rowz)
 
 ```
 
+
+```{r}
+colnames(Telehealth_Population_Vehicle_Internet)
+```
 
