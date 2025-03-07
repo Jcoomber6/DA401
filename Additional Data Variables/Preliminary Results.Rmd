@@ -1,6 +1,6 @@
 ---
-title: "Final Project - Lack of Access to Needed Medical Care"
-author: "Jessica Coomber and Mia Treboni Hogan"
+title: "How has the increased use of Telehealth in the US increased access to medical care for Medicare and Medicaid members?"
+author: "Jessica Coomber"
 institute: "Denison University"
 format: 
   html:
@@ -65,8 +65,7 @@ q <- 0
 
 ## Research Question
 
-How has the use of Telehealth in the US increased access to medical care for low income populations?
-
+How has the increased use of Telehealth in the US increased access to medical care for Medicare and Medicaid members?
 
 ```{r}
 # Load necessary packages
@@ -789,9 +788,6 @@ TelehealthandPopulation_VehicleInternet <- merge(TelehealthandPopulation_Vehicle
 ```
 
 
-#### Internet and Vehicles per capita variables
-
-
 ```{r}
 colnames(TelehealthandPopulation_VehicleInternet)
 ```
@@ -823,6 +819,7 @@ TelehealthandPopulation_VehicleInternet[columns_to_convert] <- lapply(Telehealth
 
 ```
 
+#### Vehicles per 100k people variables
 
 ```{r}
 #Create a new variable for TotalNumVehicles per 100,000 people
@@ -903,11 +900,108 @@ TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleIntern
     ThreeRentVehicleAvailablePer100k = (ThreeRentVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
   )
 
+#Create a new variable for FourRentVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    FourRentVehicleAvailablePer100k = (FourRentVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for FiveOrMoreRentVehicleAvailable per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    FiveOrMoreRentVehicleAvailablePer100k = (FiveOrMoreRentVehicleAvailable / POP) * 100000  # Normalize per 100,000 people
+  )
+
+
+
+```
+
+#### Internet per 100k people variables
+```{r}
+
+#Create a new variable for WithInternet per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    WithInternetPer100k = (WithInternet / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for DialUpNoInternetSubs per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    DialUpNoInternetSubsPer100k = (DialUpNoInternetSubs / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for BroadBandAnyType per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    BroadBandAnyTypePer100k = (BroadBandAnyType / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for CellularData per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   CellularDataPer100k = (CellularData / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for CellularDataAndAnotherType per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   CellularDataAndAnotherTypePer100k = (CellularDataAndAnotherType / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for CableFiberOrDSL per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   CableFiberOrDSLPer100k = (CableFiberOrDSL / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for SatelliteInternet per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   SatelliteInternetPer100k = (SatelliteInternet / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for SatelliteInternetOnly per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   SatelliteInternetOnlyPer100k = (SatelliteInternetOnly / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for OtherServiceOnly per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   OtherServiceOnlyPer100k = (OtherServiceOnly / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for InternetAccessNoSubscrition per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   InternetAccessNoSubscritionPer100k = (InternetAccessNoSubscrition / POP) * 100000  # Normalize per 100,000 people
+  )
+
+#Create a new variable for NoInternet per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   NoInternetPer100k = (NoInternet / POP) * 100000  # Normalize per 100,000 people
+  )
+
+
+
 ```
 
 
+```{r}
+#Create a new variable for TelehealthVisits per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   TelehealthVisitsPer100k = (TelehealthVisits / POP) * 100000  # Normalize per 100,000 people
+  )
 
+```
 
+```{r}
+colnames(TelehealthandPopulation_VehicleInternet)
+```
 
 
 ### Cleaning Hospital Dataset
@@ -926,6 +1020,40 @@ Hospitals <- dplyr::select(Hospitals, -NoofBeds, -NoofCertifiedBeds, -NoofMedica
 
 # Removing Columns that are Not Needed 
 Hospitals <- dplyr::select(Hospitals, -Telephone, -ZIPCode, -StreetAddress, - ProviderNo)
+
+```
+
+```{r}
+# Remove rows where State is one of the specified territories
+Hospitals <- Hospitals %>%
+  filter(!State %in% c("U.S. Virgin Islands", "American Samoa", "Guam", "Northern Mariana Islands"))
+```
+
+```{r}
+#Hospital count
+Hospitals$hospital_count <- table(Hospitals$State)[Hospitals$State]
+
+```
+
+
+```{r}
+# Select the 'State' and 'hospital_count' columns from Hospitals
+hospital_count_df <- Hospitals %>%
+  group_by(State) %>%
+  summarize(hospital_count = n())
+
+
+# Merge the Hospital dataset with TelehealthandPopulation_VehicleInternet on State
+TelehealthandPopulation_VehicleInternetHospital <- merge(TelehealthandPopulation_VehicleInternet, hospital_count_df, by = c("State"), all = TRUE)
+
+```
+
+```{r}
+#Create a new variable for NoInternet per 100,000 people
+TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_VehicleInternetHospital %>%
+  mutate(
+   HospitalCount100k = (hospital_count / POP) * 100000  # Normalize per 100,000 people
+  )
 
 ```
 
@@ -1031,11 +1159,10 @@ TelehealthandPopulation_VehicleInternet %>%
 ```{r}
 # Create bar plot
 TelehealthandPopulation_VehicleInternet %>%
-  arrange(desc(TelehealthVisits)) %>%  # Arrange in descending order
-  ggplot(aes(x = fct_reorder(State, TelehealthVisits, .desc = TRUE), y = TelehealthVisits, fill = State)) +
+  arrange(desc(TelehealthVisitsPer100k)) %>%  # Arrange in descending order
+  ggplot(aes(x = fct_reorder(State, TelehealthVisitsPer100k, .desc = TRUE), y = TelehealthVisitsPer100k, fill = State)) +
   geom_bar(stat = "identity") +
-    scale_fill_viridis_d(option = "turbo") +  # Ensures distinct colors
-  labs(title = "Telehealth Visits by State",
+  labs(title = "Telehealth Visits by State (per 100k people)",
        x = "State",
        y = "Number of Telehealth Visits") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
@@ -1044,10 +1171,28 @@ TelehealthandPopulation_VehicleInternet %>%
 ```
 
 ```{r}
+# Create bar plot of number of hospitals by state
+TelehealthandPopulation_VehicleInternetHospital %>%
+  arrange(desc(HospitalCount100k)) %>%  # Arrange in descending order
+  ggplot(aes(x = fct_reorder(State, HospitalCount100k, .desc = TRUE), y = HospitalCount100k, fill = State)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of Hospitals by State (per 100k people)",
+       x = "State",
+       y = "Number of Hospitals") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
 
-model1<-lm(TelehealthVisits~EnrollmentStatus, TelehealthandPopulation_VehicleInternet) # without Income fixed effects
-model2 <- lm(TelehealthVisits~EnrollmentStatus + State, TelehealthandPopulation_VehicleInternet) # with State fixed effects
-model3<-lm(TelehealthVisits~EnrollmentStatus + State + Year, TelehealthandPopulation_VehicleInternet) # with State and Year fixed effects
+```
+
+
+
+
+```{r}
+
+model1<-lm(TelehealthVisits~Race, TelehealthandPopulation_VehicleInternet) # without Income fixed effects
+model2 <- lm(TelehealthVisits~Race + State, TelehealthandPopulation_VehicleInternet) # with State fixed effects
+model3<-lm(TelehealthVisits~Race + State + Year, TelehealthandPopulation_VehicleInternet) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
@@ -1061,12 +1206,39 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Effect of State and Year on Enrollment Status' impact on Number of Telehelath Visits",
+             title = "Effect of State and Year on Races' impact on Number of Telehelath Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz)
 
 ```
+
+
+```{r}
+model1<-lm(TelehealthVisits~Race, TelehealthandPopulation_VehicleInternet) # without Income fixed effects
+model2 <- lm(TelehealthVisits~Race + State, TelehealthandPopulation_VehicleInternet) # with State fixed effects
+model3<-lm(TelehealthVisits~Race + State + Year, TelehealthandPopulation_VehicleInternet) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = T, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
+
+table_output <- modelsummary(regz,
+             title = "Effect of State and Year on Races' Impact on Number of Telehealth Visits",
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_omit = "^(Race|State)$")
+             
+```
+
 
 
 ```{r}
