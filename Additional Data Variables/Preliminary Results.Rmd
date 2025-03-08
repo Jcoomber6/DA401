@@ -67,6 +67,28 @@ q <- 0
 
 How has the increased use of Telehealth in the US increased access to medical care for Medicare and Medicaid members?
 
+## Problem Statement or Introduction
+
+This research will examine how the increased use in telehealth has increased access to medical care for Medicare and Medicaid members. This research with reference demographic factors that suggest economic status of individuals to see how they are impacting the number of telehealth visits. 
+
+I expect that disadvantaged populations will show a lower utilization of telehealth despite the potential of telehealth to improve access to care. I expect that socioeconomic factors affect the utilization of telehealth services and individuals with lower socioeconomic status will have lower uses of telehealth.
+
+
+## Methods
+
+I will be primarily working with the Medicare Telehealth Trends dataset published by the Centers for Medicare & Medicaid Services, made available on Data.gov. This dataset represents patients with Medicare and/or Medicaid who reported using telehealth services during and after the pandemic. This data will be merged with publicly available data from the US Census Bureau on state specific factors that could be impacting access to telehealth. 
+
+U.S. Census Bureau variables that I will include are number of vehicles, types of internet subscriptions, number of hospitals and population for each state.
+
+Variables that are available on FRED that I will merge based on the year include: the unemployment rate and GDP.
+
+I will use a fixed effect analysis to see whether certain variables are having a strong impact on the number of telehealth visits. I will use state and year as my fixed effects because they are not changing with time. Fixed effect will be a beneficial method because it will help isolate variables of influence to see how they are impacting the utilization of telehealth services.
+
+
+## Early Results
+
+## Load Packages
+
 ```{r}
 # Load necessary packages
 library(caret)
@@ -92,7 +114,9 @@ library(FNN)
 library(MASS)
 ```
 
-### Cleaning Telehelath Dataset
+# Cleaning the Data
+
+## Telehealth Dataset
 
 ```{r}
 # Telehealth Data Cleaning
@@ -120,6 +144,7 @@ Telehealth <- Telehealth %>% rename(TelehealthVisits = Total_Bene_Telehealth)
 Telehealth <- Telehealth %>% rename(PercentTelehealthPartB = Pct_Telehealth)
 ```
 
+## Population Dataset
 
 ```{r}
 # Load the data
@@ -160,7 +185,9 @@ TelehealthandPopulation <- dplyr::select(TelehealthandPopulation, -BasePopulatio
 
 ```
 
-### Cleaning Vehicle 2023 Dataset
+## Cleaning Vehicle Datasets
+
+### Vehicle 2023 
 
 ```{r}
 Vehicle2023 <- read.csv("Tenure by Vehicles Available_2023.csv", header = TRUE, sep = ",")
@@ -232,7 +259,7 @@ Vehicle_transposed2023$State <- gsub("New.Jersey", "New Jersey", Vehicle_transpo
 Vehicle_transposed2023$State <- gsub("New.York", "New York", Vehicle_transposed2023$State)
 ```
 
-### Cleaning Vehicle 2022 Dataset
+### Vehicle 2022
 
 ```{r}
 Vehicle2022 <- read.csv("Tenure by Vehicles Available_2022.csv", header = TRUE, sep = ",")
@@ -305,7 +332,7 @@ Vehicle_transposed2022$State <- gsub("New.York", "New York", Vehicle_transposed2
 ```
 
 
-### Cleaning Vehicle 2021 Dataset
+### Vehicle 2021
 
 ```{r}
 Vehicle2021 <- read.csv("Tenure by Vehicles Available_2021.csv", header = TRUE, sep = ",")
@@ -377,7 +404,7 @@ Vehicle_transposed2021$State <- gsub("New.Jersey", "New Jersey", Vehicle_transpo
 Vehicle_transposed2021$State <- gsub("New.York", "New York", Vehicle_transposed2021$State)
 ```
 
-### Cleaning Vehicle 2020 Dataset
+### Vehicle 2020
 
 ```{r}
 Vehicle2020 <- read.csv("Tenure by Vehicles Available_2020.csv", header = TRUE, sep = ",")
@@ -449,7 +476,7 @@ Vehicle_transposed2020$State <- gsub("New.Jersey", "New Jersey", Vehicle_transpo
 Vehicle_transposed2020$State <- gsub("New.York", "New York", Vehicle_transposed2020$State)
 ```
 
-## Merging all the Vehicle transposed data
+### Merging all the Vehicle transposed data
 ```{r}
 # Remove 2024 from TelehealthandPopulation before merging
 TelehealthandPopulation <- TelehealthandPopulation %>%
@@ -479,7 +506,9 @@ TelehealthandPopulation_Vehicle <- merge(TelehealthandPopulation, Vehicle_long, 
 
 ```
 
-## Cleaning Internet 2023 Dataset
+## Cleaning Internet Datasets
+
+### Internet 2023
 
 ```{r}
 InternetSubs2023 <- read.csv("Presence and Types of Internet Subscriptions_2023.csv", header = TRUE, sep = ",")
@@ -550,7 +579,7 @@ Internet_transposed2023$State <- gsub("New.Jersey", "New Jersey", Internet_trans
 Internet_transposed2023$State <- gsub("New.York", "New York", Internet_transposed2023$State)
 ```
 
-### Cleaning Internet 2022 Dataset
+### Internet 2022
 
 ```{r}
 InternetSubs2022 <- read.csv("Presence and Types of Internet Subscriptions_2022.csv", header = TRUE, sep = ",")
@@ -621,7 +650,7 @@ Internet_transposed2022$State <- gsub("New.Jersey", "New Jersey", Internet_trans
 Internet_transposed2022$State <- gsub("New.York", "New York", Internet_transposed2022$State)
 ```
 
-### Cleaning Internet 2021 Dataset
+### Internet 2021
 
 ```{r}
 InternetSubs2021 <- read.csv("Presence and Types of Internet Subscriptions_2021.csv", header = TRUE, sep = ",")
@@ -692,7 +721,7 @@ Internet_transposed2021$State <- gsub("New.Jersey", "New Jersey", Internet_trans
 Internet_transposed2021$State <- gsub("New.York", "New York", Internet_transposed2021$State)
 ```
 
-### Cleaning Internet 2020 Dataset
+### Internet 2020
 
 ```{r}
 InternetSubs2020 <- read.csv("Presence and Types of Internet Subscriptions_2020.csv", header = TRUE, sep = ",")
@@ -763,8 +792,7 @@ Internet_transposed2020$State <- gsub("New.Jersey", "New Jersey", Internet_trans
 Internet_transposed2020$State <- gsub("New.York", "New York", Internet_transposed2020$State)
 ```
 
-## Merging all the Vehicle transposed data
-
+## Merging all the Internet transposed data
 
 ```{r}
 # Create a list of the vehicle datasets
@@ -787,10 +815,7 @@ Internet_long <- bind_rows(
 TelehealthandPopulation_VehicleInternet <- merge(TelehealthandPopulation_Vehicle, Internet_long, by = c("State", "Year"), all = TRUE)
 ```
 
-
-```{r}
-colnames(TelehealthandPopulation_VehicleInternet)
-```
+### Convert new columns to numeric 
 
 ```{r}
 # Convert columns from character to numeric
@@ -819,7 +844,7 @@ TelehealthandPopulation_VehicleInternet[columns_to_convert] <- lapply(Telehealth
 
 ```
 
-#### Vehicles per 100k people variables
+### Vehicles per 100k people variables
 
 ```{r}
 #Create a new variable for TotalNumVehicles per 100,000 people
@@ -916,7 +941,7 @@ TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleIntern
 
 ```
 
-#### Internet per 100k people variables
+### Internet per 100k people variables
 ```{r}
 
 #Create a new variable for WithInternet per 100,000 people
@@ -989,6 +1014,7 @@ TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleIntern
 
 ```
 
+### Telehealth and Eligible per 100k variables
 
 ```{r}
 #Create a new variable for TelehealthVisits per 100,000 people
@@ -997,19 +1023,21 @@ TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleIntern
    TelehealthVisitsPer100k = (TelehealthVisits / POP) * 100000  # Normalize per 100,000 people
   )
 
+
+#Create a new variable for EligibleServicesCount per 100,000 people
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   EligibleServicesCountPer100k = (EligibleServicesCount / POP) * 100000  # Normalize per 100,000 people
+  )
+
+
 ```
 
-```{r}
-colnames(TelehealthandPopulation_VehicleInternet)
-```
-
-
-### Cleaning Hospital Dataset
+## Cleaning Hospital Dataset
 
 ```{r}
 Hospitals <- read.csv("CentersForMedicareAndMedicaidServicesFacilities Hospitals.csv", header = TRUE, sep = ",")
 ```
-
 
 ```{r}
 # Remove all non-letter characters from column names
@@ -1029,14 +1057,13 @@ Hospitals <- Hospitals %>%
   filter(!State %in% c("U.S. Virgin Islands", "American Samoa", "Guam", "Northern Mariana Islands"))
 ```
 
+### Create Hospital Count by State
+
 ```{r}
+
 #Hospital count
 Hospitals$hospital_count <- table(Hospitals$State)[Hospitals$State]
 
-```
-
-
-```{r}
 # Select the 'State' and 'hospital_count' columns from Hospitals
 hospital_count_df <- Hospitals %>%
   group_by(State) %>%
@@ -1048,6 +1075,8 @@ TelehealthandPopulation_VehicleInternetHospital <- merge(TelehealthandPopulation
 
 ```
 
+### Hospital Count Per 100k
+
 ```{r}
 #Create a new variable for NoInternet per 100,000 people
 TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_VehicleInternetHospital %>%
@@ -1058,30 +1087,18 @@ TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_Vehic
 ```
 
 
-### Exploration
+# Exploration
 
-```{r}
-# Create bar plot
-TelehealthandPopulation_VehicleInternet %>%
-    filter(Sex != "All") %>%
-  ggplot(aes(x = Sex, y = TelehealthVisits, fill = Sex)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Telehealth Visits by Sex Category",
-       x = "Sex Category",
-       y = "Number of Telehealth Visits") +
-    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
-  theme_minimal()
-```
-
+### By Race
 ```{r}
 # Create bar plot
 TelehealthandPopulation_VehicleInternet %>%
     filter(Race != "All") %>%
-  ggplot(aes(x = Race, y = TelehealthVisits, fill = Race)) +
+  ggplot(aes(x = Race, y = TelehealthVisitsPer100k, fill = Race)) +
   geom_bar(stat = "identity") +
   labs(title = "Telehealth Visits by Race Category",
        x = "Race Category",
-       y = "Number of Telehealth Visits") +
+       y = "Number of Telehealth Visits (Per 100k people)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
@@ -1091,53 +1108,69 @@ TelehealthandPopulation_VehicleInternet %>%
 # Create bar plot
 TelehealthandPopulation_VehicleInternet %>%
     filter(Race != "All") %>%
-  ggplot(aes(x = Race, y = EligibleServicesCount, fill = Race)) +
+  ggplot(aes(x = Race, y = EligibleServicesCountPer100k, fill = Race)) +
   geom_bar(stat = "identity") +
   labs(title = "Eligible Services by Race Category",
        x = "Race Category",
-       y = "Number of Telehealth Visits") +
+       y = "Number of Eligible Services (Per 100k people)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
 ```
 
+```{r}
+TelehealthandPopulation_VehicleInternet %>%
+  filter(Race != "All") %>%  # Exclude "All" from the dataset
+  count(Race) %>%
+  ggplot(aes(x = Race, y = n, fill = Race)) +  # 'n' is the count of each race
+  geom_bar(stat = "identity") +
+  labs(title = "Count of Each Race in Dataset",
+       x = "Race",
+       y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels if needed
+```
+### By Enrollment Status
 
 ```{r}
 # Create bar plot
 TelehealthandPopulation_VehicleInternet %>%
   filter(EnrollmentStatus != "All") %>%
-  ggplot(aes(x = EnrollmentStatus, y = TelehealthVisits, fill = EnrollmentStatus)) +
+  ggplot(aes(x = EnrollmentStatus, y = TelehealthVisitsPer100k, fill = EnrollmentStatus)) +
   geom_bar(stat = "identity") +
   labs(title = "Telehealth Visits by Enrollment Status",
        x = "Enrollment Status",
-       y = "Number of Telehealth Visits") +
+       y = "Number of Telehealth Visits (Per 100k people)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
 
 ```
+### By Year
 
 ```{r}
 # Create bar plot
 TelehealthandPopulation_VehicleInternet %>%
-  ggplot(aes(x = Year, y = TelehealthVisits, fill = factor(Year))) +  # Assign unique color per year
+  ggplot(aes(x = Year, y = TelehealthVisitsPer100k, fill = factor(Year))) +  # Assign unique color per year
   geom_bar(stat = "identity") +
   labs(title = "Telehealth Visits by Year",
        x = "Year",
-       y = "Number of Telehealth Visits") +
+       y = "Number of Telehealth Visits (Per 100k people)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = "none")  # Remove the legend
+
 
 ```
 
 ```{r}
 # Create bar plot
 TelehealthandPopulation_VehicleInternet %>%
-  ggplot(aes(x = Year, y = EligibleServicesCount, fill = factor(Year))) +
+  ggplot(aes(x = Year, y = EligibleServicesCountPer100k, fill = factor(Year))) +
   geom_bar(stat = "identity") +
   labs(title = "Eligible Services by Year",
        x = "Year",
-       y = "Number of Eligible Services ") +
+       y = "Number of Eligible Services (Per 100k People)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal()
 
@@ -1145,30 +1178,33 @@ TelehealthandPopulation_VehicleInternet %>%
 
 ```{r}
 TelehealthandPopulation_VehicleInternet %>%
-  ggplot(aes(x = factor(Year), y = TelehealthVisits, fill = factor(Quarter))) +  
+  ggplot(aes(x = factor(Year), y = TelehealthVisitsPer100k, fill = factor(Quarter))) +  
   geom_bar(stat = "identity", position = "dodge") +  # Places Q1–Q4 next to each other for each Year
   labs(title = "Telehealth Visits by Quarter and Year",
        x = "Year",
-       y = "Number of Telehealth Visits",
+       y = "Number of Telehealth Visits (Per 100k people)",
        fill = "Quarter") +
   scale_y_continuous(labels = scales::comma) +  # Format y-axis with commas
   scale_fill_brewer(palette = "Paired") +  # Use a high-contrast color palette
   theme_minimal()
 ```
 
+### By State
+
 ```{r}
 # Create bar plot
-TelehealthandPopulation_VehicleInternet %>%
+TelehealthandPopulation_VehicleInternetHospital %>%
   arrange(desc(TelehealthVisitsPer100k)) %>%  # Arrange in descending order
   ggplot(aes(x = fct_reorder(State, TelehealthVisitsPer100k, .desc = TRUE), y = TelehealthVisitsPer100k, fill = State)) +
   geom_bar(stat = "identity") +
-  labs(title = "Telehealth Visits by State (per 100k people)",
+  labs(title = "Telehealth Visits by State",
        x = "State",
-       y = "Number of Telehealth Visits") +
+       y = "Number of Telehealth Visits (per 100k people)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
 ```
+
 
 ```{r}
 # Create bar plot of number of hospitals by state
@@ -1176,23 +1212,24 @@ TelehealthandPopulation_VehicleInternetHospital %>%
   arrange(desc(HospitalCount100k)) %>%  # Arrange in descending order
   ggplot(aes(x = fct_reorder(State, HospitalCount100k, .desc = TRUE), y = HospitalCount100k, fill = State)) +
   geom_bar(stat = "identity") +
-  labs(title = "Number of Hospitals by State (per 100k people)",
+  labs(title = "Number of Hospitals by State",
        x = "State",
-       y = "Number of Hospitals") +
+       y = "Number of Hospitals (per 100k people)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
 
 ```
 
+# Fixed Effect
 
-
+## Race
 
 ```{r}
 
-model1<-lm(TelehealthVisits~Race, TelehealthandPopulation_VehicleInternet) # without Income fixed effects
-model2 <- lm(TelehealthVisits~Race + State, TelehealthandPopulation_VehicleInternet) # with State fixed effects
-model3<-lm(TelehealthVisits~Race + State + Year, TelehealthandPopulation_VehicleInternet) # with State and Year fixed effects
+model1<-lm(TelehealthVisits~Race, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
+model2 <- lm(TelehealthVisits~Race + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
+model3<-lm(TelehealthVisits~Race + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
@@ -1209,15 +1246,25 @@ modelsummary(regz,
              title = "Effect of State and Year on Races' impact on Number of Telehelath Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
-             add_rows = rowz)
+             add_rows = rowz,
+             coef_map = NULL) # HOW CAN I GET THIS TO WORK
 
 ```
 
+* No Fixed Effect R^2 = 0.051 suggests the number of telehealth visits is explained little by the race.
+
+* State Fixed Effect R^2 = 0.370 suggests adding state fixed effects improves the model’s explanatory power slightly.
+
+* State and Year Fixed Effect R^2 = 0.389 suggests including both state and year fixed effects improves the model even more, explaining more variation in number of telehealth visits due to race.
+
+* When State and Year fixed effects are included, the relationship between race and telehealth visits changes from 45,862.248*** to 21,057,971.591***. This suggests that once controlling for these factors, the impact of race on the number of telehealth visits is stronger.
+
+## With Internet
 
 ```{r}
-model1<-lm(TelehealthVisits~Race, TelehealthandPopulation_VehicleInternet) # without Income fixed effects
-model2 <- lm(TelehealthVisits~Race + State, TelehealthandPopulation_VehicleInternet) # with State fixed effects
-model3<-lm(TelehealthVisits~Race + State + Year, TelehealthandPopulation_VehicleInternet) # with State and Year fixed effects
+model1<-lm(TelehealthVisits~WithInternet, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
+model2 <- lm(TelehealthVisits~WithInternet + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
+model3<-lm(TelehealthVisits~WithInternet + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
@@ -1230,18 +1277,18 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
                              byrow = T, nrow = 2)) # 2 rows
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
-table_output <- modelsummary(regz,
-             title = "Effect of State and Year on Races' Impact on Number of Telehealth Visits",
+modelsummary(regz,
+             title = "Effect of State and Year on WithInternet' impact on Number of Telehelath Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
-             coef_omit = "^(Race|State)$")
-             
+             coef_map = NULL) # HOW CAN I GET THIS TO WORK
 ```
 
+* No Fixed Effect R^2 = 0.275 suggests the number of telehealth visits is explained little by having Internet Access
 
+* State Fixed Effect R^2 = 0.349 suggests adding state fixed effects improves the model’s explanatory power
 
-```{r}
-colnames(Telehealth_Population_Vehicle_Internet)
-```
+* State and Year Fixed Effect R^2 = 0.350 suggests including both state and year fixed effects improves the model even more, explaining more variation in number of telehealth visits due to having internet
 
+* When State and Year fixed effects are included, the relationship between having internet and telehealth visits changes from -2,260.236*** to 7,037,323.145***. Without the fixed effect the relationship between internet access and telehealth visits seems negative (a decrease in visits when internet access is present). Once controlling for fixed effects, we see that the impact of having internet on the number of telehealth visits switches to positive and is stronger.
