@@ -1221,6 +1221,44 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 
 ```
 
+### Internet
+
+```{r}
+# Count people with each internet access type
+internet_counts <- TelehealthandPopulation_VehicleInternet %>%
+  summarise(
+    WithInternet = sum(WithInternet, na.rm = TRUE),
+    DialUpNoInternetSubs = sum(DialUpNoInternetSubs, na.rm = TRUE),
+    BroadBandAnyType = sum(BroadBandAnyType, na.rm = TRUE),
+    CellularData = sum(CellularData, na.rm = TRUE),
+    CellularDataAndAnotherType = sum(CellularDataAndAnotherType, na.rm = TRUE),
+    CableFiberOrDSL = sum(CableFiberOrDSL, na.rm = TRUE),
+    CableFiberOrDSLOnly = sum(CableFiberOrDSLOnly, na.rm = TRUE),
+    SatelliteInternet = sum(SatelliteInternet, na.rm = TRUE),
+    SatelliteInternetOnly = sum(SatelliteInternetOnly, na.rm = TRUE),
+    OtherServiceOnly = sum(OtherServiceOnly, na.rm = TRUE),
+    InternetAccessNoSubscrition = sum(InternetAccessNoSubscrition, na.rm = TRUE),
+    NoInternet = sum(NoInternet, na.rm = TRUE)
+  )
+
+# Reshape the data to long format for ggplot
+internet_counts_long <- internet_counts %>%
+  gather(key = "InternetAccessType", value = "Count")  # Reshapes the data
+
+# Create a bar plot
+ggplot(internet_counts_long, aes(x = reorder(InternetAccessType, Count), y = Count, fill = InternetAccessType)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Count of People with Different Internet Access Types",
+       x = "Internet Access Type",
+       y = "Count") +
+  scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+  # Rotates x-axis labels for readability
+  theme(legend.position = "none")  # Remove the legend
+
+```
+
+
 # Fixed Effect
 
 ## Race
