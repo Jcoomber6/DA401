@@ -86,6 +86,11 @@ I will use a fixed effect analysis to see whether certain variables are having a
 
 
 ## Early Results
+* ADD IMPLICATIONS
+* Results should be from models from the methods section
+* report al important parts of results - not just P values
+* inlcudes numbers titles, captions and cite in text (Table 1)!!!!
+* link prior research to this section - cite things
 
 ## Load Packages
 
@@ -1081,7 +1086,7 @@ TelehealthandPopulation_VehicleInternetHospital <- merge(TelehealthandPopulation
 #Create a new variable for NoInternet per 100,000 people
 TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_VehicleInternetHospital %>%
   mutate(
-   HospitalCount100k = (hospital_count / POP) * 100000  # Normalize per 100,000 people
+   HospitalCountPer100k = (hospital_count / POP) * 100000  # Normalize per 100,000 people
   )
 
 ```
@@ -1209,8 +1214,8 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 ```{r}
 # Create bar plot of number of hospitals by state
 TelehealthandPopulation_VehicleInternetHospital %>%
-  arrange(desc(HospitalCount100k)) %>%  # Arrange in descending order
-  ggplot(aes(x = fct_reorder(State, HospitalCount100k, .desc = TRUE), y = HospitalCount100k, fill = State)) +
+  arrange(desc(HospitalCountPer100k)) %>%  # Arrange in descending order
+  ggplot(aes(x = fct_reorder(State, HospitalCountPer100k, .desc = TRUE), y = HospitalCountPer100k, fill = State)) +
   geom_bar(stat = "identity") +
   labs(title = "Number of Hospitals by State",
        x = "State",
@@ -1261,17 +1266,19 @@ ggplot(internet_counts_long, aes(x = reorder(InternetAccessType, Count), y = Cou
 
 # Fixed Effect
 
-## Race
+## Total Vehicles Owned Per 100k
 
 ```{r}
 
-model1<-lm(TelehealthVisits~Race, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
-model2 <- lm(TelehealthVisits~Race + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
-model3<-lm(TelehealthVisits~Race + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
+model1<-lm(TelehealthVisitsPer100k~TotalOwnedPer100k, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
+model2 <- lm(TelehealthVisitsPer100k~TotalOwnedPer100k + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
+model3<-lm(TelehealthVisitsPer100k~TotalOwnedPer100k + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
              `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalOwnedPer100k" = "Vehicles Owned")
 
 gofz <- c("nobs", "r.squared")
 
@@ -1281,32 +1288,74 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Effect of State and Year on Races' impact on Number of Telehelath Visits",
+             title = "Effect of State and Year on TotalOwned' (Per 100k people) impact on Number of Telehelath Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
-             coef_map = NULL) # HOW CAN I GET THIS TO WORK
+             coef_map = coefz)
 
 ```
 
-* No Fixed Effect R^2 = 0.051 suggests the number of telehealth visits is explained little by the race.
+* No Fixed Effect R^2 = 0.002 suggests the number of telehealth visits is explained little by how many vehicles owned.
 
-* State Fixed Effect R^2 = 0.370 suggests adding state fixed effects improves the model’s explanatory power slightly.
+* State Fixed Effect R^2 = 0.126 suggests adding state fixed effects improves the model’s explanatory power.
 
-* State and Year Fixed Effect R^2 = 0.389 suggests including both state and year fixed effects improves the model even more, explaining more variation in number of telehealth visits due to race.
+* State and Year Fixed Effect R^2 = 0.135 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles owned.
 
-* When State and Year fixed effects are included, the relationship between race and telehealth visits changes from 45,862.248*** to 21,057,971.591***. This suggests that once controlling for these factors, the impact of race on the number of telehealth visits is stronger.
+* When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from -0.014*** to -0.094***. This suggests that once controlling for these factors, more cars owned still has a negative relationship with the number of telehealth visitssuggesting higher number of vehicles owned is associated with fewer telehealth visits. This could be because individuals with more vehicles have better access to in-person healthcare and don't need to use telehealth.
+
+
+## Total Vehicles Rent Per 100k
+
+```{r}
+model1<-lm(TelehealthVisitsPer100k~TotalRentPer100k, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
+model2 <- lm(TelehealthVisitsPer100k~TotalRentPer100k + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
+model3<-lm(TelehealthVisitsPer100k~TotalRentPer100k + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalRentPer100k" = "Total Rent")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = T, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
+
+modelsummary(regz,
+             title = "Effect of State and Year on TotalRent's (Per 100k people) Impact on Number of Telehealth Visits",
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz) 
+
+```
+
+* No Fixed Effect R^2 = 0.000 suggests the number of telehealth visits is unexplained by the number of rented vehicles.
+
+* State Fixed Effect R^2 = -0.079 suggests adding state fixed effects improves the model’s explanatory power
+
+* State and Year Fixed Effect R^2 = 0.134 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles rented.
+
+* When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from 0.000 to 0.060***. This suggests that once controlling for these factors, more cars rented has a positive relationship with the number of telehealth visits suggesting higher number of vehicles rented is associated with more telehealth visits. This could be because individuals renting vehicles have lower accessibility to in person visits and would use telehealth
+
+* This result is positive, different from the negative relationship shown with owning vehicles and telehalth visits, suggesting that those who rent cars use telehealth more than those who own cars.
 
 ## With Internet
 
 ```{r}
-model1<-lm(TelehealthVisits~WithInternet, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
-model2 <- lm(TelehealthVisits~WithInternet + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
-model3<-lm(TelehealthVisits~WithInternet + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
+model1<-lm(TelehealthVisitsPer100k~WithInternetPer100k, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
+model2 <- lm(TelehealthVisitsPer100k~WithInternetPer100k + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
+model3<-lm(TelehealthVisitsPer100k~WithInternetPer100k + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
              `State and Year Fixed Effect` = model3)
+
+coefz <- c("WithInternetPer100k" = "With Internet")
 
 gofz <- c("nobs", "r.squared")
 
@@ -1316,17 +1365,57 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Effect of State and Year on WithInternet' impact on Number of Telehelath Visits",
+             title = "Effect of State and Year on WithInternet's (Per 100k people) Impact on Number of Telehealth Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
-             coef_map = NULL) # HOW CAN I GET THIS TO WORK
+             coef_map = coefz) 
 ```
 
-* No Fixed Effect R^2 = 0.275 suggests the number of telehealth visits is explained little by having Internet Access
+* No Fixed Effect R^2 = 0.013 suggests the number of telehealth visits is explained little by having Internet Access
 
-* State Fixed Effect R^2 = 0.349 suggests adding state fixed effects improves the model’s explanatory power
+* State Fixed Effect R^2 = 0.132 suggests adding state fixed effects improves the model’s explanatory power
 
-* State and Year Fixed Effect R^2 = 0.350 suggests including both state and year fixed effects improves the model even more, explaining more variation in number of telehealth visits due to having internet
+* State and Year Fixed Effect R^2 = 0.136 suggests including both state and year fixed effects improves the model slightly more, explaining more variation in number of telehealth visits due to having internet.
 
-* When State and Year fixed effects are included, the relationship between having internet and telehealth visits changes from -2,260.236*** to 7,037,323.145***. Without the fixed effect the relationship between internet access and telehealth visits seems negative (a decrease in visits when internet access is present). Once controlling for fixed effects, we see that the impact of having internet on the number of telehealth visits switches to positive and is stronger.
+* When State and Year fixed effects are included, the relationship between having internet and telehealth visits changes from -0.036*** to -0.056***. This suggests that once controlling for these factors, having internet still has a negative relationship with the number of telehealth visits, and it appears more negative once controlling for state and year.
+
+
+## Hospital Count
+
+```{r}
+model1<-lm(TelehealthVisitsPer100k~HospitalCountPer100k, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
+model2 <- lm(TelehealthVisitsPer100k~HospitalCountPer100k + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
+model3<-lm(TelehealthVisitsPer100k~HospitalCountPer100k + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("HospitalCountPer100k" = "Hospital Count")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = T, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
+
+modelsummary(regz,
+             title = "Effect of State and Year on Hospital Count's (Per 100k people) Impact on Number of Telehealth Visits",
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz) 
+
+```
+
+* No Fixed Effect R^2 = 0.004 suggests the number of telehealth visits is explained little by the number of hospitals per 100k people in that state.
+
+* State Fixed Effect R^2 = 0.090 suggests adding state fixed effects improves the model’s explanatory power
+
+* State and Year Fixed Effect R^2 = 0.133 suggests including both state and year fixed effects improves the model more, explaining more variation in number of telehealth visits due to the number of hospitals per 100k people in that state.
+
+* When State and Year fixed effects are included, the relationship between the number of hospitals and telehealth visits changes from -34.734*** to -423.203***. This suggests that once controlling for these factors, the number of hospitals still has a negative relationship with the number of telehealth visits, and it appears more much more negative once controlling for state and year. 
+
+* This suggests that more hospitlas has a lower use of telehelath visits. This could be beacause of more availability of hospitals to treat patients without telehealth.
