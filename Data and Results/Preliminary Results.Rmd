@@ -1288,7 +1288,7 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Effect of State and Year on TotalOwned' (Per 100k people) impact on Number of Telehelath Visits",
+             title = "Figure 1: Effect of State and Year on the Number of Cars Owned (Per 100k people) impact on Number of Telehelath Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
@@ -1326,7 +1326,7 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Effect of State and Year on TotalRent's (Per 100k people) Impact on Number of Telehealth Visits",
+             title = "Figure 2: Effect of State and Year on the Number of Cars Rented (Per 100k people) Impact on Number of Telehealth Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
@@ -1365,7 +1365,7 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Effect of State and Year on WithInternet's (Per 100k people) Impact on Number of Telehealth Visits",
+             title = "Figure 3: Effect of State and Year on the Number of People with Internet Access (Per 100k people) Impact on Number of Telehealth Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
@@ -1402,7 +1402,7 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Effect of State and Year on Hospital Count's (Per 100k people) Impact on Number of Telehealth Visits",
+             title = "Figure 4: Effect of State and Year on The Number of Hospitals in each state (Per 100k people) Impact on Number of Telehealth Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,

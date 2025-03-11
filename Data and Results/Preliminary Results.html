@@ -4048,7 +4048,7 @@ Plot
 <span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
 <span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
-<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Effect of State and Year on TotalOwned&#39; (Per 100k people) impact on Number of Telehelath Visits&quot;</span>,</span>
+<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Figure 1: Effect of State and Year on the Number of Cars Owned (Per 100k people) impact on Number of Telehelath Visits&quot;</span>,</span>
 <span id="cb63-20"><a href="#cb63-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
 <span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
 <span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
@@ -4059,12 +4059,12 @@ Plot
 <!-- preamble start -->
 
     <script>
-      function styleCell_cuwoe88ph7becidmxqly(i, j, css_id) {
-        var table = document.getElementById("tinytable_cuwoe88ph7becidmxqly");
+      function styleCell_nz1d0ni9wtuer91hs26j(i, j, css_id) {
+        var table = document.getElementById("tinytable_nz1d0ni9wtuer91hs26j");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_cuwoe88ph7becidmxqly');
+        var table = document.getElementById('tinytable_nz1d0ni9wtuer91hs26j');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -4072,8 +4072,8 @@ Plot
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_cuwoe88ph7becidmxqly(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_cuwoe88ph7becidmxqly");
+      function spanCell_nz1d0ni9wtuer91hs26j(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_nz1d0ni9wtuer91hs26j");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -4099,48 +4099,48 @@ Plot
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(0, 0, 'tinytable_css_idfyt8s1akeexpsffok2cr') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(0, 1, 'tinytable_css_idn4mtfwh3ozo65x518mde') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(0, 2, 'tinytable_css_idn4mtfwh3ozo65x518mde') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(0, 3, 'tinytable_css_idn4mtfwh3ozo65x518mde') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(1, 0, 'tinytable_css_idfaaymz2m3bsf4oa20std') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(1, 1, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(1, 2, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(1, 3, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(2, 0, 'tinytable_css_idq9m802bamp3v7cb3zu84') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(2, 1, 'tinytable_css_idm3shr51kj7jdlbjaldrp') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(2, 2, 'tinytable_css_idm3shr51kj7jdlbjaldrp') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(2, 3, 'tinytable_css_idm3shr51kj7jdlbjaldrp') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(3, 0, 'tinytable_css_idfaaymz2m3bsf4oa20std') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(3, 1, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(3, 2, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(3, 3, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(4, 0, 'tinytable_css_idfaaymz2m3bsf4oa20std') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(4, 1, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(4, 2, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(4, 3, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(5, 0, 'tinytable_css_idfaaymz2m3bsf4oa20std') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(5, 1, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(5, 2, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(5, 3, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 0, 'tinytable_css_idfaaymz2m3bsf4oa20std') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 1, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 2, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
-window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 3, 'tinytable_css_idqwje6cwx4ukwtuyh5nw9') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(0, 0, 'tinytable_css_id7okqxwzffme971pl16sj') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(0, 1, 'tinytable_css_idp3kodv1f4ts8esf2q26y') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(0, 2, 'tinytable_css_idp3kodv1f4ts8esf2q26y') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(0, 3, 'tinytable_css_idp3kodv1f4ts8esf2q26y') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(1, 0, 'tinytable_css_ideohlxcwiapbm9rlwwf3t') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(1, 1, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(1, 2, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(1, 3, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(2, 0, 'tinytable_css_idqp7wsyna7gfb3c7u65y6') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(2, 1, 'tinytable_css_idrnbvq3roz6n5tfkm1h7f') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(2, 2, 'tinytable_css_idrnbvq3roz6n5tfkm1h7f') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(2, 3, 'tinytable_css_idrnbvq3roz6n5tfkm1h7f') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(3, 0, 'tinytable_css_ideohlxcwiapbm9rlwwf3t') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(3, 1, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(3, 2, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(3, 3, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(4, 0, 'tinytable_css_ideohlxcwiapbm9rlwwf3t') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(4, 1, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(4, 2, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(4, 3, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(5, 0, 'tinytable_css_ideohlxcwiapbm9rlwwf3t') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(5, 1, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(5, 2, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(5, 3, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(6, 0, 'tinytable_css_ideohlxcwiapbm9rlwwf3t') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(6, 1, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(6, 2, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
+window.addEventListener('load', function () { styleCell_nz1d0ni9wtuer91hs26j(6, 3, 'tinytable_css_idalcswl1z2nk3xht4q4sg') })
     </script>
 
     <style>
-    .table td.tinytable_css_idfyt8s1akeexpsffok2cr, .table th.tinytable_css_idfyt8s1akeexpsffok2cr {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_idn4mtfwh3ozo65x518mde, .table th.tinytable_css_idn4mtfwh3ozo65x518mde {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_idfaaymz2m3bsf4oa20std, .table th.tinytable_css_idfaaymz2m3bsf4oa20std {  text-align: left; }
-    .table td.tinytable_css_idqwje6cwx4ukwtuyh5nw9, .table th.tinytable_css_idqwje6cwx4ukwtuyh5nw9 {  text-align: center; }
-    .table td.tinytable_css_idq9m802bamp3v7cb3zu84, .table th.tinytable_css_idq9m802bamp3v7cb3zu84 {  border-bottom: solid 0.05em black;  text-align: left; }
-    .table td.tinytable_css_idm3shr51kj7jdlbjaldrp, .table th.tinytable_css_idm3shr51kj7jdlbjaldrp {  border-bottom: solid 0.05em black;  text-align: center; }
+    .table td.tinytable_css_id7okqxwzffme971pl16sj, .table th.tinytable_css_id7okqxwzffme971pl16sj {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idp3kodv1f4ts8esf2q26y, .table th.tinytable_css_idp3kodv1f4ts8esf2q26y {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_ideohlxcwiapbm9rlwwf3t, .table th.tinytable_css_ideohlxcwiapbm9rlwwf3t {  text-align: left; }
+    .table td.tinytable_css_idalcswl1z2nk3xht4q4sg, .table th.tinytable_css_idalcswl1z2nk3xht4q4sg {  text-align: center; }
+    .table td.tinytable_css_idqp7wsyna7gfb3c7u65y6, .table th.tinytable_css_idqp7wsyna7gfb3c7u65y6 {  border-bottom: solid 0.05em black;  text-align: left; }
+    .table td.tinytable_css_idrnbvq3roz6n5tfkm1h7f, .table th.tinytable_css_idrnbvq3roz6n5tfkm1h7f {  border-bottom: solid 0.05em black;  text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_cuwoe88ph7becidmxqly" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_nz1d0ni9wtuer91hs26j" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        </thead><caption>Effect of State and Year on TotalOwned&#39; (Per 100k people) impact on Number of Telehelath Visits</caption>
+        </thead><caption>Figure 1: Effect of State and Year on the Number of Cars Owned (Per 100k people) impact on Number of Telehelath Visits</caption>
               <tbody><tr>
                 <th scope="col"> </th>
                 <th scope="col">No Fixed Effect</th>
@@ -4193,10 +4193,10 @@ window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 
 </div>
 </div>
 <ul>
-<li><p>No Fixed Effect R^2 = 0.082 suggests the number of telehealth visits is explained little by how many vehicles owned.</p></li>
-<li><p>State Fixed Effect R^2 = 0.333 suggests adding state fixed effects improves the model’s explanatory power.</p></li>
-<li><p>State and Year Fixed Effect R^2 = 0.337 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles owned.</p></li>
-<li><p>When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from -8.828*** to -3.134***. This suggests that once controlling for these factors, more cars owned still has a negative relationship with the number of telehealth visits, but it appears less negative once controling for state and year.</p></li>
+<li><p>No Fixed Effect R^2 = 0.002 suggests the number of telehealth visits is explained little by how many vehicles owned.</p></li>
+<li><p>State Fixed Effect R^2 = 0.126 suggests adding state fixed effects improves the model’s explanatory power.</p></li>
+<li><p>State and Year Fixed Effect R^2 = 0.135 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles owned.</p></li>
+<li><p>When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from -0.014*** to -0.094***. This suggests that once controlling for these factors, more cars owned still has a negative relationship with the number of telehealth visitssuggesting higher number of vehicles owned is associated with fewer telehealth visits. This could be because individuals with more vehicles have better access to in-person healthcare and don’t need to use telehealth.</p></li>
 </ul>
 </section>
 <section id="total-vehicles-rent-per-100k" class="level2" data-number="4.2">
@@ -4222,7 +4222,7 @@ window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 
 <span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
 <span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb64-18"><a href="#cb64-18" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
-<span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Effect of State and Year on TotalRent&#39;s (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
+<span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Figure 2: Effect of State and Year on the Number of Cars Rented (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
 <span id="cb64-20"><a href="#cb64-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
 <span id="cb64-21"><a href="#cb64-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
 <span id="cb64-22"><a href="#cb64-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
@@ -4233,12 +4233,12 @@ window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 
 <!-- preamble start -->
 
     <script>
-      function styleCell_kghozr8sw8qu3b5fo01x(i, j, css_id) {
-        var table = document.getElementById("tinytable_kghozr8sw8qu3b5fo01x");
+      function styleCell_91p4tvgyvj6exkexocib(i, j, css_id) {
+        var table = document.getElementById("tinytable_91p4tvgyvj6exkexocib");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_kghozr8sw8qu3b5fo01x');
+        var table = document.getElementById('tinytable_91p4tvgyvj6exkexocib');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -4246,8 +4246,8 @@ window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_kghozr8sw8qu3b5fo01x(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_kghozr8sw8qu3b5fo01x");
+      function spanCell_91p4tvgyvj6exkexocib(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_91p4tvgyvj6exkexocib");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -4273,48 +4273,48 @@ window.addEventListener('load', function () { styleCell_cuwoe88ph7becidmxqly(6, 
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(0, 0, 'tinytable_css_idrflrz4r5t8saz68h9dki') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(0, 1, 'tinytable_css_iduognc0tyzpszbf1l0s8m') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(0, 2, 'tinytable_css_iduognc0tyzpszbf1l0s8m') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(0, 3, 'tinytable_css_iduognc0tyzpszbf1l0s8m') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(1, 0, 'tinytable_css_idimbo4bc17puach7zk6vf') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(1, 1, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(1, 2, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(1, 3, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(2, 0, 'tinytable_css_idpv1pw1xzwmfm5zhibmwo') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(2, 1, 'tinytable_css_id3pivkb15p7rcfzv2u0ty') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(2, 2, 'tinytable_css_id3pivkb15p7rcfzv2u0ty') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(2, 3, 'tinytable_css_id3pivkb15p7rcfzv2u0ty') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(3, 0, 'tinytable_css_idimbo4bc17puach7zk6vf') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(3, 1, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(3, 2, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(3, 3, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(4, 0, 'tinytable_css_idimbo4bc17puach7zk6vf') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(4, 1, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(4, 2, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(4, 3, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(5, 0, 'tinytable_css_idimbo4bc17puach7zk6vf') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(5, 1, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(5, 2, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(5, 3, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 0, 'tinytable_css_idimbo4bc17puach7zk6vf') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 1, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 2, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
-window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 3, 'tinytable_css_idy7l1p6p6lqg5dt7x6moe') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(0, 0, 'tinytable_css_idrgiw79fafldmnp5p8rmj') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(0, 1, 'tinytable_css_idogborjhe3wz2hj1bzqvl') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(0, 2, 'tinytable_css_idogborjhe3wz2hj1bzqvl') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(0, 3, 'tinytable_css_idogborjhe3wz2hj1bzqvl') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(1, 0, 'tinytable_css_idx2bkh6tqx6r984z6nqf8') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(1, 1, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(1, 2, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(1, 3, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(2, 0, 'tinytable_css_idpoeg2ni2c5wzyte4x0yn') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(2, 1, 'tinytable_css_id25iejh41hwsks6pcqtrf') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(2, 2, 'tinytable_css_id25iejh41hwsks6pcqtrf') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(2, 3, 'tinytable_css_id25iejh41hwsks6pcqtrf') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(3, 0, 'tinytable_css_idx2bkh6tqx6r984z6nqf8') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(3, 1, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(3, 2, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(3, 3, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(4, 0, 'tinytable_css_idx2bkh6tqx6r984z6nqf8') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(4, 1, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(4, 2, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(4, 3, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(5, 0, 'tinytable_css_idx2bkh6tqx6r984z6nqf8') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(5, 1, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(5, 2, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(5, 3, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(6, 0, 'tinytable_css_idx2bkh6tqx6r984z6nqf8') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(6, 1, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(6, 2, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
+window.addEventListener('load', function () { styleCell_91p4tvgyvj6exkexocib(6, 3, 'tinytable_css_idt2lxx1dpok2s0e756cip') })
     </script>
 
     <style>
-    .table td.tinytable_css_idrflrz4r5t8saz68h9dki, .table th.tinytable_css_idrflrz4r5t8saz68h9dki {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_iduognc0tyzpszbf1l0s8m, .table th.tinytable_css_iduognc0tyzpszbf1l0s8m {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_idimbo4bc17puach7zk6vf, .table th.tinytable_css_idimbo4bc17puach7zk6vf {  text-align: left; }
-    .table td.tinytable_css_idy7l1p6p6lqg5dt7x6moe, .table th.tinytable_css_idy7l1p6p6lqg5dt7x6moe {  text-align: center; }
-    .table td.tinytable_css_idpv1pw1xzwmfm5zhibmwo, .table th.tinytable_css_idpv1pw1xzwmfm5zhibmwo {  border-bottom: solid 0.05em black;  text-align: left; }
-    .table td.tinytable_css_id3pivkb15p7rcfzv2u0ty, .table th.tinytable_css_id3pivkb15p7rcfzv2u0ty {  border-bottom: solid 0.05em black;  text-align: center; }
+    .table td.tinytable_css_idrgiw79fafldmnp5p8rmj, .table th.tinytable_css_idrgiw79fafldmnp5p8rmj {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idogborjhe3wz2hj1bzqvl, .table th.tinytable_css_idogborjhe3wz2hj1bzqvl {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idx2bkh6tqx6r984z6nqf8, .table th.tinytable_css_idx2bkh6tqx6r984z6nqf8 {  text-align: left; }
+    .table td.tinytable_css_idt2lxx1dpok2s0e756cip, .table th.tinytable_css_idt2lxx1dpok2s0e756cip {  text-align: center; }
+    .table td.tinytable_css_idpoeg2ni2c5wzyte4x0yn, .table th.tinytable_css_idpoeg2ni2c5wzyte4x0yn {  border-bottom: solid 0.05em black;  text-align: left; }
+    .table td.tinytable_css_id25iejh41hwsks6pcqtrf, .table th.tinytable_css_id25iejh41hwsks6pcqtrf {  border-bottom: solid 0.05em black;  text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_kghozr8sw8qu3b5fo01x" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_91p4tvgyvj6exkexocib" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        </thead><caption>Effect of State and Year on TotalRent&#39;s (Per 100k people) Impact on Number of Telehealth Visits</caption>
+        </thead><caption>Figure 2: Effect of State and Year on the Number of Cars Rented (Per 100k people) Impact on Number of Telehealth Visits</caption>
               <tbody><tr>
                 <th scope="col"> </th>
                 <th scope="col">No Fixed Effect</th>
@@ -4366,6 +4366,13 @@ window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 
 <!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
+<ul>
+<li><p>No Fixed Effect R^2 = 0.000 suggests the number of telehealth visits is unexplained by the number of rented vehicles.</p></li>
+<li><p>State Fixed Effect R^2 = -0.079 suggests adding state fixed effects improves the model’s explanatory power</p></li>
+<li><p>State and Year Fixed Effect R^2 = 0.134 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles rented.</p></li>
+<li><p>When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from 0.000 to 0.060***. This suggests that once controlling for these factors, more cars rented has a positive relationship with the number of telehealth visits suggesting higher number of vehicles rented is associated with more telehealth visits. This could be because individuals renting vehicles have lower accessibility to in person visits and would use telehealth</p></li>
+<li><p>This result is positive, different from the negative relationship shown with owning vehicles and telehalth visits, suggesting that those who rent cars use telehealth more than those who own cars.</p></li>
+</ul>
 </section>
 <section id="with-internet" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="with-internet"><span class="header-section-number">4.3</span> With Internet</h2>
@@ -4390,7 +4397,7 @@ window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 
 <span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
 <span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
-<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Effect of State and Year on WithInternet&#39;s (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
+<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Figure 3: Effect of State and Year on the Number of People with Internet Access (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
 <span id="cb65-20"><a href="#cb65-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
 <span id="cb65-21"><a href="#cb65-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
 <span id="cb65-22"><a href="#cb65-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
@@ -4401,12 +4408,12 @@ window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 
 <!-- preamble start -->
 
     <script>
-      function styleCell_n9o43xechz8y3fvz0r23(i, j, css_id) {
-        var table = document.getElementById("tinytable_n9o43xechz8y3fvz0r23");
+      function styleCell_s5sp7jz04vottowypf6b(i, j, css_id) {
+        var table = document.getElementById("tinytable_s5sp7jz04vottowypf6b");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_n9o43xechz8y3fvz0r23');
+        var table = document.getElementById('tinytable_s5sp7jz04vottowypf6b');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -4414,8 +4421,8 @@ window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_n9o43xechz8y3fvz0r23(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_n9o43xechz8y3fvz0r23");
+      function spanCell_s5sp7jz04vottowypf6b(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_s5sp7jz04vottowypf6b");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -4441,48 +4448,48 @@ window.addEventListener('load', function () { styleCell_kghozr8sw8qu3b5fo01x(6, 
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(0, 0, 'tinytable_css_idgzm3d62nvc20zyo8dzry') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(0, 1, 'tinytable_css_id5xbjo6k4zroiyop4a8u0') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(0, 2, 'tinytable_css_id5xbjo6k4zroiyop4a8u0') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(0, 3, 'tinytable_css_id5xbjo6k4zroiyop4a8u0') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(1, 0, 'tinytable_css_idb5ar5q0uitkzbxcorqmm') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(1, 1, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(1, 2, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(1, 3, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(2, 0, 'tinytable_css_idxs61vbchdpixcgucq8d5') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(2, 1, 'tinytable_css_idwrn6q9kd6woyag65wmb1') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(2, 2, 'tinytable_css_idwrn6q9kd6woyag65wmb1') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(2, 3, 'tinytable_css_idwrn6q9kd6woyag65wmb1') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(3, 0, 'tinytable_css_idb5ar5q0uitkzbxcorqmm') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(3, 1, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(3, 2, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(3, 3, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(4, 0, 'tinytable_css_idb5ar5q0uitkzbxcorqmm') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(4, 1, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(4, 2, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(4, 3, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(5, 0, 'tinytable_css_idb5ar5q0uitkzbxcorqmm') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(5, 1, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(5, 2, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(5, 3, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 0, 'tinytable_css_idb5ar5q0uitkzbxcorqmm') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 1, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 2, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
-window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 3, 'tinytable_css_idd49dxbe5ei50muw9ldpg') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(0, 0, 'tinytable_css_idipfycugmncd3v6atyn90') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(0, 1, 'tinytable_css_id4dtsr4nydkp62pm7v705') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(0, 2, 'tinytable_css_id4dtsr4nydkp62pm7v705') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(0, 3, 'tinytable_css_id4dtsr4nydkp62pm7v705') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(1, 0, 'tinytable_css_idhpiwho7l2zhwdhf8z5pc') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(1, 1, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(1, 2, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(1, 3, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(2, 0, 'tinytable_css_idmivxl0a4eoz7hmgzm7hn') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(2, 1, 'tinytable_css_id3tiqwyo35o8dzzca90zg') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(2, 2, 'tinytable_css_id3tiqwyo35o8dzzca90zg') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(2, 3, 'tinytable_css_id3tiqwyo35o8dzzca90zg') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(3, 0, 'tinytable_css_idhpiwho7l2zhwdhf8z5pc') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(3, 1, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(3, 2, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(3, 3, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(4, 0, 'tinytable_css_idhpiwho7l2zhwdhf8z5pc') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(4, 1, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(4, 2, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(4, 3, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(5, 0, 'tinytable_css_idhpiwho7l2zhwdhf8z5pc') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(5, 1, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(5, 2, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(5, 3, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(6, 0, 'tinytable_css_idhpiwho7l2zhwdhf8z5pc') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(6, 1, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(6, 2, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
+window.addEventListener('load', function () { styleCell_s5sp7jz04vottowypf6b(6, 3, 'tinytable_css_id3vh4wzv7mqouw4ln2j88') })
     </script>
 
     <style>
-    .table td.tinytable_css_idgzm3d62nvc20zyo8dzry, .table th.tinytable_css_idgzm3d62nvc20zyo8dzry {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_id5xbjo6k4zroiyop4a8u0, .table th.tinytable_css_id5xbjo6k4zroiyop4a8u0 {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_idb5ar5q0uitkzbxcorqmm, .table th.tinytable_css_idb5ar5q0uitkzbxcorqmm {  text-align: left; }
-    .table td.tinytable_css_idd49dxbe5ei50muw9ldpg, .table th.tinytable_css_idd49dxbe5ei50muw9ldpg {  text-align: center; }
-    .table td.tinytable_css_idxs61vbchdpixcgucq8d5, .table th.tinytable_css_idxs61vbchdpixcgucq8d5 {  border-bottom: solid 0.05em black;  text-align: left; }
-    .table td.tinytable_css_idwrn6q9kd6woyag65wmb1, .table th.tinytable_css_idwrn6q9kd6woyag65wmb1 {  border-bottom: solid 0.05em black;  text-align: center; }
+    .table td.tinytable_css_idipfycugmncd3v6atyn90, .table th.tinytable_css_idipfycugmncd3v6atyn90 {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_id4dtsr4nydkp62pm7v705, .table th.tinytable_css_id4dtsr4nydkp62pm7v705 {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idhpiwho7l2zhwdhf8z5pc, .table th.tinytable_css_idhpiwho7l2zhwdhf8z5pc {  text-align: left; }
+    .table td.tinytable_css_id3vh4wzv7mqouw4ln2j88, .table th.tinytable_css_id3vh4wzv7mqouw4ln2j88 {  text-align: center; }
+    .table td.tinytable_css_idmivxl0a4eoz7hmgzm7hn, .table th.tinytable_css_idmivxl0a4eoz7hmgzm7hn {  border-bottom: solid 0.05em black;  text-align: left; }
+    .table td.tinytable_css_id3tiqwyo35o8dzzca90zg, .table th.tinytable_css_id3tiqwyo35o8dzzca90zg {  border-bottom: solid 0.05em black;  text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_n9o43xechz8y3fvz0r23" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_s5sp7jz04vottowypf6b" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        </thead><caption>Effect of State and Year on WithInternet&#39;s (Per 100k people) Impact on Number of Telehealth Visits</caption>
+        </thead><caption>Figure 3: Effect of State and Year on the Number of People with Internet Access (Per 100k people) Impact on Number of Telehealth Visits</caption>
               <tbody><tr>
                 <th scope="col"> </th>
                 <th scope="col">No Fixed Effect</th>
@@ -4535,10 +4542,10 @@ window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 
 </div>
 </div>
 <ul>
-<li><p>No Fixed Effect R^2 = 0.037 suggests the number of telehealth visits is explained little by having Internet Access</p></li>
-<li><p>State Fixed Effect R^2 = 0.335 suggests adding state fixed effects improves the model’s explanatory power</p></li>
-<li><p>State and Year Fixed Effect R^2 = 0.337 suggests including both state and year fixed effects improves the model even more, explaining more variation in number of telehealth visits due to having internet</p></li>
-<li><p>When State and Year fixed effects are included, the relationship between having internet and telehealth visits changes from -6.165*** to -2.315***. This suggests that once controlling for these factors, having internet still has a negative relationship with the number of telehealth visits, but it appears less negative once controlling for state and year.</p></li>
+<li><p>No Fixed Effect R^2 = 0.013 suggests the number of telehealth visits is explained little by having Internet Access</p></li>
+<li><p>State Fixed Effect R^2 = 0.132 suggests adding state fixed effects improves the model’s explanatory power</p></li>
+<li><p>State and Year Fixed Effect R^2 = 0.136 suggests including both state and year fixed effects improves the model slightly more, explaining more variation in number of telehealth visits due to having internet.</p></li>
+<li><p>When State and Year fixed effects are included, the relationship between having internet and telehealth visits changes from -0.036*** to -0.056***. This suggests that once controlling for these factors, having internet still has a negative relationship with the number of telehealth visits, and it appears more negative once controlling for state and year.</p></li>
 </ul>
 </section>
 <section id="hospital-count" class="level2" data-number="4.4">
@@ -4564,7 +4571,7 @@ window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 
 <span id="cb66-16"><a href="#cb66-16" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
 <span id="cb66-17"><a href="#cb66-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb66-18"><a href="#cb66-18" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
-<span id="cb66-19"><a href="#cb66-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Effect of State and Year on Hospital Count&#39;s (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
+<span id="cb66-19"><a href="#cb66-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Figure 4: Effect of State and Year on The Number of Hospitals in each state (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
 <span id="cb66-20"><a href="#cb66-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
 <span id="cb66-21"><a href="#cb66-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
 <span id="cb66-22"><a href="#cb66-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
@@ -4575,12 +4582,12 @@ window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 
 <!-- preamble start -->
 
     <script>
-      function styleCell_k8byqncux36tiytiu9dl(i, j, css_id) {
-        var table = document.getElementById("tinytable_k8byqncux36tiytiu9dl");
+      function styleCell_18dwp2rku6cupnx3uwc6(i, j, css_id) {
+        var table = document.getElementById("tinytable_18dwp2rku6cupnx3uwc6");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_k8byqncux36tiytiu9dl');
+        var table = document.getElementById('tinytable_18dwp2rku6cupnx3uwc6');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -4588,8 +4595,8 @@ window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_k8byqncux36tiytiu9dl(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_k8byqncux36tiytiu9dl");
+      function spanCell_18dwp2rku6cupnx3uwc6(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_18dwp2rku6cupnx3uwc6");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -4615,48 +4622,48 @@ window.addEventListener('load', function () { styleCell_n9o43xechz8y3fvz0r23(6, 
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(0, 0, 'tinytable_css_idi1f2nim24gj0qajec0m6') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(0, 1, 'tinytable_css_id8mjfv6r47hzgzlhd6syu') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(0, 2, 'tinytable_css_id8mjfv6r47hzgzlhd6syu') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(0, 3, 'tinytable_css_id8mjfv6r47hzgzlhd6syu') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(1, 0, 'tinytable_css_id7jbuachqayk3jds9bbp8') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(1, 1, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(1, 2, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(1, 3, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(2, 0, 'tinytable_css_idxkgjvnfce4hxwtinghzt') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(2, 1, 'tinytable_css_id5zitwlbf2k66xwyi3opf') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(2, 2, 'tinytable_css_id5zitwlbf2k66xwyi3opf') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(2, 3, 'tinytable_css_id5zitwlbf2k66xwyi3opf') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(3, 0, 'tinytable_css_id7jbuachqayk3jds9bbp8') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(3, 1, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(3, 2, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(3, 3, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(4, 0, 'tinytable_css_id7jbuachqayk3jds9bbp8') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(4, 1, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(4, 2, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(4, 3, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(5, 0, 'tinytable_css_id7jbuachqayk3jds9bbp8') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(5, 1, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(5, 2, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(5, 3, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(6, 0, 'tinytable_css_id7jbuachqayk3jds9bbp8') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(6, 1, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(6, 2, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
-window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(6, 3, 'tinytable_css_idlvn9cro9laxbjk195nwe') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(0, 0, 'tinytable_css_id1oswkcs8md42l0z3fjxv') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(0, 1, 'tinytable_css_idnwiom432na62jaevu7kl') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(0, 2, 'tinytable_css_idnwiom432na62jaevu7kl') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(0, 3, 'tinytable_css_idnwiom432na62jaevu7kl') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(1, 0, 'tinytable_css_idy3amkmso8dxgpwsk4js4') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(1, 1, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(1, 2, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(1, 3, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(2, 0, 'tinytable_css_id4635tuubiczk5v9g5eq4') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(2, 1, 'tinytable_css_id39mb7tf5awm64z9b16sn') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(2, 2, 'tinytable_css_id39mb7tf5awm64z9b16sn') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(2, 3, 'tinytable_css_id39mb7tf5awm64z9b16sn') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(3, 0, 'tinytable_css_idy3amkmso8dxgpwsk4js4') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(3, 1, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(3, 2, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(3, 3, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(4, 0, 'tinytable_css_idy3amkmso8dxgpwsk4js4') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(4, 1, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(4, 2, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(4, 3, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(5, 0, 'tinytable_css_idy3amkmso8dxgpwsk4js4') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(5, 1, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(5, 2, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(5, 3, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(6, 0, 'tinytable_css_idy3amkmso8dxgpwsk4js4') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(6, 1, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(6, 2, 'tinytable_css_idvitp2p6w09sduuev9nob') })
+window.addEventListener('load', function () { styleCell_18dwp2rku6cupnx3uwc6(6, 3, 'tinytable_css_idvitp2p6w09sduuev9nob') })
     </script>
 
     <style>
-    .table td.tinytable_css_idi1f2nim24gj0qajec0m6, .table th.tinytable_css_idi1f2nim24gj0qajec0m6 {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_id8mjfv6r47hzgzlhd6syu, .table th.tinytable_css_id8mjfv6r47hzgzlhd6syu {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_id7jbuachqayk3jds9bbp8, .table th.tinytable_css_id7jbuachqayk3jds9bbp8 {  text-align: left; }
-    .table td.tinytable_css_idlvn9cro9laxbjk195nwe, .table th.tinytable_css_idlvn9cro9laxbjk195nwe {  text-align: center; }
-    .table td.tinytable_css_idxkgjvnfce4hxwtinghzt, .table th.tinytable_css_idxkgjvnfce4hxwtinghzt {  border-bottom: solid 0.05em black;  text-align: left; }
-    .table td.tinytable_css_id5zitwlbf2k66xwyi3opf, .table th.tinytable_css_id5zitwlbf2k66xwyi3opf {  border-bottom: solid 0.05em black;  text-align: center; }
+    .table td.tinytable_css_id1oswkcs8md42l0z3fjxv, .table th.tinytable_css_id1oswkcs8md42l0z3fjxv {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idnwiom432na62jaevu7kl, .table th.tinytable_css_idnwiom432na62jaevu7kl {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idy3amkmso8dxgpwsk4js4, .table th.tinytable_css_idy3amkmso8dxgpwsk4js4 {  text-align: left; }
+    .table td.tinytable_css_idvitp2p6w09sduuev9nob, .table th.tinytable_css_idvitp2p6w09sduuev9nob {  text-align: center; }
+    .table td.tinytable_css_id4635tuubiczk5v9g5eq4, .table th.tinytable_css_id4635tuubiczk5v9g5eq4 {  border-bottom: solid 0.05em black;  text-align: left; }
+    .table td.tinytable_css_id39mb7tf5awm64z9b16sn, .table th.tinytable_css_id39mb7tf5awm64z9b16sn {  border-bottom: solid 0.05em black;  text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_k8byqncux36tiytiu9dl" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_18dwp2rku6cupnx3uwc6" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        </thead><caption>Effect of State and Year on Hospital Count&#39;s (Per 100k people) Impact on Number of Telehealth Visits</caption>
+        </thead><caption>Figure 4: Effect of State and Year on The Number of Hospitals in each state (Per 100k people) Impact on Number of Telehealth Visits</caption>
               <tbody><tr>
                 <th scope="col"> </th>
                 <th scope="col">No Fixed Effect</th>
@@ -4708,6 +4715,13 @@ window.addEventListener('load', function () { styleCell_k8byqncux36tiytiu9dl(6, 
 <!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
+<ul>
+<li><p>No Fixed Effect R^2 = 0.004 suggests the number of telehealth visits is explained little by the number of hospitals per 100k people in that state.</p></li>
+<li><p>State Fixed Effect R^2 = 0.090 suggests adding state fixed effects improves the model’s explanatory power</p></li>
+<li><p>State and Year Fixed Effect R^2 = 0.133 suggests including both state and year fixed effects improves the model more, explaining more variation in number of telehealth visits due to the number of hospitals per 100k people in that state.</p></li>
+<li><p>When State and Year fixed effects are included, the relationship between the number of hospitals and telehealth visits changes from -34.734*** to -423.203***. This suggests that once controlling for these factors, the number of hospitals still has a negative relationship with the number of telehealth visits, and it appears more much more negative once controlling for state and year.</p></li>
+<li><p>This suggests that more hospitlas has a lower use of telehelath visits. This could be beacause of more availability of hospitals to treat patients without telehealth.</p></li>
+</ul>
 <!-- -->
 
 </section>
@@ -6164,7 +6178,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb67-1411"><a href="#cb67-1411" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
 <span id="cb67-1412"><a href="#cb67-1412" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb67-1413"><a href="#cb67-1413" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
-<span id="cb67-1414"><a href="#cb67-1414" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Effect of State and Year on TotalOwned&#39; (Per 100k people) impact on Number of Telehelath Visits&quot;</span>,</span>
+<span id="cb67-1414"><a href="#cb67-1414" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Figure 1: Effect of State and Year on the Number of Cars Owned (Per 100k people) impact on Number of Telehelath Visits&quot;</span>,</span>
 <span id="cb67-1415"><a href="#cb67-1415" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
 <span id="cb67-1416"><a href="#cb67-1416" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
 <span id="cb67-1417"><a href="#cb67-1417" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
@@ -6172,13 +6186,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb67-1419"><a href="#cb67-1419" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb67-1420"><a href="#cb67-1420" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb67-1421"><a href="#cb67-1421" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1422"><a href="#cb67-1422" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>No Fixed Effect R^2 = 0.082 suggests the number of telehealth visits is explained little by how many vehicles owned.</span>
+<span id="cb67-1422"><a href="#cb67-1422" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>No Fixed Effect R^2 = 0.002 suggests the number of telehealth visits is explained little by how many vehicles owned.</span>
 <span id="cb67-1423"><a href="#cb67-1423" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1424"><a href="#cb67-1424" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State Fixed Effect R^2 = 0.333 suggests adding state fixed effects improves the model’s explanatory power.</span>
+<span id="cb67-1424"><a href="#cb67-1424" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State Fixed Effect R^2 = 0.126 suggests adding state fixed effects improves the model’s explanatory power.</span>
 <span id="cb67-1425"><a href="#cb67-1425" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1426"><a href="#cb67-1426" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State and Year Fixed Effect R^2 = 0.337 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles owned.</span>
+<span id="cb67-1426"><a href="#cb67-1426" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State and Year Fixed Effect R^2 = 0.135 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles owned.</span>
 <span id="cb67-1427"><a href="#cb67-1427" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1428"><a href="#cb67-1428" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from -8.828*** to -3.134***. This suggests that once controlling for these factors, more cars owned still has a negative relationship with the number of telehealth visits, but it appears less negative once controling for state and year.</span>
+<span id="cb67-1428"><a href="#cb67-1428" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from -0.014*** to -0.094***. This suggests that once controlling for these factors, more cars owned still has a negative relationship with the number of telehealth visitssuggesting higher number of vehicles owned is associated with fewer telehealth visits. This could be because individuals with more vehicles have better access to in-person healthcare and don&#39;t need to use telehealth.</span>
 <span id="cb67-1429"><a href="#cb67-1429" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb67-1430"><a href="#cb67-1430" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb67-1431"><a href="#cb67-1431" aria-hidden="true" tabindex="-1"></a><span class="fu">## Total Vehicles Rent Per 100k</span></span>
@@ -6202,7 +6216,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb67-1451"><a href="#cb67-1451" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
 <span id="cb67-1452"><a href="#cb67-1452" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb67-1453"><a href="#cb67-1453" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
-<span id="cb67-1454"><a href="#cb67-1454" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Effect of State and Year on TotalRent&#39;s (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
+<span id="cb67-1454"><a href="#cb67-1454" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Figure 2: Effect of State and Year on the Number of Cars Rented (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
 <span id="cb67-1455"><a href="#cb67-1455" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
 <span id="cb67-1456"><a href="#cb67-1456" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
 <span id="cb67-1457"><a href="#cb67-1457" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
@@ -6210,72 +6224,91 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb67-1459"><a href="#cb67-1459" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb67-1460"><a href="#cb67-1460" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb67-1461"><a href="#cb67-1461" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1462"><a href="#cb67-1462" aria-hidden="true" tabindex="-1"></a><span class="fu">## With Internet</span></span>
+<span id="cb67-1462"><a href="#cb67-1462" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>No Fixed Effect R^2 = 0.000 suggests the number of telehealth visits is unexplained by the number of rented vehicles.</span>
 <span id="cb67-1463"><a href="#cb67-1463" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1466"><a href="#cb67-1466" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb67-1467"><a href="#cb67-1467" aria-hidden="true" tabindex="-1"></a>model1<span class="ot">&lt;-</span><span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>WithInternetPer100k, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># without Income fixed effects</span></span>
-<span id="cb67-1468"><a href="#cb67-1468" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>WithInternetPer100k <span class="sc">+</span> State, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># with State fixed effects</span></span>
-<span id="cb67-1469"><a href="#cb67-1469" aria-hidden="true" tabindex="-1"></a>model3<span class="ot">&lt;-</span><span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>WithInternetPer100k <span class="sc">+</span> State <span class="sc">+</span> Year, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># with State and Year fixed effects</span></span>
-<span id="cb67-1470"><a href="#cb67-1470" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1471"><a href="#cb67-1471" aria-hidden="true" tabindex="-1"></a>regz <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">No Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model1,</span>
-<span id="cb67-1472"><a href="#cb67-1472" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">State Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model2,</span>
-<span id="cb67-1473"><a href="#cb67-1473" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">State and Year Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model3)</span>
-<span id="cb67-1474"><a href="#cb67-1474" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1475"><a href="#cb67-1475" aria-hidden="true" tabindex="-1"></a>coefz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;WithInternetPer100k&quot;</span> <span class="ot">=</span> <span class="st">&quot;With Internet&quot;</span>)</span>
-<span id="cb67-1476"><a href="#cb67-1476" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1477"><a href="#cb67-1477" aria-hidden="true" tabindex="-1"></a>gofz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nobs&quot;</span>, <span class="st">&quot;r.squared&quot;</span>)</span>
-<span id="cb67-1478"><a href="#cb67-1478" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1479"><a href="#cb67-1479" aria-hidden="true" tabindex="-1"></a>rowz <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="st">&#39;State Fixed Effects&#39;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;Yes&quot;</span>,</span>
-<span id="cb67-1480"><a href="#cb67-1480" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;Year Fixed Effects&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>),</span>
-<span id="cb67-1481"><a href="#cb67-1481" aria-hidden="true" tabindex="-1"></a>                             <span class="at">byrow =</span> T, <span class="at">nrow =</span> <span class="dv">2</span>)) <span class="co"># 2 rows</span></span>
-<span id="cb67-1482"><a href="#cb67-1482" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
-<span id="cb67-1483"><a href="#cb67-1483" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1484"><a href="#cb67-1484" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
-<span id="cb67-1485"><a href="#cb67-1485" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Effect of State and Year on WithInternet&#39;s (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
-<span id="cb67-1486"><a href="#cb67-1486" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
-<span id="cb67-1487"><a href="#cb67-1487" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
-<span id="cb67-1488"><a href="#cb67-1488" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
-<span id="cb67-1489"><a href="#cb67-1489" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> coefz) </span>
-<span id="cb67-1490"><a href="#cb67-1490" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb67-1491"><a href="#cb67-1491" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1492"><a href="#cb67-1492" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>No Fixed Effect R^2 = 0.037 suggests the number of telehealth visits is explained little by having Internet Access</span>
+<span id="cb67-1464"><a href="#cb67-1464" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State Fixed Effect R^2 = -0.079 suggests adding state fixed effects improves the model’s explanatory power</span>
+<span id="cb67-1465"><a href="#cb67-1465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1466"><a href="#cb67-1466" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State and Year Fixed Effect R^2 = 0.134 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles rented.</span>
+<span id="cb67-1467"><a href="#cb67-1467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1468"><a href="#cb67-1468" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from 0.000 to 0.060***. This suggests that once controlling for these factors, more cars rented has a positive relationship with the number of telehealth visits suggesting higher number of vehicles rented is associated with more telehealth visits. This could be because individuals renting vehicles have lower accessibility to in person visits and would use telehealth</span>
+<span id="cb67-1469"><a href="#cb67-1469" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1470"><a href="#cb67-1470" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>This result is positive, different from the negative relationship shown with owning vehicles and telehalth visits, suggesting that those who rent cars use telehealth more than those who own cars.</span>
+<span id="cb67-1471"><a href="#cb67-1471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1472"><a href="#cb67-1472" aria-hidden="true" tabindex="-1"></a><span class="fu">## With Internet</span></span>
+<span id="cb67-1473"><a href="#cb67-1473" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1476"><a href="#cb67-1476" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-1477"><a href="#cb67-1477" aria-hidden="true" tabindex="-1"></a>model1<span class="ot">&lt;-</span><span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>WithInternetPer100k, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># without Income fixed effects</span></span>
+<span id="cb67-1478"><a href="#cb67-1478" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>WithInternetPer100k <span class="sc">+</span> State, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># with State fixed effects</span></span>
+<span id="cb67-1479"><a href="#cb67-1479" aria-hidden="true" tabindex="-1"></a>model3<span class="ot">&lt;-</span><span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>WithInternetPer100k <span class="sc">+</span> State <span class="sc">+</span> Year, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># with State and Year fixed effects</span></span>
+<span id="cb67-1480"><a href="#cb67-1480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1481"><a href="#cb67-1481" aria-hidden="true" tabindex="-1"></a>regz <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">No Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model1,</span>
+<span id="cb67-1482"><a href="#cb67-1482" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">State Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model2,</span>
+<span id="cb67-1483"><a href="#cb67-1483" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">State and Year Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model3)</span>
+<span id="cb67-1484"><a href="#cb67-1484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1485"><a href="#cb67-1485" aria-hidden="true" tabindex="-1"></a>coefz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;WithInternetPer100k&quot;</span> <span class="ot">=</span> <span class="st">&quot;With Internet&quot;</span>)</span>
+<span id="cb67-1486"><a href="#cb67-1486" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1487"><a href="#cb67-1487" aria-hidden="true" tabindex="-1"></a>gofz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nobs&quot;</span>, <span class="st">&quot;r.squared&quot;</span>)</span>
+<span id="cb67-1488"><a href="#cb67-1488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1489"><a href="#cb67-1489" aria-hidden="true" tabindex="-1"></a>rowz <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="st">&#39;State Fixed Effects&#39;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;Yes&quot;</span>,</span>
+<span id="cb67-1490"><a href="#cb67-1490" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;Year Fixed Effects&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>),</span>
+<span id="cb67-1491"><a href="#cb67-1491" aria-hidden="true" tabindex="-1"></a>                             <span class="at">byrow =</span> T, <span class="at">nrow =</span> <span class="dv">2</span>)) <span class="co"># 2 rows</span></span>
+<span id="cb67-1492"><a href="#cb67-1492" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
 <span id="cb67-1493"><a href="#cb67-1493" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1494"><a href="#cb67-1494" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State Fixed Effect R^2 = 0.335 suggests adding state fixed effects improves the model’s explanatory power</span>
-<span id="cb67-1495"><a href="#cb67-1495" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1496"><a href="#cb67-1496" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State and Year Fixed Effect R^2 = 0.337 suggests including both state and year fixed effects improves the model even more, explaining more variation in number of telehealth visits due to having internet</span>
-<span id="cb67-1497"><a href="#cb67-1497" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1498"><a href="#cb67-1498" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>When State and Year fixed effects are included, the relationship between having internet and telehealth visits changes from -6.165*** to -2.315***. This suggests that once controlling for these factors, having internet still has a negative relationship with the number of telehealth visits, but it appears less negative once controlling for state and year.</span>
-<span id="cb67-1499"><a href="#cb67-1499" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1500"><a href="#cb67-1500" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1501"><a href="#cb67-1501" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hospital Count</span></span>
-<span id="cb67-1502"><a href="#cb67-1502" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1505"><a href="#cb67-1505" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb67-1506"><a href="#cb67-1506" aria-hidden="true" tabindex="-1"></a>model1<span class="ot">&lt;-</span><span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>HospitalCountPer100k, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># without Income fixed effects</span></span>
-<span id="cb67-1507"><a href="#cb67-1507" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>HospitalCountPer100k <span class="sc">+</span> State, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># with State fixed effects</span></span>
-<span id="cb67-1508"><a href="#cb67-1508" aria-hidden="true" tabindex="-1"></a>model3<span class="ot">&lt;-</span><span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>HospitalCountPer100k <span class="sc">+</span> State <span class="sc">+</span> Year, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># with State and Year fixed effects</span></span>
+<span id="cb67-1494"><a href="#cb67-1494" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
+<span id="cb67-1495"><a href="#cb67-1495" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Figure 3: Effect of State and Year on the Number of People with Internet Access (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
+<span id="cb67-1496"><a href="#cb67-1496" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
+<span id="cb67-1497"><a href="#cb67-1497" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
+<span id="cb67-1498"><a href="#cb67-1498" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
+<span id="cb67-1499"><a href="#cb67-1499" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> coefz) </span>
+<span id="cb67-1500"><a href="#cb67-1500" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-1501"><a href="#cb67-1501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1502"><a href="#cb67-1502" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>No Fixed Effect R^2 = 0.013 suggests the number of telehealth visits is explained little by having Internet Access</span>
+<span id="cb67-1503"><a href="#cb67-1503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1504"><a href="#cb67-1504" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State Fixed Effect R^2 = 0.132 suggests adding state fixed effects improves the model’s explanatory power</span>
+<span id="cb67-1505"><a href="#cb67-1505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1506"><a href="#cb67-1506" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State and Year Fixed Effect R^2 = 0.136 suggests including both state and year fixed effects improves the model slightly more, explaining more variation in number of telehealth visits due to having internet.</span>
+<span id="cb67-1507"><a href="#cb67-1507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1508"><a href="#cb67-1508" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>When State and Year fixed effects are included, the relationship between having internet and telehealth visits changes from -0.036*** to -0.056***. This suggests that once controlling for these factors, having internet still has a negative relationship with the number of telehealth visits, and it appears more negative once controlling for state and year.</span>
 <span id="cb67-1509"><a href="#cb67-1509" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1510"><a href="#cb67-1510" aria-hidden="true" tabindex="-1"></a>regz <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">No Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model1,</span>
-<span id="cb67-1511"><a href="#cb67-1511" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">State Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model2,</span>
-<span id="cb67-1512"><a href="#cb67-1512" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">State and Year Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model3)</span>
-<span id="cb67-1513"><a href="#cb67-1513" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1514"><a href="#cb67-1514" aria-hidden="true" tabindex="-1"></a>coefz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;HospitalCountPer100k&quot;</span> <span class="ot">=</span> <span class="st">&quot;Hospital Count&quot;</span>)</span>
-<span id="cb67-1515"><a href="#cb67-1515" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1516"><a href="#cb67-1516" aria-hidden="true" tabindex="-1"></a>gofz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nobs&quot;</span>, <span class="st">&quot;r.squared&quot;</span>)</span>
-<span id="cb67-1517"><a href="#cb67-1517" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1518"><a href="#cb67-1518" aria-hidden="true" tabindex="-1"></a>rowz <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="st">&#39;State Fixed Effects&#39;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;Yes&quot;</span>,</span>
-<span id="cb67-1519"><a href="#cb67-1519" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;Year Fixed Effects&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>),</span>
-<span id="cb67-1520"><a href="#cb67-1520" aria-hidden="true" tabindex="-1"></a>                             <span class="at">byrow =</span> T, <span class="at">nrow =</span> <span class="dv">2</span>)) <span class="co"># 2 rows</span></span>
-<span id="cb67-1521"><a href="#cb67-1521" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
-<span id="cb67-1522"><a href="#cb67-1522" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1523"><a href="#cb67-1523" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
-<span id="cb67-1524"><a href="#cb67-1524" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Effect of State and Year on Hospital Count&#39;s (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
-<span id="cb67-1525"><a href="#cb67-1525" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
-<span id="cb67-1526"><a href="#cb67-1526" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
-<span id="cb67-1527"><a href="#cb67-1527" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
-<span id="cb67-1528"><a href="#cb67-1528" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> coefz) </span>
-<span id="cb67-1529"><a href="#cb67-1529" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-1530"><a href="#cb67-1530" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb67-1531"><a href="#cb67-1531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1510"><a href="#cb67-1510" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1511"><a href="#cb67-1511" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hospital Count</span></span>
+<span id="cb67-1512"><a href="#cb67-1512" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1515"><a href="#cb67-1515" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-1516"><a href="#cb67-1516" aria-hidden="true" tabindex="-1"></a>model1<span class="ot">&lt;-</span><span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>HospitalCountPer100k, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># without Income fixed effects</span></span>
+<span id="cb67-1517"><a href="#cb67-1517" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>HospitalCountPer100k <span class="sc">+</span> State, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># with State fixed effects</span></span>
+<span id="cb67-1518"><a href="#cb67-1518" aria-hidden="true" tabindex="-1"></a>model3<span class="ot">&lt;-</span><span class="fu">lm</span>(TelehealthVisitsPer100k<span class="sc">~</span>HospitalCountPer100k <span class="sc">+</span> State <span class="sc">+</span> Year, TelehealthandPopulation_VehicleInternetHospital) <span class="co"># with State and Year fixed effects</span></span>
+<span id="cb67-1519"><a href="#cb67-1519" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1520"><a href="#cb67-1520" aria-hidden="true" tabindex="-1"></a>regz <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">No Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model1,</span>
+<span id="cb67-1521"><a href="#cb67-1521" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">State Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model2,</span>
+<span id="cb67-1522"><a href="#cb67-1522" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">State and Year Fixed Effect</span><span class="st">`</span> <span class="ot">=</span> model3)</span>
+<span id="cb67-1523"><a href="#cb67-1523" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1524"><a href="#cb67-1524" aria-hidden="true" tabindex="-1"></a>coefz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;HospitalCountPer100k&quot;</span> <span class="ot">=</span> <span class="st">&quot;Hospital Count&quot;</span>)</span>
+<span id="cb67-1525"><a href="#cb67-1525" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1526"><a href="#cb67-1526" aria-hidden="true" tabindex="-1"></a>gofz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nobs&quot;</span>, <span class="st">&quot;r.squared&quot;</span>)</span>
+<span id="cb67-1527"><a href="#cb67-1527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1528"><a href="#cb67-1528" aria-hidden="true" tabindex="-1"></a>rowz <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="st">&#39;State Fixed Effects&#39;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;Yes&quot;</span>,</span>
+<span id="cb67-1529"><a href="#cb67-1529" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;Year Fixed Effects&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>),</span>
+<span id="cb67-1530"><a href="#cb67-1530" aria-hidden="true" tabindex="-1"></a>                             <span class="at">byrow =</span> T, <span class="at">nrow =</span> <span class="dv">2</span>)) <span class="co"># 2 rows</span></span>
+<span id="cb67-1531"><a href="#cb67-1531" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rowz, <span class="st">&#39;position&#39;</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>) <span class="co"># rows 3 and 4</span></span>
+<span id="cb67-1532"><a href="#cb67-1532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1533"><a href="#cb67-1533" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(regz,</span>
+<span id="cb67-1534"><a href="#cb67-1534" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;Figure 4: Effect of State and Year on The Number of Hospitals in each state (Per 100k people) Impact on Number of Telehealth Visits&quot;</span>,</span>
+<span id="cb67-1535"><a href="#cb67-1535" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">&quot;{estimate}{stars}&quot;</span>,</span>
+<span id="cb67-1536"><a href="#cb67-1536" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_map =</span> gofz,</span>
+<span id="cb67-1537"><a href="#cb67-1537" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rowz,</span>
+<span id="cb67-1538"><a href="#cb67-1538" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> coefz) </span>
+<span id="cb67-1539"><a href="#cb67-1539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1540"><a href="#cb67-1540" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-1541"><a href="#cb67-1541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1542"><a href="#cb67-1542" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>No Fixed Effect R^2 = 0.004 suggests the number of telehealth visits is explained little by the number of hospitals per 100k people in that state.</span>
+<span id="cb67-1543"><a href="#cb67-1543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1544"><a href="#cb67-1544" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State Fixed Effect R^2 = 0.090 suggests adding state fixed effects improves the model’s explanatory power</span>
+<span id="cb67-1545"><a href="#cb67-1545" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1546"><a href="#cb67-1546" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>State and Year Fixed Effect R^2 = 0.133 suggests including both state and year fixed effects improves the model more, explaining more variation in number of telehealth visits due to the number of hospitals per 100k people in that state.</span>
+<span id="cb67-1547"><a href="#cb67-1547" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1548"><a href="#cb67-1548" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>When State and Year fixed effects are included, the relationship between the number of hospitals and telehealth visits changes from -34.734*** to -423.203***. This suggests that once controlling for these factors, the number of hospitals still has a negative relationship with the number of telehealth visits, and it appears more much more negative once controlling for state and year. </span>
+<span id="cb67-1549"><a href="#cb67-1549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-1550"><a href="#cb67-1550" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>This suggests that more hospitlas has a lower use of telehelath visits. This could be beacause of more availability of hospitals to treat patients without telehealth.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
