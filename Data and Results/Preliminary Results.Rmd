@@ -1101,6 +1101,24 @@ UNRATE <- read.csv("UNRATE.csv", header = TRUE, sep = ",")
 
 ```
 
+```{r}
+GDP <- GDP %>%
+    mutate(Year = year(as.Date(observation_date)))
+
+UNRATE <- UNRATE %>%
+    mutate(Year = year(as.Date(observation_date)))
+
+GDP <- dplyr::select(GDP, -observation_date)
+UNRATE <- dplyr::select(UNRATE, -observation_date)
+
+```
+
+```{r}
+# Merge only on Year and keep only GDP and UNRATE
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital %>%
+    inner_join(GDP, by = "Year") %>%
+    inner_join(UNRATE, by = "Year")
+```
 
 # Exploration
 
@@ -1288,9 +1306,6 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 ```
 
 
-
-
-
 # Fixed Effect
 
 ## Total Vehicles Owned Per 100k
@@ -1315,7 +1330,7 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Figure 1: Effect of State and Year on the Number of Cars Owned (Per 100k people) impact on Number of Telehelath Visits",
+             title = "Effect of State and Year on the Number of Cars Owned (Per 100k people) impact on Number of Telehelath Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
@@ -1353,7 +1368,7 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Figure 2: Effect of State and Year on the Number of Cars Rented (Per 100k people) Impact on Number of Telehealth Visits",
+             title = "Effect of State and Year on the Number of Cars Rented (Per 100k people) Impact on Number of Telehealth Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
@@ -1392,7 +1407,7 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Figure 3: Effect of State and Year on the Number of People with Internet Access (Per 100k people) Impact on Number of Telehealth Visits",
+             title = "Effect of State and Year on the Number of People with Internet Access (Per 100k people) Impact on Number of Telehealth Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
@@ -1429,7 +1444,7 @@ rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
 attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
 
 modelsummary(regz,
-             title = "Figure 4: Effect of State and Year on The Number of Hospitals in each state (Per 100k people) Impact on Number of Telehealth Visits",
+             title = "Effect of State and Year on The Number of Hospitals in each state (Per 100k people) Impact on Number of Telehealth Visits",
              estimate = "{estimate}{stars}",
              gof_map = gofz,
              add_rows = rowz,
@@ -1446,3 +1461,63 @@ modelsummary(regz,
 * When State and Year fixed effects are included, the relationship between the number of hospitals and telehealth visits changes from -34.734*** to -423.203***. This suggests that once controlling for these factors, the number of hospitals still has a negative relationship with the number of telehealth visits, and it appears more much more negative once controlling for state and year. 
 
 * This suggests that more hospitlas has a lower use of telehelath visits. This could be beacause of more availability of hospitals to treat patients without telehealth.
+
+
+## GDP Fixed Effect
+
+```{r}
+model1<-lm(TelehealthVisitsPer100k~GDP, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without Income fixed effects
+model2 <- lm(TelehealthVisitsPer100k~GDP + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+model3<-lm(TelehealthVisitsPer100k~GDP + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("GDP" = "Gross Domestic Product (GDP)")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = T, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
+
+modelsummary(regz,
+             title = "Effect of State and Year on GDP's Impact on Number of Telehealth Visits",
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz) 
+
+```
+
+## UNRATE Fixed Effect
+
+```{r}
+model1<-lm(TelehealthVisitsPer100k~UNRATE, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without Income fixed effects
+model2 <- lm(TelehealthVisitsPer100k~UNRATE + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+model3<-lm(TelehealthVisitsPer100k~UNRATE + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("UNRATE" = "Unemployement Rate")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = T, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
+
+modelsummary(regz,
+             title = "Effect of State and Year on Unemployement Rate's Impact on Number of Telehealth Visits",
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz) 
+
+```
+
