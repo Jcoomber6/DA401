@@ -1092,6 +1092,16 @@ TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_Vehic
 ```
 
 
+## GDP and UNRATE Data
+
+```{r}
+# Load the data
+GDP <- read.csv("GDP.csv", header = TRUE, sep = ",")
+UNRATE <- read.csv("UNRATE.csv", header = TRUE, sep = ",")
+
+```
+
+
 # Exploration
 
 ### By Race
@@ -1262,6 +1272,23 @@ ggplot(internet_counts_long, aes(x = reorder(InternetAccessType, Count), y = Cou
   theme(legend.position = "none")  # Remove the legend
 
 ```
+
+```{r}
+TelehealthandPopulation_VehicleInternetHospital %>%
+    filter(RuralUrban != "All") %>%
+    ggplot(aes(x = RuralUrban, y = TelehealthVisitsPer100k, fill = RuralUrban)) +
+    geom_bar(stat = "identity") +
+    labs(title = "Telehealth Visits (Per 100k people in each state) by Rural vs. Urban", 
+         x = "Category of State", 
+         y = "Number of Telehealth Visits") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas+
+    theme_minimal() +
+    theme(legend.position = "none")
+
+```
+
+
+
 
 
 # Fixed Effect
