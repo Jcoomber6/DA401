@@ -1179,17 +1179,14 @@ TelehealthandPopulation_VehicleInternet %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
 
 ```
-### By Year
+### Telehealth Visits By Year
 
 ```{r}
 # Create bar plot
 TelehealthandPopulation_VehicleInternet %>%
   ggplot(aes(x = Year, y = TelehealthVisitsPer100k, fill = factor(Year))) +  # Assign unique color per year
   geom_bar(stat = "identity") +
-  geom_text(aes(label = scales::comma(TelehealthVisitsPer100k)), 
-            vjust = -0.5, size = 5) +  # Add text labels above bars
-  labs(title = "Telehealth Visits by Year",
-       x = "Year",
+  labs(x = "Year",
        y = "Number of Telehealth Visits (Per 100k people)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal()+
@@ -1198,17 +1195,18 @@ TelehealthandPopulation_VehicleInternet %>%
 
 ```
 
+### Eligible Services By Year
 
 ```{r}
 # Create bar plot
 TelehealthandPopulation_VehicleInternet %>%
   ggplot(aes(x = Year, y = EligibleServicesCountPer100k, fill = factor(Year))) +
   geom_bar(stat = "identity") +
-  labs(title = "Eligible Services by Year",
-       x = "Year",
+  labs(x = "Year",
        y = "Number of Eligible Services (Per 100k People)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = "none")  # Remove the legend
 
 ```
 
@@ -1299,8 +1297,7 @@ TelehealthandPopulation_VehicleInternetHospital %>%
     filter(RuralUrban != "All") %>%
     ggplot(aes(x = RuralUrban, y = TelehealthVisitsPer100k, fill = RuralUrban)) +
     geom_bar(stat = "identity") +
-    labs(title = "Telehealth Visits (Per 100k people in each state) by Rural vs. Urban", 
-         x = "Category of State", 
+    labs(x = "Category of State", 
          y = "Number of Telehealth Visits") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas+
     theme_minimal() +
@@ -1331,9 +1328,9 @@ regz <- list(`No Fixed Effect` = model1,
              `State and Year Fixed Effect` = model3)
 
 coefz <- c("TotalOwnedPer100k" = "Vehicles Owned",
-           "TotalRentPer100k" = "Renters",
-           "WithInternetPer100k" = "Internet Access",
-           "HospitalCountPer100k" = "Hospitals",
+           "TotalRentPer100k" = "Vehicles Rented",
+           "WithInternetPer100k" = "With Internet Access",
+           "HospitalCountPer100k" = "Hospitals Count",
            "GDP" = "GDP",
            "UNRATE" = "Unemployment Rate")
 
