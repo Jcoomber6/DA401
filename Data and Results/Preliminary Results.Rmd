@@ -1186,6 +1186,8 @@ TelehealthandPopulation_VehicleInternet %>%
 TelehealthandPopulation_VehicleInternet %>%
   ggplot(aes(x = Year, y = TelehealthVisitsPer100k, fill = factor(Year))) +  # Assign unique color per year
   geom_bar(stat = "identity") +
+  geom_text(aes(label = scales::comma(TelehealthVisitsPer100k)), 
+            vjust = -0.5, size = 5) +  # Add text labels above bars
   labs(title = "Telehealth Visits by Year",
        x = "Year",
        y = "Number of Telehealth Visits (Per 100k people)") +
@@ -1195,6 +1197,7 @@ TelehealthandPopulation_VehicleInternet %>%
 
 
 ```
+
 
 ```{r}
 # Create bar plot
