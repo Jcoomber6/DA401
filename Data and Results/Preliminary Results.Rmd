@@ -1311,6 +1311,50 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 
 # Fixed Effect
 
+## Multivariable
+
+```{r}
+model1 <- lm(TelehealthVisitsPer100k ~ TotalOwnedPer100k + TotalRentPer100k + WithInternetPer100k +
+               HospitalCountPer100k + GDP + UNRATE, 
+             TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
+
+model2 <- lm(TelehealthVisitsPer100k ~ TotalOwnedPer100k + TotalRentPer100k + WithInternetPer100k +
+               HospitalCountPer100k + GDP + UNRATE + State, 
+             TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+
+model3 <- lm(TelehealthVisitsPer100k ~ TotalOwnedPer100k + TotalRentPer100k + WithInternetPer100k +
+               HospitalCountPer100k + GDP + UNRATE + State + Year, 
+             TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalOwnedPer100k" = "Vehicles Owned",
+           "TotalRentPer100k" = "Renters",
+           "WithInternetPer100k" = "Internet Access",
+           "HospitalCountPer100k" = "Hospitals",
+           "GDP" = "GDP",
+           "UNRATE" = "Unemployment Rate")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = TRUE, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(12, 13)
+
+modelsummary(regz,
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz)
+
+```
+
+
+
+
 ## Total Vehicles Owned Per 100k
 
 ```{r}
