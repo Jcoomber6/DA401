@@ -1312,7 +1312,7 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 
 ```{r}
 model1 <- lm(TelehealthVisitsPer100k ~ TotalOwnedPer100k + TotalRentPer100k + WithInternetPer100k +
-               HospitalCountPer100k + GDP + UNRATE, 
+               HospitalCountPer100k + GDP + UNRATE,
              TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
 
 model2 <- lm(TelehealthVisitsPer100k ~ TotalOwnedPer100k + TotalRentPer100k + WithInternetPer100k +
