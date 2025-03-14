@@ -67,31 +67,6 @@ q <- 0
 
 How has the increased use of Telehealth in the US increased access to medical care for Medicare and Medicaid members?
 
-## Problem Statement or Introduction
-
-This research will examine how the increased use in telehealth has increased access to medical care for Medicare and Medicaid members. This research with reference demographic factors that suggest economic status of individuals to see how they are impacting the number of telehealth visits. 
-
-I expect that disadvantaged populations will show a lower utilization of telehealth despite the potential of telehealth to improve access to care. I expect that socioeconomic factors affect the utilization of telehealth services and individuals with lower socioeconomic status will have lower uses of telehealth.
-
-
-## Methods
-
-I will be primarily working with the Medicare Telehealth Trends dataset published by the Centers for Medicare & Medicaid Services, made available on Data.gov. This dataset represents patients with Medicare and/or Medicaid who reported using telehealth services during and after the pandemic. This data will be merged with publicly available data from the US Census Bureau on state specific factors that could be impacting access to telehealth. 
-
-U.S. Census Bureau variables that I will include are number of vehicles, types of internet subscriptions, number of hospitals and population for each state.
-
-Variables that are available on FRED that I will merge based on the year include: the unemployment rate and GDP.
-
-I will use a fixed effect analysis to see whether certain variables are having a strong impact on the number of telehealth visits. I will use state and year as my fixed effects because they are not changing with time. Fixed effect will be a beneficial method because it will help isolate variables of influence to see how they are impacting the utilization of telehealth services.
-
-
-## Early Results
-* ADD IMPLICATIONS
-* Results should be from models from the methods section
-* report al important parts of results - not just P values
-* inlcudes numbers titles, captions and cite in text (Table 1)!!!!
-* link prior research to this section - cite things
-
 ## Load Packages
 
 ```{r}
