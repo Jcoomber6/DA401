@@ -1053,7 +1053,7 @@ TelehealthandPopulation_VehicleInternetHospital <- merge(TelehealthandPopulation
 ### Hospital Count Per Capita
 
 ```{r}
-#Create a new variable for NoInternet per Capita
+#Create a new variable for Hospital Count per Capita
 TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_VehicleInternetHospital %>%
   mutate(
    HospitalCountPerCapita = (hospital_count / POP)
@@ -1061,6 +1061,27 @@ TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_Vehic
 
 ```
 
+### Sum the number of physicians per state
+
+```{r}
+physician_sum_df <- Hospitals %>%
+  group_by(State) %>%
+  summarize(NoofPhysicians = sum(NoofPhysicians, na.rm = TRUE), .groups = "drop")
+
+TelehealthandPopulation_VehicleInternetHospital <- merge(TelehealthandPopulation_VehicleInternetHospital, physician_sum_df, by = c("State"), all = TRUE)
+
+```
+
+### Number of Physicans Per Capita
+
+```{r}
+#Create a new variable for Hospital Count per Capita
+TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_VehicleInternetHospital %>%
+  mutate(
+   NoofPhysiciansPerCapita = (NoofPhysicians / POP)
+  )
+
+```
 
 ## GDP and UNRATE Data
 
@@ -1090,12 +1111,27 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopula
     inner_join(UNRATE, by = "Year")
 ```
 
+
+### GDP and UNRATE Lag
+
+```{r}
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  arrange(State, Year) %>%  # Ensure correct ordering
+  group_by(State) %>%       # Group by state if panel data
+  mutate(
+    GDP_lag1 = lag(GDP, n = 1),  # Lag GDP by 1 year
+    UNRATE_lag1 = lag(UNRATE, n = 1)  # Lag Unemployment by 1 year
+  ) %>%
+  ungroup()
+
+```
+
 # Exploration
 
 ### By Race
 ```{r}
 # Create bar plot
-TelehealthandPopulation_VehicleInternet %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
     filter(Race != "All") %>%
   ggplot(aes(x = Race, y = TelehealthVisitsPerCapita, fill = Race)) +
   geom_bar(stat = "identity") +
@@ -1110,7 +1146,7 @@ TelehealthandPopulation_VehicleInternet %>%
 
 ```{r}
 # Create bar plot
-TelehealthandPopulation_VehicleInternet %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
     filter(Race != "All") %>%
   ggplot(aes(x = Race, y = EligibleServicesCountPerCapita, fill = Race)) +
   geom_bar(stat = "identity") +
@@ -1124,7 +1160,7 @@ TelehealthandPopulation_VehicleInternet %>%
 ```
 
 ```{r}
-TelehealthandPopulation_VehicleInternet %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   filter(Race != "All") %>%  # Exclude "All" from the dataset
   count(Race) %>%
   ggplot(aes(x = Race, y = n, fill = Race)) +  # 'n' is the count of each race
@@ -1139,7 +1175,7 @@ TelehealthandPopulation_VehicleInternet %>%
 
 ```{r}
 # Create bar plot
-TelehealthandPopulation_VehicleInternet %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   filter(EnrollmentStatus != "All") %>%
   ggplot(aes(x = EnrollmentStatus, y = TelehealthVisitsPerCapita, fill = EnrollmentStatus)) +
   geom_bar(stat = "identity") +
@@ -1155,7 +1191,7 @@ TelehealthandPopulation_VehicleInternet %>%
 
 ```{r}
 # Create bar plot
-TelehealthandPopulation_VehicleInternet %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   ggplot(aes(x = Year, y = TelehealthVisitsPerCapita, fill = factor(Year))) +  # Assign unique color per year
   geom_bar(stat = "identity") +
   labs(x = "Year",
@@ -1171,7 +1207,7 @@ TelehealthandPopulation_VehicleInternet %>%
 
 ```{r}
 # Create bar plot
-TelehealthandPopulation_VehicleInternet %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   ggplot(aes(x = Year, y = EligibleServicesCountPerCapita, fill = factor(Year))) +
   geom_bar(stat = "identity") +
   labs(x = "Year",
@@ -1183,7 +1219,7 @@ TelehealthandPopulation_VehicleInternet %>%
 ```
 
 ```{r}
-TelehealthandPopulation_VehicleInternet %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   ggplot(aes(x = factor(Year), y = TelehealthVisitsPerCapita, fill = factor(Quarter))) +  
   geom_bar(stat = "identity", position = "dodge") +  # Places Q1–Q4 next to each other for each Year
   labs(title = "Telehealth Visits by Quarter and Year",
@@ -1199,7 +1235,7 @@ TelehealthandPopulation_VehicleInternet %>%
 
 ```{r}
 # Create bar plot
-TelehealthandPopulation_VehicleInternetHospital %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   arrange(desc(TelehealthVisitsPerCapita)) %>%  # Arrange in descending order
   ggplot(aes(x = fct_reorder(State, TelehealthVisitsPerCapita, .desc = TRUE), y = TelehealthVisitsPerCapita, fill = State)) +
   geom_bar(stat = "identity") +
@@ -1214,7 +1250,7 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 
 ```{r}
 # Create bar plot of number of hospitals by state
-TelehealthandPopulation_VehicleInternetHospital %>%
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   arrange(desc(HospitalCountPerCapita)) %>%  # Arrange in descending order
   ggplot(aes(x = fct_reorder(State, HospitalCountPerCapita, .desc = TRUE), y = HospitalCountPerCapita, fill = State)) +
   geom_bar(stat = "identity") +
@@ -1283,17 +1319,11 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 ## Multivariable
 
 ```{r}
-model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita +
-               HospitalCountPerCapita + GDP + UNRATE,
-             TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_lag1 + UNRATE_lag1,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
 
-model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita +
-               HospitalCountPerCapita + GDP + UNRATE + State, 
-             TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_lag1 + UNRATE_lag1 + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
 
-model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita +
-               HospitalCountPerCapita + GDP + UNRATE + State + Year, 
-             TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_lag1 + UNRATE_lag1 + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
@@ -1303,15 +1333,16 @@ coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
            "TotalRentPerCapita" = "Vehicles Rented",
            "WithInternetPerCapita" = "With Internet Access",
            "HospitalCountPerCapita" = "Hospitals Count",
-           "GDP" = "GDP",
-           "UNRATE" = "Unemployment Rate")
+           "NoofPhysiciansPerCapita" = "Number of Physicians",
+           "GDP_lag1" = "GDP",
+           "UNRATE_lag1" = "Unemployment Rate")
 
 gofz <- c("nobs", "r.squared")
 
 rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
                                "Year Fixed Effects", "No", "No", "Yes"),
                              byrow = TRUE, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(12, 13)
+attr(rowz, 'position') <- c(14, 15)
 
 modelsummary(regz,
              estimate = "{estimate}{stars}",
@@ -1322,18 +1353,33 @@ modelsummary(regz,
 ```
 
 ## VIF Calculation
+
 ```{r}
 # Load necessary package
 library(car)  
+library(knitr)
 
-# Fit the model (without fixed effects for accurate VIF calculation)
-vif_model <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita +
-                  HospitalCountPerCapita + GDP + UNRATE, 
-                data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
+# Fit the model (excluding fixed effects for accurate VIF calculation)
+vif_model <- lm(
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + 
+    WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita +GDP + UNRATE, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
+)
 
 # Calculate VIF
 vif_values <- vif(vif_model)
-print(vif_values)
+
+# Format VIF output into a data frame
+vif_df <- data.frame(
+  Variable = names(vif_values),
+  VIF = round(vif_values, 2)  # Round to 2 decimal places
+) %>%
+  arrange(desc(VIF))  # Sort in descending order
+
+# Remove redundant variable names in the Variable column
+vif_df$Variable <- gsub(".*", "", vif_df$Variable)  # Clean up redundant text
+
+# Print formatted VIF values using kable for a neat table
+kable(vif_df, col.names = c("Variable", "VIF"), caption = "Variance Inflation Factors (VIF)", format = "markdown", digits = 2)
 
 ```
 
@@ -1343,15 +1389,6 @@ VIF 5-10: Moderate multicollinearity
 
 VIF > 10: High multicollinearity (problematic)
 
-```{r}
-cor_matrix <- cor(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE[, 
-                  c("TotalOwnedPerCapita", "TotalRentPerCapita", 
-                    "WithInternetPerCapita", "HospitalCountPerCapita", "GDP", 
-                    "UNRATE")], use = "complete.obs")
-
-print(cor_matrix)
-```
-
 
 ```{r}
 # Load necessary libraries
@@ -1360,12 +1397,10 @@ library(viridis)
 library(dplyr)
 
 # Define numeric columns
-numeric_columns <- c("TotalOwnedPerCapita", "TotalRentPerCapita", "WithInternetPerCapita", 
-                     "HospitalCountPerCapita", "GDP", "UNRATE")
+numeric_columns <- c("TelehealthVisits", "TotalOwnedPerCapita", "TotalRentPerCapita", "WithInternetPerCapita", "HospitalCountPerCapita", "NoofPhysiciansPerCapita", "GDP", "UNRATE")
 
 # Compute correlation matrix
-cor_matrix <- cor(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE[numeric_columns], 
-                  use = "pairwise.complete.obs")
+cor_matrix <- cor(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE[numeric_columns], use = "pairwise.complete.obs")
 
 # Convert correlation matrix to a long format dataframe
 cor_df <- as.data.frame(as.table(cor_matrix)) %>%
@@ -1387,216 +1422,9 @@ ggplot(data = cor_df, aes(Var1, Var2, fill = Freq)) +
 
 ```
 
-## Total Vehicles Owned Per 100k
-
 ```{r}
-
-model1<-lm(TelehealthVisitsPerCapita~TotalOwnedPerCapita, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
-model2 <- lm(TelehealthVisitsPerCapita~TotalOwnedPerCapita + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
-model3<-lm(TelehealthVisitsPerCapita~TotalOwnedPerCapita + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
-
-regz <- list(`No Fixed Effect` = model1,
-             `State Fixed Effect` = model2,
-             `State and Year Fixed Effect` = model3)
-
-coefz <- c("TotalOwnedPer100k" = "Vehicles Owned")
-
-gofz <- c("nobs", "r.squared")
-
-rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
-                               "Year Fixed Effects", "No", "No", "Yes"),
-                             byrow = T, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
-
-modelsummary(regz,
-             title = "Effect of State and Year on the Number of Cars Owned (Per 100k people) impact on Number of Telehelath Visits",
-             estimate = "{estimate}{stars}",
-             gof_map = gofz,
-             add_rows = rowz,
-             coef_map = coefz)
-
-```
-
-* No Fixed Effect R^2 = 0.002 suggests the number of telehealth visits is explained little by how many vehicles owned.
-
-* State Fixed Effect R^2 = 0.126 suggests adding state fixed effects improves the model’s explanatory power.
-
-* State and Year Fixed Effect R^2 = 0.135 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles owned.
-
-* When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from -0.014*** to -0.094***. This suggests that once controlling for these factors, more cars owned still has a negative relationship with the number of telehealth visitssuggesting higher number of vehicles owned is associated with fewer telehealth visits. This could be because individuals with more vehicles have better access to in-person healthcare and don't need to use telehealth.
-
-
-## Total Vehicles Rent Per 100k
-
-```{r}
-model1<-lm(TelehealthVisitsPer100k~TotalRentPer100k, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
-model2 <- lm(TelehealthVisitsPer100k~TotalRentPer100k + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
-model3<-lm(TelehealthVisitsPer100k~TotalRentPer100k + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
-
-regz <- list(`No Fixed Effect` = model1,
-             `State Fixed Effect` = model2,
-             `State and Year Fixed Effect` = model3)
-
-coefz <- c("TotalRentPer100k" = "Total Rent")
-
-gofz <- c("nobs", "r.squared")
-
-rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
-                               "Year Fixed Effects", "No", "No", "Yes"),
-                             byrow = T, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
-
-modelsummary(regz,
-             title = "Effect of State and Year on the Number of Cars Rented (Per 100k people) Impact on Number of Telehealth Visits",
-             estimate = "{estimate}{stars}",
-             gof_map = gofz,
-             add_rows = rowz,
-             coef_map = coefz) 
-
-```
-
-* No Fixed Effect R^2 = 0.000 suggests the number of telehealth visits is unexplained by the number of rented vehicles.
-
-* State Fixed Effect R^2 = -0.079 suggests adding state fixed effects improves the model’s explanatory power
-
-* State and Year Fixed Effect R^2 = 0.134 suggests including both state and year fixed effects improves the model slightly even more, explaining more variation in number of telehealth visits due to number of vehicles rented.
-
-* When State and Year fixed effects are included, the relationship between number of vehicles owned and telehealth visits changes from 0.000 to 0.060***. This suggests that once controlling for these factors, more cars rented has a positive relationship with the number of telehealth visits suggesting higher number of vehicles rented is associated with more telehealth visits. This could be because individuals renting vehicles have lower accessibility to in person visits and would use telehealth
-
-* This result is positive, different from the negative relationship shown with owning vehicles and telehalth visits, suggesting that those who rent cars use telehealth more than those who own cars.
-
-## With Internet
-
-```{r}
-model1<-lm(TelehealthVisitsPer100k~WithInternetPer100k, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
-model2 <- lm(TelehealthVisitsPer100k~WithInternetPer100k + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
-model3<-lm(TelehealthVisitsPer100k~WithInternetPer100k + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
-
-regz <- list(`No Fixed Effect` = model1,
-             `State Fixed Effect` = model2,
-             `State and Year Fixed Effect` = model3)
-
-coefz <- c("WithInternetPer100k" = "With Internet")
-
-gofz <- c("nobs", "r.squared")
-
-rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
-                               "Year Fixed Effects", "No", "No", "Yes"),
-                             byrow = T, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
-
-modelsummary(regz,
-             title = "Effect of State and Year on the Number of People with Internet Access (Per 100k people) Impact on Number of Telehealth Visits",
-             estimate = "{estimate}{stars}",
-             gof_map = gofz,
-             add_rows = rowz,
-             coef_map = coefz) 
-```
-
-* No Fixed Effect R^2 = 0.013 suggests the number of telehealth visits is explained little by having Internet Access
-
-* State Fixed Effect R^2 = 0.132 suggests adding state fixed effects improves the model’s explanatory power
-
-* State and Year Fixed Effect R^2 = 0.136 suggests including both state and year fixed effects improves the model slightly more, explaining more variation in number of telehealth visits due to having internet.
-
-* When State and Year fixed effects are included, the relationship between having internet and telehealth visits changes from -0.036*** to -0.056***. This suggests that once controlling for these factors, having internet still has a negative relationship with the number of telehealth visits, and it appears more negative once controlling for state and year.
-
-
-## Hospital Count
-
-```{r}
-model1<-lm(TelehealthVisitsPer100k~HospitalCountPer100k, TelehealthandPopulation_VehicleInternetHospital) # without Income fixed effects
-model2 <- lm(TelehealthVisitsPer100k~HospitalCountPer100k + State, TelehealthandPopulation_VehicleInternetHospital) # with State fixed effects
-model3<-lm(TelehealthVisitsPer100k~HospitalCountPer100k + State + Year, TelehealthandPopulation_VehicleInternetHospital) # with State and Year fixed effects
-
-regz <- list(`No Fixed Effect` = model1,
-             `State Fixed Effect` = model2,
-             `State and Year Fixed Effect` = model3)
-
-coefz <- c("HospitalCountPer100k" = "Hospital Count")
-
-gofz <- c("nobs", "r.squared")
-
-rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
-                               "Year Fixed Effects", "No", "No", "Yes"),
-                             byrow = T, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
-
-modelsummary(regz,
-             title = "Effect of State and Year on The Number of Hospitals in each state (Per 100k people) Impact on Number of Telehealth Visits",
-             estimate = "{estimate}{stars}",
-             gof_map = gofz,
-             add_rows = rowz,
-             coef_map = coefz) 
-
-```
-
-* No Fixed Effect R^2 = 0.004 suggests the number of telehealth visits is explained little by the number of hospitals per 100k people in that state.
-
-* State Fixed Effect R^2 = 0.090 suggests adding state fixed effects improves the model’s explanatory power
-
-* State and Year Fixed Effect R^2 = 0.133 suggests including both state and year fixed effects improves the model more, explaining more variation in number of telehealth visits due to the number of hospitals per 100k people in that state.
-
-* When State and Year fixed effects are included, the relationship between the number of hospitals and telehealth visits changes from -34.734*** to -423.203***. This suggests that once controlling for these factors, the number of hospitals still has a negative relationship with the number of telehealth visits, and it appears more much more negative once controlling for state and year. 
-
-* This suggests that more hospitlas has a lower use of telehelath visits. This could be beacause of more availability of hospitals to treat patients without telehealth.
-
-
-## GDP Fixed Effect
-
-```{r}
-model1<-lm(TelehealthVisitsPer100k~GDP, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without Income fixed effects
-model2 <- lm(TelehealthVisitsPer100k~GDP + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
-model3<-lm(TelehealthVisitsPer100k~GDP + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
-
-regz <- list(`No Fixed Effect` = model1,
-             `State Fixed Effect` = model2,
-             `State and Year Fixed Effect` = model3)
-
-coefz <- c("GDP" = "Gross Domestic Product (GDP)")
-
-gofz <- c("nobs", "r.squared")
-
-rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
-                               "Year Fixed Effects", "No", "No", "Yes"),
-                             byrow = T, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
-
-modelsummary(regz,
-             title = "Effect of State and Year on GDP's Impact on Number of Telehealth Visits",
-             estimate = "{estimate}{stars}",
-             gof_map = gofz,
-             add_rows = rowz,
-             coef_map = coefz) 
-
-```
-
-## UNRATE Fixed Effect
-
-```{r}
-model1<-lm(TelehealthVisitsPer100k~UNRATE, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without Income fixed effects
-model2 <- lm(TelehealthVisitsPer100k~UNRATE + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
-model3<-lm(TelehealthVisitsPer100k~UNRATE + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
-
-regz <- list(`No Fixed Effect` = model1,
-             `State Fixed Effect` = model2,
-             `State and Year Fixed Effect` = model3)
-
-coefz <- c("UNRATE" = "Unemployement Rate")
-
-gofz <- c("nobs", "r.squared")
-
-rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
-                               "Year Fixed Effects", "No", "No", "Yes"),
-                             byrow = T, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(3, 4) # rows 3 and 4
-
-modelsummary(regz,
-             title = "Effect of State and Year on Unemployement Rate's Impact on Number of Telehealth Visits",
-             estimate = "{estimate}{stars}",
-             gof_map = gofz,
-             add_rows = rowz,
-             coef_map = coefz) 
+unique_values <- unique(Hospitals$FacilityTypeDescription)
+print(unique_values)
 
 ```
 
