@@ -1362,7 +1362,7 @@ library(knitr)
 # Fit the model (excluding fixed effects for accurate VIF calculation)
 vif_model <- lm(
   TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + 
-    WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita +GDP + UNRATE, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
+    WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_lag1 + UNRATE_lag1, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
 )
 
 # Calculate VIF
@@ -1389,6 +1389,7 @@ VIF 5-10: Moderate multicollinearity
 
 VIF > 10: High multicollinearity (problematic)
 
+* The unemployment rate is highly correlated with other predictors (likely GDP). Lagging could be used to help with this.
 
 ```{r}
 # Load necessary libraries
