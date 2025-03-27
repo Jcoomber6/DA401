@@ -529,7 +529,7 @@ Internet_transposed2023 <- Internet_transposed2023 %>% rename(CableFiberOrDSLOnl
 Internet_transposed2023 <- Internet_transposed2023 %>% rename(SatelliteInternet = SatelliteInternetservice)
 Internet_transposed2023 <- Internet_transposed2023 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
 Internet_transposed2023 <- Internet_transposed2023 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
-Internet_transposed2023 <- Internet_transposed2023 %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(InternetAccessNoSubscription = Internetaccesswithoutasubscription)
 Internet_transposed2023 <- Internet_transposed2023 %>% rename(NoInternet = NoInternetaccess)
 Internet_transposed2023 <- Internet_transposed2023 %>% rename(TotalWithInternet = Total)
 ```
@@ -600,7 +600,7 @@ Internet_transposed2022 <- Internet_transposed2022 %>% rename(CableFiberOrDSLOnl
 Internet_transposed2022 <- Internet_transposed2022 %>% rename(SatelliteInternet = SatelliteInternetservice)
 Internet_transposed2022 <- Internet_transposed2022 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
 Internet_transposed2022 <- Internet_transposed2022 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
-Internet_transposed2022 <- Internet_transposed2022 %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(InternetAccessNoSubscription = Internetaccesswithoutasubscription)
 Internet_transposed2022 <- Internet_transposed2022 %>% rename(NoInternet = NoInternetaccess)
 Internet_transposed2022 <- Internet_transposed2022 %>% rename(TotalWithInternet = Total)
 ```
@@ -671,7 +671,7 @@ Internet_transposed2021 <- Internet_transposed2021 %>% rename(CableFiberOrDSLOnl
 Internet_transposed2021 <- Internet_transposed2021 %>% rename(SatelliteInternet = SatelliteInternetservice)
 Internet_transposed2021 <- Internet_transposed2021 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
 Internet_transposed2021 <- Internet_transposed2021 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
-Internet_transposed2021 <- Internet_transposed2021 %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(InternetAccessNoSubscription = Internetaccesswithoutasubscription)
 Internet_transposed2021 <- Internet_transposed2021 %>% rename(NoInternet = NoInternetaccess)
 Internet_transposed2021 <- Internet_transposed2021 %>% rename(TotalWithInternet = Total)
 ```
@@ -742,7 +742,7 @@ Internet_transposed2020 <- Internet_transposed2020 %>% rename(CableFiberOrDSLOnl
 Internet_transposed2020 <- Internet_transposed2020 %>% rename(SatelliteInternet = SatelliteInternetservice)
 Internet_transposed2020 <- Internet_transposed2020 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
 Internet_transposed2020 <- Internet_transposed2020 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
-Internet_transposed2020 <- Internet_transposed2020 %>% rename(InternetAccessNoSubscrition = Internetaccesswithoutasubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(InternetAccessNoSubscription = Internetaccesswithoutasubscription)
 Internet_transposed2020 <- Internet_transposed2020 %>% rename(NoInternet = NoInternetaccess)
 Internet_transposed2020 <- Internet_transposed2020 %>% rename(TotalWithInternet = Total)
 ```
@@ -812,7 +812,7 @@ columns_to_convert <- c("POP", "TotalNumVehicles", "TotalOwned",
                         "CellularDataAndAnotherType", "CableFiberOrDSL", 
                         "CableFiberOrDSLOnly", "SatelliteInternet", 
                         "SatelliteInternetOnly", "OtherServiceOnly", 
-                        "InternetAccessNoSubscrition", "NoInternet")
+                        "InternetAccessNoSubscription", "NoInternet")
 
 # Apply gsub to clean each column before conversion
 TelehealthandPopulation_VehicleInternet[columns_to_convert] <- lapply(TelehealthandPopulation_VehicleInternet[columns_to_convert], function(x) {
@@ -979,7 +979,7 @@ TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleIntern
 #Create a new variable for InternetAccessNoSubscrition per Capita
 TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
   mutate(
-   InternetAccessNoSubscritionPerCapita = (InternetAccessNoSubscrition / POP)
+   InternetAccessNoSubscriptionPerCapita = (InternetAccessNoSubscription / POP)
   )
 
 #Create a new variable for NoInternet per Capita
@@ -1111,6 +1111,16 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopula
     inner_join(UNRATE, by = "Year")
 ```
 
+```{r}
+# Convert from billions to trillions
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$GDP_trillions <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$GDP / 1000  
+```
+
+```{r}
+# Convert from percentage to proportion
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$UNRATE_prop <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$UNRATE / 100  
+```
+
 
 ### GDP and UNRATE Lag
 
@@ -1173,34 +1183,6 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+  # Rotates x-axis labels
     theme(legend.position = "none")  # Remove the legend
 ```
-
-```{r}
-# Create bar plot
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-    filter(Race != "All") %>%
-  ggplot(aes(x = Race, y = EligibleServicesCountPerCapita, fill = Race)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Eligible Services by Race Category",
-       x = "Race Category",
-       y = "Number of Eligible Services (Per Capita)") +
-    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))+  # Rotates x-axis labels
-  theme(legend.position = "none")  # Remove the legend
-```
-
-```{r}
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  filter(Race != "All") %>%  # Exclude "All" from the dataset
-  count(Race) %>%
-  ggplot(aes(x = Race, y = n, fill = Race)) +  # 'n' is the count of each race
-  geom_bar(stat = "identity") +
-  labs(title = "Count of Each Race in Dataset",
-       x = "Race",
-       y = "Count") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels if needed
-```
 ### By Enrollment Status
 
 ```{r}
@@ -1247,20 +1229,6 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   theme(legend.position = "none")  # Remove the legend
 
 ```
-
-```{r}
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  ggplot(aes(x = factor(Year), y = TelehealthVisitsPerCapita, fill = factor(Quarter))) +  
-  geom_bar(stat = "identity", position = "dodge") +  # Places Q1–Q4 next to each other for each Year
-  labs(title = "Telehealth Visits by Quarter and Year",
-       x = "Year",
-       y = "Number of Telehealth Visits (Per Capita)",
-       fill = "Quarter") +
-  scale_y_continuous(labels = scales::comma) +  # Format y-axis with commas
-  scale_fill_brewer(palette = "Paired") +  # Use a high-contrast color palette
-  theme_minimal()
-```
-
 ### By State
 
 ```{r}
@@ -1343,17 +1311,16 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 
 ```
 
-
 # Fixed Effect
 
 ## Multivariable
 
 ```{r}
-model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_lag1 + UNRATE_lag1,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + BroadBandAnyTypePerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + CellularDataPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
 
-model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_lag1 + UNRATE_lag1 + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + BroadBandAnyTypePerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + CellularDataPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
 
-model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_lag1 + UNRATE_lag1 + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + BroadBandAnyTypePerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + CellularDataPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
@@ -1361,18 +1328,22 @@ regz <- list(`No Fixed Effect` = model1,
 
 coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
            "TotalRentPerCapita" = "Vehicles Rented",
-           "WithInternetPerCapita" = "With Internet Access",
+           "WithInternetPerCapita" = "With Internet",
+           "CableFiberOrDSLPerCapita" = "Cable Fiber Or DSL",
+           "BroadBandAnyTypePerCapita" = "Broad Band Any Type",
+           "SatelliteInternetOnlyPerCapita" = "Satellite Internet Only",
+           "CellularDataPerCapita" = "Cellular Data",
            "HospitalCountPerCapita" = "Hospitals Count",
            "NoofPhysiciansPerCapita" = "Number of Physicians",
-           "GDP_lag1" = "GDP",
-           "UNRATE_lag1" = "Unemployment Rate")
+           "GDP_trillions" = "GDP",
+           "UNRATE_prop" = "Unemployment Rate")
 
 gofz <- c("nobs", "r.squared")
 
 rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
                                "Year Fixed Effects", "No", "No", "Yes"),
                              byrow = TRUE, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(14, 15)
+attr(rowz, 'position') <- c(24, 25)
 
 modelsummary(regz,
              estimate = "{estimate}{stars}",
@@ -1381,6 +1352,50 @@ modelsummary(regz,
              coef_map = coefz)
 
 ```
+
+* Cable, Fiber, and DSL are different types of broadband internet connections that provide high-speed internet access
+
+* Cellular Data and Another Type – Having multiple types of internet access, especially mobile connectivity, increases accessibility to telehealth services
+
+* Satellite Internet – Often has high latency and data limits, making it difficult to use telehealth
+
+
+
+## Another draft with low multicolinearity
+
+```{r}
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
+
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
+           "TotalRentPerCapita" = "Vehicles Rented",
+           "CableFiberOrDSLPerCapita" = "Cable Fiber Or DSL",
+           "SatelliteInternetOnlyPerCapita" = "Satellite Internet Only",
+           "HospitalCountPerCapita" = "Hospitals Count",
+           "NoofPhysiciansPerCapita" = "Number of Physicians",
+           "GDP_trillions" = "GDP")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = TRUE, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(21, 22)
+
+modelsummary(regz,
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz)
+```
+
 
 ## VIF Calculation
 
@@ -1391,8 +1406,7 @@ library(knitr)
 
 # Fit the model (excluding fixed effects for accurate VIF calculation)
 vif_model <- lm(
-  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + 
-    WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_lag1 + UNRATE_lag1, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
 )
 
 # Calculate VIF
@@ -1428,7 +1442,7 @@ library(viridis)
 library(dplyr)
 
 # Define numeric columns
-numeric_columns <- c("TelehealthVisits", "TotalOwnedPerCapita", "TotalRentPerCapita", "WithInternetPerCapita", "HospitalCountPerCapita", "NoofPhysiciansPerCapita", "GDP", "UNRATE")
+numeric_columns <- c("TelehealthVisitsPerCapita", "TotalOwnedPerCapita", "TotalRentPerCapita", "WithInternetPerCapita", "BroadBandAnyTypePerCapita", "CableFiberOrDSLPerCapita", "SatelliteInternetOnlyPerCapita", "CellularDataPerCapita", "HospitalCountPerCapita", "NoofPhysiciansPerCapita", "GDP_trillions", "UNRATE_prop")
 
 # Compute correlation matrix
 cor_matrix <- cor(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE[numeric_columns], use = "pairwise.complete.obs")
@@ -1456,6 +1470,13 @@ ggplot(data = cor_df, aes(Var1, Var2, fill = Freq)) +
 ```{r}
 unique_values <- unique(Hospitals$FacilityTypeDescription)
 print(unique_values)
+
+```
+
+
+```{r}
+unique_colnames <- unique(colnames(Internet_transposed2023))
+print(unique_colnames)
 
 ```
 
