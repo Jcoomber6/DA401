@@ -1126,6 +1126,36 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopula
 
 ```
 
+
+```{r}
+# Create lagged variables
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  mutate(GDP_lag1 = lag(GDP, 1), UNRATE_lag1 = lag(UNRATE, 1),
+         GDP_lag2 = lag(GDP, 2), UNRATE_lag2 = lag(UNRATE, 2),
+         GDP_lag3 = lag(GDP, 3), UNRATE_lag3 = lag(UNRATE, 3))
+
+# Fit models with different lags
+model_0 <- lm(TelehealthVisitsPerCapita ~ GDP + UNRATE, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
+model_1 <- lm(TelehealthVisitsPerCapita ~ GDP_lag1 + UNRATE_lag1, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
+model_2 <- lm(TelehealthVisitsPerCapita ~ GDP_lag2 + UNRATE_lag2, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
+model_3 <- lm(TelehealthVisitsPerCapita ~ GDP_lag3 + UNRATE_lag3, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
+
+
+# Compare models using AIC
+AIC(model_0, model_1, model_2, model_3)
+```
+
+```{r}
+# Extract residuals
+residuals_model_0 <- residuals(model_0)
+
+# ACF plot
+acf(residuals_model_0, main = "Autocorrelation of Residuals (model_0)")
+```
+```{r}
+pacf(residuals_model_0, main = "Partial Autocorrelation of Residuals (model_0)")
+```
+
 # Exploration
 
 ### By Race
