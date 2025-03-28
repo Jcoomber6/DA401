@@ -1355,20 +1355,41 @@ modelsummary(regz,
 
 * Cable, Fiber, and DSL are different types of broadband internet connections that provide high-speed internet access
 
-* Cellular Data and Another Type – Having multiple types of internet access, especially mobile connectivity, increases accessibility to telehealth services
+* Satellite Internet –  often the option of internet access in rural areas
 
-* Satellite Internet – Often has high latency and data limits, making it difficult to use telehealth
+## Create interaction term with Urban/Rural
 
+```{r}
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  mutate(is_rural = case_when(
+    RuralUrban == "Rural" ~ 1,       # Set 1 for Rural
+    RuralUrban == "Urban" ~ 0,       # Set 0 for Urban
+    TRUE ~ NA_real_                  # Set NA for 'All'
+  ))
+
+# Create the interaction term for CableFiberOrDSL
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  mutate(CableFiberOrDSL_Rural = CableFiberOrDSLPerCapita * is_rural)
+
+# Create the interaction term for SatelliteInternetOnly
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  mutate(SatelliteInternetOnly_Rural = SatelliteInternetOnlyPerCapita * is_rural)
+
+# Create the interaction term for BroadBandAnyTypePerCapita
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  mutate(BroadBandAnyType_Rural = BroadBandAnyTypePerCapita * is_rural)
+
+```
 
 
 ## Another draft with low multicolinearity
 
 ```{r}
-model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + BroadBandAnyType_Rural + SatelliteInternetOnly_Rural + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
 
-model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + BroadBandAnyType_Rural + SatelliteInternetOnly_Rural + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
 
-model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + BroadBandAnyType_Rural + SatelliteInternetOnly_Rural + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
@@ -1376,11 +1397,12 @@ regz <- list(`No Fixed Effect` = model1,
 
 coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
            "TotalRentPerCapita" = "Vehicles Rented",
-           "CableFiberOrDSLPerCapita" = "Cable Fiber Or DSL",
-           "SatelliteInternetOnlyPerCapita" = "Satellite Internet Only",
+           "BroadBandAnyType_Rural" = "Broad Band Any Type (Interaction)",
+           "SatelliteInternetOnly_Rural" = "Satellite Internet Only (Interaction)",
            "HospitalCountPerCapita" = "Hospitals Count",
            "NoofPhysiciansPerCapita" = "Number of Physicians",
-           "GDP_trillions" = "GDP")
+           "GDP_trillions" = "GDP",
+           "UNRATE_prop" = "Unemployement Rate")
 
 gofz <- c("nobs", "r.squared")
 
@@ -1406,7 +1428,7 @@ library(knitr)
 
 # Fit the model (excluding fixed effects for accurate VIF calculation)
 vif_model <- lm(
-  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
 )
 
 # Calculate VIF
@@ -1423,7 +1445,7 @@ vif_df <- data.frame(
 vif_df$Variable <- gsub(".*", "", vif_df$Variable)  # Clean up redundant text
 
 # Print formatted VIF values using kable for a neat table
-kable(vif_df, col.names = c("Variable", "VIF"), caption = "Variance Inflation Factors (VIF)", format = "markdown", digits = 2)
+kable(vif_df, col.names = c("Variable", "VIF"), caption = " ", format = "markdown", digits = 2)
 
 ```
 
@@ -1460,7 +1482,7 @@ ggplot(data = cor_df, aes(Var1, Var2, fill = Freq)) +
   scale_fill_viridis(option = "D") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Correlation Heatmap of Key Variables",
+  labs(title = " ",
        x = "Features",
        y = "Features",
        fill = "Correlation")
