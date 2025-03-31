@@ -1122,49 +1122,16 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$UNRATE_prop <- Telehea
 ```
 
 
-### GDP and UNRATE Lag
-
+### Transit spending per capita
 ```{r}
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  arrange(State, Year) %>%  # Ensure correct ordering
-  group_by(State) %>%       # Group by state if panel data
-  mutate(
-    GDP_lag1 = lag(GDP, n = 1),  # Lag GDP by 1 year
-    UNRATE_lag1 = lag(UNRATE, n = 1)  # Lag Unemployment by 1 year
-  ) %>%
-  ungroup()
+Transit <- read.csv("Transit Report Card.csv", header = TRUE, sep = ",")
+Transit <- Transit %>% rename(State = States, TransitSpendingPerCapita = Transit.spending.per.capita, TransitSpendingScore = Transit.spending.score, LegalRestrictionCategory = Legal.restrictions.on.transit.funding, LegalRestrictionScore = Legal.restrictions.score, VMTPerCapita = VMT.per.capita..2019., VMTScore = VMT.score, TransitAccessScore = Transit.access.score, OverallTransitScore = Overall.score)
+
+# Merge datasets on 'state'
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit <- merge(Transit, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE, by = "State", all = TRUE)
 
 ```
 
-
-```{r}
-# Create lagged variables
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  mutate(GDP_lag1 = lag(GDP, 1), UNRATE_lag1 = lag(UNRATE, 1),
-         GDP_lag2 = lag(GDP, 2), UNRATE_lag2 = lag(UNRATE, 2),
-         GDP_lag3 = lag(GDP, 3), UNRATE_lag3 = lag(UNRATE, 3))
-
-# Fit models with different lags
-model_0 <- lm(TelehealthVisitsPerCapita ~ GDP + UNRATE, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
-model_1 <- lm(TelehealthVisitsPerCapita ~ GDP_lag1 + UNRATE_lag1, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
-model_2 <- lm(TelehealthVisitsPerCapita ~ GDP_lag2 + UNRATE_lag2, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
-model_3 <- lm(TelehealthVisitsPerCapita ~ GDP_lag3 + UNRATE_lag3, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE)
-
-
-# Compare models using AIC
-AIC(model_0, model_1, model_2, model_3)
-```
-
-```{r}
-# Extract residuals
-residuals_model_0 <- residuals(model_0)
-
-# ACF plot
-acf(residuals_model_0, main = "Autocorrelation of Residuals (model_0)")
-```
-```{r}
-pacf(residuals_model_0, main = "Partial Autocorrelation of Residuals (model_0)")
-```
 
 # Exploration
 
@@ -1357,30 +1324,6 @@ modelsummary(regz,
 
 * Satellite Internet –  often the option of internet access in rural areas
 
-## Create interaction term with Urban/Rural
-
-```{r}
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  mutate(is_rural = case_when(
-    RuralUrban == "Rural" ~ 1,       # Set 1 for Rural
-    RuralUrban == "Urban" ~ 0,       # Set 0 for Urban
-    TRUE ~ NA_real_                  # Set NA for 'All'
-  ))
-
-# Create the interaction term for CableFiberOrDSL
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  mutate(CableFiberOrDSL_Rural = CableFiberOrDSLPerCapita * is_rural)
-
-# Create the interaction term for SatelliteInternetOnly
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  mutate(SatelliteInternetOnly_Rural = SatelliteInternetOnlyPerCapita * is_rural)
-
-# Create the interaction term for BroadBandAnyTypePerCapita
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  mutate(BroadBandAnyType_Rural = BroadBandAnyTypePerCapita * is_rural)
-
-```
-
 
 ## Another draft with low multicolinearity
 
@@ -1456,7 +1399,7 @@ modelsummary(regz,
 ```
 
 
-* Rented is higher because semi high financial status but less than owning so mroe use of telehealth
+* Rented is stronger positive than owned because semi high financial status but less than owning so more use of telehealth
 
 * Cable fiber is switches to negative but not statistically significant anymore, Maybe because they are likely urban and more access to in person?
 
@@ -1469,6 +1412,43 @@ modelsummary(regz,
 * Unrate could be positive because this is medicaid populaiton specificially
 
 
+### After Alex Meeting
+
+```{r}
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # without State/Year fixed effects
+
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State fixed effects
+
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
+           "TransitSpendingScore" = "Transit Spending",
+           "WithInternetPerCapita" = "With Internet",
+           "HospitalCountPerCapita" = "Hospitals Count",
+           "NoofPhysiciansPerCapita" = "Number of Physicians",
+           "GDP_trillions" = "GDP",
+           "UNRATE_prop" = "Unemployement Rate")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = TRUE, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(21, 22)
+
+modelsummary(regz,
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz)
+
+```
+
+
 ## VIF Calculation
 
 ```{r}
@@ -1478,7 +1458,7 @@ library(knitr)
 
 # Fit the model (excluding fixed effects for accurate VIF calculation)
 vif_model <- lm(
-  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + DialUpNoInternetSubsPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit
 )
 
 # Calculate VIF
