@@ -1418,6 +1418,56 @@ modelsummary(regz,
              coef_map = coefz)
 ```
 
+### Maybe use this one?
+
+```{r}
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + DialUpNoInternetSubsPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
+
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + DialUpNoInternetSubsPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + DialUpNoInternetSubsPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
+           "TotalRentPerCapita" = "Vehicles Rented",
+           "CableFiberOrDSLPerCapita" = "Cable Fiber Or DSL", #Likely urban
+           "SatelliteInternetOnlyPerCapita" = "Satellite Internet Only", # LIkely Rural
+           "DialUpNoInternetSubsPerCapita" = "DialUpNoInternetSubsPerCapita", # No Internet
+           "HospitalCountPerCapita" = "Hospitals Count",
+           "NoofPhysiciansPerCapita" = "Number of Physicians",
+           "GDP_trillions" = "GDP",
+           "UNRATE_prop" = "Unemployement Rate")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = TRUE, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(21, 22)
+
+modelsummary(regz,
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz)
+```
+
+
+* Rented is higher because semi high financial status but less than owning so mroe use of telehealth
+
+* Cable fiber is switches to negative but not statistically significant anymore, Maybe because they are likely urban and more access to in person?
+
+* Satellite switches to negative - this is an area that is lacking telehelath but could benefit because it is likely rural
+
+* Dial Up is positive - WHY? these people don't hace internet subs...
+
+* Hospiutal count and num of physicians GDP and UNRATE are most statistically significant
+
+* Unrate could be positive because this is medicaid populaiton specificially
+
 
 ## VIF Calculation
 
@@ -1428,7 +1478,7 @@ library(knitr)
 
 # Fit the model (excluding fixed effects for accurate VIF calculation)
 vif_model <- lm(
-  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + CableFiberOrDSLPerCapita + DialUpNoInternetSubsPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE
 )
 
 # Calculate VIF
@@ -1455,7 +1505,7 @@ VIF 5-10: Moderate multicollinearity
 
 VIF > 10: High multicollinearity (problematic)
 
-* The unemployment rate is highly correlated with other predictors (likely GDP). Lagging could be used to help with this.
+* The unemployment rate and GDP are correlated
 
 ```{r}
 # Load necessary libraries
