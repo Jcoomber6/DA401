@@ -1399,19 +1399,6 @@ modelsummary(regz,
 ```
 
 
-* Rented is stronger positive than owned because semi high financial status but less than owning so more use of telehealth
-
-* Cable fiber is switches to negative but not statistically significant anymore, Maybe because they are likely urban and more access to in person?
-
-* Satellite switches to negative - this is an area that is lacking telehelath but could benefit because it is likely rural
-
-* Dial Up is positive - WHY? these people don't hace internet subs...
-
-* Hospiutal count and num of physicians GDP and UNRATE are most statistically significant
-
-* Unrate could be positive because this is medicaid populaiton specificially
-
-
 ### After Alex Meeting
 
 ```{r}
@@ -1426,7 +1413,7 @@ regz <- list(`No Fixed Effect` = model1,
              `State and Year Fixed Effect` = model3)
 
 coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
-           "TransitSpendingScore" = "Transit Spending",
+           "TransitSpendingScore" = "Transit Spending Per Capita",
            "WithInternetPerCapita" = "With Internet",
            "HospitalCountPerCapita" = "Hospitals Count",
            "NoofPhysiciansPerCapita" = "Number of Physicians",
@@ -1494,10 +1481,10 @@ library(viridis)
 library(dplyr)
 
 # Define numeric columns
-numeric_columns <- c("TelehealthVisitsPerCapita", "TotalOwnedPerCapita", "TotalRentPerCapita", "WithInternetPerCapita", "BroadBandAnyTypePerCapita", "CableFiberOrDSLPerCapita", "SatelliteInternetOnlyPerCapita", "CellularDataPerCapita", "HospitalCountPerCapita", "NoofPhysiciansPerCapita", "GDP_trillions", "UNRATE_prop")
+numeric_columns <- c("TelehealthVisitsPerCapita", "TotalOwnedPerCapita", "TransitSpendingScore", "WithInternetPerCapita", "HospitalCountPerCapita", "NoofPhysiciansPerCapita", "GDP_trillions", "UNRATE_prop")
 
 # Compute correlation matrix
-cor_matrix <- cor(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE[numeric_columns], use = "pairwise.complete.obs")
+cor_matrix <- cor(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit[numeric_columns], use = "pairwise.complete.obs")
 
 # Convert correlation matrix to a long format dataframe
 cor_df <- as.data.frame(as.table(cor_matrix)) %>%
