@@ -1283,23 +1283,21 @@ TelehealthandPopulation_VehicleInternetHospital %>%
 ## Multivariable
 
 ```{r}
-model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + BroadBandAnyTypePerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + CellularDataPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # without State/Year fixed effects
 
-model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + BroadBandAnyTypePerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + CellularDataPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State fixed effects
 
-model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + WithInternetPerCapita + BroadBandAnyTypePerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + CellularDataPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
              `State and Year Fixed Effect` = model3)
 
 coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
-           "TotalRentPerCapita" = "Vehicles Rented",
+           "TransitSpendingScore" = "Transit Spending Per Capita",
            "WithInternetPerCapita" = "With Internet",
            "CableFiberOrDSLPerCapita" = "Cable Fiber Or DSL",
-           "BroadBandAnyTypePerCapita" = "Broad Band Any Type",
            "SatelliteInternetOnlyPerCapita" = "Satellite Internet Only",
-           "CellularDataPerCapita" = "Cellular Data",
            "HospitalCountPerCapita" = "Hospitals Count",
            "NoofPhysiciansPerCapita" = "Number of Physicians",
            "GDP_trillions" = "GDP",
@@ -1328,20 +1326,18 @@ modelsummary(regz,
 ## Another draft with low multicolinearity
 
 ```{r}
-model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + BroadBandAnyType_Rural + SatelliteInternetOnly_Rural + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # without State/Year fixed effects
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # without State/Year fixed effects
 
-model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + BroadBandAnyType_Rural + SatelliteInternetOnly_Rural + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State fixed effects
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State fixed effects
 
-model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TotalRentPerCapita + BroadBandAnyType_Rural + SatelliteInternetOnly_Rural + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE) # with State and Year fixed effects
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
              `State and Year Fixed Effect` = model3)
 
 coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
-           "TotalRentPerCapita" = "Vehicles Rented",
-           "BroadBandAnyType_Rural" = "Broad Band Any Type (Interaction)",
-           "SatelliteInternetOnly_Rural" = "Satellite Internet Only (Interaction)",
+           "TransitSpendingScore" = "Transit Spending Per Capita",
            "HospitalCountPerCapita" = "Hospitals Count",
            "NoofPhysiciansPerCapita" = "Number of Physicians",
            "GDP_trillions" = "GDP",
