@@ -1244,7 +1244,7 @@ internet_counts <- TelehealthandPopulation_VehicleInternet %>%
     SatelliteInternet = sum(SatelliteInternet, na.rm = TRUE),
     SatelliteInternetOnly = sum(SatelliteInternetOnly, na.rm = TRUE),
     OtherServiceOnly = sum(OtherServiceOnly, na.rm = TRUE),
-    InternetAccessNoSubscrition = sum(InternetAccessNoSubscrition, na.rm = TRUE),
+    InternetAccessNoSubscription = sum(InternetAccessNoSubscription, na.rm = TRUE),
     NoInternet = sum(NoInternet, na.rm = TRUE)
   )
 
@@ -1499,19 +1499,6 @@ ggplot(data = cor_df, aes(Var1, Var2, fill = Freq)) +
        x = "Features",
        y = "Features",
        fill = "Correlation")
-
-```
-
-```{r}
-unique_values <- unique(Hospitals$FacilityTypeDescription)
-print(unique_values)
-
-```
-
-
-```{r}
-unique_colnames <- unique(colnames(Internet_transposed2023))
-print(unique_colnames)
 
 ```
 
