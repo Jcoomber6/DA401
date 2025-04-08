@@ -1,27 +1,27 @@
 # Factors Impacting the Use of Telehealth for Medicare and Medicaid Members in 2020-2024
 
-This Research Data Analytics project focuses on factors that are associated with an increase of decrease in number of telehealth For Medicare and Medicaid Populations.
+* This Research Data Analytics project focuses on factors that are associated with an increase of decrease in number of telehealth For Medicare and Medicaid Populations.
 
 ## Motivation
 
-This research can be used to understand potential socioeconomic barriers to telehealth access to aid opportunities for targeted interventions to improve equitable access to care.
+* This research can be used to understand potential socioeconomic barriers to telehealth access to aid opportunities for targeted interventions to improve equitable access to care.
 
 ## Authors & Collaborators 
 
-Jessie Coomber completed this project. 
-Dr. Alexandre Scarcioffolo supported its progress.
+* Jessie Coomber completed this project. 
+* Dr. Alexandre Scarcioffolo supported its progress.
 
 ## Data and Results Folder
 
 ### Preliminary Results RMD and Preliminary Results HTML
 
-This HTML and Rmd were used for initial results. This document is updated into the Results Draft documents.
+* This HTML and Rmd were used for initial results. This document is updated into the Results Draft documents.
 
 ### Results Draft RMD and Results Draft HTML
 
-This HTML file includes the data cleaning, data exploration, prediction forecasting, and interpretations.
+* This HTML file includes the data cleaning, data exploration, prediction forecasting, and interpretations.
 
-The Rmd file that was used to create the HTML file is also included. An individual will need to have an R studio installed to run this file.
+* The Rmd file that was used to create the HTML file is also included. An individual will need to have an R studio installed to run this file.
 
 ### Data 
 
@@ -47,3 +47,10 @@ The Rmd file that was used to create the HTML file is also included. An individu
 
 #### 7. UNRATE.csv and GDP.csv
 * Federal Reserve Economic Data (FRED) annual GDP in billions and unemployment rate as a percentage. Merged to the Medicare Telehealth Trends dataset based on year
+
+### Methodology
+* 7 variables have been chosen for the multivariable fixed effect model in relation to telehealth visits. 
+* The variables include: the number of vehicles owned, transit spending per capita, having internet access, number of hospitals, number of physicians, GDP, and unemployment rate.
+* Variance Inflation Factor (VIF) analysis is used to test for multicollinearity which could lead to unreliable coefficient estimates and impact the interpretation.
+
+
