@@ -30,10 +30,10 @@
 * Variable definitions were found in the Medicare Telehealth Trends Data Dictionary file
 
 #### 2. Tenure by Vehicles Available_2020.csv (_2021.csv, _2022.csv, _2023.csv, _2024.csv)
-* Publicly available data from the US Census Bureau to assess vehicle access. Merged with Medicare Telehealth Trends.csv based on state.
+* Publicly available data from the US Census Bureau to assess vehicle access. Merged with Medicare Telehealth Trends.csv based on state and year.
 
 #### 3. Presence and Types of Internet Subscriptions_2020.csv (_2021.csv, _2022.csv, _2023.csv, _2024.csv)
-* Publicly available data from the US Census Bureau to assess internate access. Merged with Medicare Telehealth Trends.csv based on state.
+* Publicly available data from the US Census Bureau to assess internate access. Merged with Medicare Telehealth Trends.csv based on state and year.
 
 #### 4. CentersForMedicareAndMedicaidServicesFacilities Hospitals.csv
 * Data from the Health Resources and Services Administration (HRSA) to assess the number of hospitals and providers. Merged with Medicare Telehealth Trends.csv based on state.
