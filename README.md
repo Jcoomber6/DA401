@@ -48,6 +48,9 @@
 #### 7. UNRATE.csv and GDP.csv
 * Federal Reserve Economic Data (FRED) annual GDP in billions and unemployment rate as a percentage. Merged to the Medicare Telehealth Trends dataset based on year
 
+#### 8. TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit.xlsx
+* This is the excel file exported from R, of the merged data from all the csv files listed above.
+
 ### Methodology
 * 7 variables have been chosen for the multivariable fixed effect model in relation to telehealth visits. 
 * The variables include: the number of vehicles owned, transit spending per capita, having internet access, number of hospitals, number of physicians, GDP, and unemployment rate.
