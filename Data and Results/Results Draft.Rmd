@@ -1132,6 +1132,17 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit <- merge(Trans
 
 ```
 
+### Saved merged data as an excel
+
+```{r}
+library(writexl)
+
+# Export the data frame to an Excel file
+write_xlsx(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit, 
+           path = "TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit.xlsx")
+
+```
+
 
 # Exploration
 
