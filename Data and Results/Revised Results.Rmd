@@ -1,0 +1,1511 @@
+---
+title: "How has the increased use of Telehealth in the US increased access to medical care for Medicare and Medicaid members?"
+author: "Jessica Coomber"
+institute: "Denison University"
+format: 
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    number-depth: 2
+    theme: lux # Check here for more themes: https://quarto.org/docs/output-formats/html-themes.html
+    code-tools: true
+    code-fold: true
+    code-summary: "Code"
+    code-copy: hover
+    link-external-newwindow: true
+    tbl-cap-location: top
+    fig-cap-location: bottom
+
+self-contained: true
+editor: source
+---
+
+```{r setup, include=FALSE}
+# DO NOT EDIT THIS
+
+knitr::opts_chunk$set(fig.align = 'center')
+knitr::opts_chunk$set(out.width = '90%')
+knitr::opts_chunk$set(results = 'hold')
+knitr::opts_chunk$set(fig.show = 'hold')
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+par(mar = c(4.1, 4.1, 1.1, 4.1))
+
+hooks = knitr::knit_hooks$get()
+hook_foldable = function(type) {
+  force(type)
+  function(x, options) {
+    res = hooks[[type]](x, options)
+    
+    if (isFALSE(options[[paste0("fold.", type)]])) return(res)
+    
+    paste0(
+      "<details open><summary>", gsub("^p", "P", gsub("^o", "O", type)), "</summary>\n\n",
+      res,
+      "\n\n</details>"
+    )
+  }
+}
+
+knitr::knit_hooks$set(
+  output = hook_foldable("output"),
+  plot = hook_foldable("plot")
+)
+
+Q <- 0
+```
+
+```{r include=FALSE}
+q <- 0
+```
+
+# Introduction
+
+## Research Question
+
+How has the increased use of Telehealth in the US increased access to medical care for Medicare and Medicaid members?
+
+## Load Packages
+
+```{r}
+# Load necessary packages
+library(caret)
+library(modelsummary)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(fpp3)
+library(tidyverse)
+library(patchwork)
+library(gganimate)
+library(readxl)
+library(forecast)
+library(ggplot2)
+library(purrr)
+library(transformr) # Just to get it on renv
+library(latex2exp)
+library(scales)
+library(tsibble)
+library(fable)
+library(fabletools)
+library(FNN)
+library(MASS)
+```
+
+# Cleaning the Data
+
+## Telehealth Dataset
+
+```{r}
+# Telehealth Data Cleaning
+
+# Load the data
+Telehealth <- read.csv("Medicare Telehealth Trends.csv", header = TRUE, sep = ",")
+# Remove all rows with any missing (NA) values
+Telehealth <- na.omit(Telehealth)
+
+```
+
+```{r}
+# Telehealth rename variables
+Telehealth <- Telehealth %>% rename(Quarter = quarter)
+Telehealth <- Telehealth %>% rename(State = Bene_Geo_Desc)
+Telehealth <- Telehealth %>% rename(EnrollmentStatus = Bene_Mdcd_Mdcr_Enrl_Stus)
+Telehealth <- Telehealth %>% rename(Race = Bene_Race_Desc)
+Telehealth <- Telehealth %>% rename(Sex = Bene_Sex_Desc)
+Telehealth <- Telehealth %>% rename(MedicareAccessForInsured = Bene_Mdcr_Entlmt_Stus)
+Telehealth <- Telehealth %>% rename(Age = Bene_Age_Desc)
+Telehealth <- Telehealth %>% rename(RuralUrban = Bene_RUCA_Desc)
+Telehealth <- Telehealth %>% rename(EligibleServicesCount = Total_Bene_TH_Elig)
+Telehealth <- Telehealth %>% rename(EnrollmentPartB = Total_PartB_Enrl)
+Telehealth <- Telehealth %>% rename(TelehealthVisits = Total_Bene_Telehealth)
+Telehealth <- Telehealth %>% rename(PercentTelehealthPartB = Pct_Telehealth)
+```
+
+## Population Dataset
+
+```{r}
+# Load the data
+Population <- read.csv("Annual Estimates of the Resident Population for the United States.csv", header = TRUE, sep = ",")
+
+# Remove leading dots from state names in both datasets
+Population$State <- gsub("^\\.+", "", Population$State)
+
+# Standardize 'District of Columbia' in both datasets to ensure a match
+Population$State <- gsub("District of Columbia", "District of Columbia", Population$State)
+Telehealth$State <- gsub("District Of Columbia", "District of Columbia", Telehealth$State)
+
+Population <- Population %>%
+  rename(
+    BasePopulation2020 = Base.Population.April.2020,
+    `2020POP` = X2020,
+    `2021POP` = X2021,
+    `2022POP` = X2022,
+    `2023POP` = X2023,
+    `2024POP` = X2024
+  )
+
+# Reshape Population: Convert wide format (multiple years as columns) to long format (single 'Year' and 'POP' columns)
+Population_long <- Population %>%
+  pivot_longer(cols = starts_with("20"), # Select columns with years
+               names_to = "Year",
+               values_to = "POP") %>%
+  mutate(Year = as.numeric(gsub("POP", "", Year))) # Convert 'Year' to numeric
+
+# Merge Telehealth and reshaped Population data on State and Year
+TelehealthandPopulation <- merge(Telehealth, Population_long, by = c("State", "Year"), all = TRUE)
+
+# Remove all rows with any missing (NA) values - includes States labeled National, Virgin Islands, Midwest, West, South, Northeast, Territories
+TelehealthandPopulation <- na.omit(TelehealthandPopulation)
+
+# Removing Columns that are Not Needed 
+TelehealthandPopulation <- dplyr::select(TelehealthandPopulation, -BasePopulation2020)
+
+```
+
+## Cleaning Vehicle Datasets
+
+### Vehicle 2023 
+
+```{r}
+Vehicle2023 <- read.csv("Tenure by Vehicles Available_2023.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Vehicle_transposed2023 <- Vehicle2023 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>%
+  mutate(Original_Column_Names = rownames(Vehicle_transposed2023))
+
+# Set first row as column names
+colnames(Vehicle_transposed2023) <- Vehicle_transposed2023[1, ]
+
+# Remove the first row, keeping the new column names
+Vehicle_transposed2023 <- Vehicle_transposed2023[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Vehicle_transposed2023) <- gsub("[^A-Za-z]", "", colnames(Vehicle_transposed2023))
+
+colnames(Vehicle_transposed2023) <- make.unique(colnames(Vehicle_transposed2023))
+
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(State = LabelGrouping)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(TotalOwned = Owneroccupied)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(NoVehicleAvailable = Novehicleavailable)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(OneVehicleAvailable = vehicleavailable)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(TwoVehicleAvailable = vehiclesavailable)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(ThreeVehicleAvailable = vehiclesavailable.1)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(FourVehicleAvailable = vehiclesavailable.2)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(FiveOrMoreVehicleAvailable = ormorevehiclesavailable)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(TotalRent = Renteroccupied)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(NoRentVehicleAvailable = Novehicleavailable.1)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(OneRentVehicleAvailable = vehicleavailable.1)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(TwoRentVehicleAvailable = vehiclesavailable.3)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(ThreeRentVehicleAvailable = vehiclesavailable.4)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(FourRentVehicleAvailable = vehiclesavailable.5)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(FiveOrMoreRentVehicleAvailable = ormorevehiclesavailable.1)
+Vehicle_transposed2023 <- Vehicle_transposed2023 %>% rename(TotalNumVehicles = Total)
+
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Vehicle_transposed2023 <- Vehicle_transposed2023[!grepl("Margin.of.Error", rownames(Vehicle_transposed2023)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Vehicle_transposed2023) <- gsub("\\.\\.Estimate", "", rownames(Vehicle_transposed2023))
+
+Vehicle_transposed2023$State <- gsub("\\.\\.Estimate", "", Vehicle_transposed2023$State)
+
+```
+
+```{r}
+Vehicle_transposed2023$State <- gsub("District.of.Columbia", "District of Columbia", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("Puerto.Rico", "Puerto Rico", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("West.Virginia", "West Virginia", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("New.Hampshire", "New Hampshire", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("North.Carolina", "North Carolina", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("South.Carolina", "South Carolina", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("Rhode.Island", "Rhode Island", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("North.Dakota", "North Dakota", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("South.Dakota", "South Dakota", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("New.Mexico", "New Mexico", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("New.Jersey", "New Jersey", Vehicle_transposed2023$State)
+Vehicle_transposed2023$State <- gsub("New.York", "New York", Vehicle_transposed2023$State)
+```
+
+### Vehicle 2022
+
+```{r}
+Vehicle2022 <- read.csv("Tenure by Vehicles Available_2022.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Vehicle_transposed2022 <- Vehicle2022 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>%
+  mutate(Original_Column_Names = rownames(Vehicle_transposed2022))
+
+# Set first row as column names
+colnames(Vehicle_transposed2022) <- Vehicle_transposed2022[1, ]
+
+# Remove the first row, keeping the new column names
+Vehicle_transposed2022 <- Vehicle_transposed2022[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Vehicle_transposed2022) <- gsub("[^A-Za-z]", "", colnames(Vehicle_transposed2022))
+
+colnames(Vehicle_transposed2022) <- make.unique(colnames(Vehicle_transposed2022))
+
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(State = LabelGrouping)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(TotalOwned = Owneroccupied)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(NoVehicleAvailable = Novehicleavailable)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(OneVehicleAvailable = vehicleavailable)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(TwoVehicleAvailable = vehiclesavailable)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(ThreeVehicleAvailable = vehiclesavailable.1)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(FourVehicleAvailable = vehiclesavailable.2)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(FiveOrMoreVehicleAvailable = ormorevehiclesavailable)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(TotalRent = Renteroccupied)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(NoRentVehicleAvailable = Novehicleavailable.1)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(OneRentVehicleAvailable = vehicleavailable.1)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(TwoRentVehicleAvailable = vehiclesavailable.3)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(ThreeRentVehicleAvailable = vehiclesavailable.4)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(FourRentVehicleAvailable = vehiclesavailable.5)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(FiveOrMoreRentVehicleAvailable = ormorevehiclesavailable.1)
+Vehicle_transposed2022 <- Vehicle_transposed2022 %>% rename(TotalNumVehicles = Total)
+
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Vehicle_transposed2022 <- Vehicle_transposed2022[!grepl("Margin.of.Error", rownames(Vehicle_transposed2022)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Vehicle_transposed2022) <- gsub("\\.\\.Estimate", "", rownames(Vehicle_transposed2022))
+
+Vehicle_transposed2022$State <- gsub("\\.\\.Estimate", "", Vehicle_transposed2022$State)
+
+```
+
+```{r}
+Vehicle_transposed2022$State <- gsub("District.of.Columbia", "District of Columbia", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("Puerto.Rico", "Puerto Rico", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("West.Virginia", "West Virginia", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("New.Hampshire", "New Hampshire", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("North.Carolina", "North Carolina", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("South.Carolina", "South Carolina", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("Rhode.Island", "Rhode Island", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("North.Dakota", "North Dakota", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("South.Dakota", "South Dakota", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("New.Mexico", "New Mexico", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("New.Jersey", "New Jersey", Vehicle_transposed2022$State)
+Vehicle_transposed2022$State <- gsub("New.York", "New York", Vehicle_transposed2022$State)
+```
+
+
+### Vehicle 2021
+
+```{r}
+Vehicle2021 <- read.csv("Tenure by Vehicles Available_2021.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Vehicle_transposed2021 <- Vehicle2021 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>%
+  mutate(Original_Column_Names = rownames(Vehicle_transposed2021))
+
+# Set first row as column names
+colnames(Vehicle_transposed2021) <- Vehicle_transposed2021[1, ]
+
+# Remove the first row, keeping the new column names
+Vehicle_transposed2021 <- Vehicle_transposed2021[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Vehicle_transposed2021) <- gsub("[^A-Za-z]", "", colnames(Vehicle_transposed2021))
+
+colnames(Vehicle_transposed2021) <- make.unique(colnames(Vehicle_transposed2021))
+
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(State = LabelGrouping)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(TotalOwned = Owneroccupied)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(NoVehicleAvailable = Novehicleavailable)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(OneVehicleAvailable = vehicleavailable)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(TwoVehicleAvailable = vehiclesavailable)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(ThreeVehicleAvailable = vehiclesavailable.1)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(FourVehicleAvailable = vehiclesavailable.2)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(FiveOrMoreVehicleAvailable = ormorevehiclesavailable)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(TotalRent = Renteroccupied)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(NoRentVehicleAvailable = Novehicleavailable.1)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(OneRentVehicleAvailable = vehicleavailable.1)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(TwoRentVehicleAvailable = vehiclesavailable.3)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(ThreeRentVehicleAvailable = vehiclesavailable.4)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(FourRentVehicleAvailable = vehiclesavailable.5)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(FiveOrMoreRentVehicleAvailable = ormorevehiclesavailable.1)
+Vehicle_transposed2021 <- Vehicle_transposed2021 %>% rename(TotalNumVehicles = Total)
+
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Vehicle_transposed2021 <- Vehicle_transposed2021[!grepl("Margin.of.Error", rownames(Vehicle_transposed2021)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Vehicle_transposed2021) <- gsub("\\.\\.Estimate", "", rownames(Vehicle_transposed2021))
+
+Vehicle_transposed2021$State <- gsub("\\.\\.Estimate", "", Vehicle_transposed2021$State)
+
+```
+
+```{r}
+Vehicle_transposed2021$State <- gsub("District.of.Columbia", "District of Columbia", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("Puerto.Rico", "Puerto Rico", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("West.Virginia", "West Virginia", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("New.Hampshire", "New Hampshire", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("North.Carolina", "North Carolina", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("South.Carolina", "South Carolina", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("Rhode.Island", "Rhode Island", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("North.Dakota", "North Dakota", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("South.Dakota", "South Dakota", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("New.Mexico", "New Mexico", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("New.Jersey", "New Jersey", Vehicle_transposed2021$State)
+Vehicle_transposed2021$State <- gsub("New.York", "New York", Vehicle_transposed2021$State)
+```
+
+### Vehicle 2020
+
+```{r}
+Vehicle2020 <- read.csv("Tenure by Vehicles Available_2020.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Vehicle_transposed2020 <- Vehicle2020 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>%
+  mutate(Original_Column_Names = rownames(Vehicle_transposed2020))
+
+# Set first row as column names
+colnames(Vehicle_transposed2020) <- Vehicle_transposed2020[1, ]
+
+# Remove the first row, keeping the new column names
+Vehicle_transposed2020 <- Vehicle_transposed2020[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Vehicle_transposed2020) <- gsub("[^A-Za-z]", "", colnames(Vehicle_transposed2020))
+
+colnames(Vehicle_transposed2020) <- make.unique(colnames(Vehicle_transposed2020))
+
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(State = LabelGrouping)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(TotalOwned = Owneroccupied)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(NoVehicleAvailable = Novehicleavailable)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(OneVehicleAvailable = vehicleavailable)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(TwoVehicleAvailable = vehiclesavailable)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(ThreeVehicleAvailable = vehiclesavailable.1)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(FourVehicleAvailable = vehiclesavailable.2)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(FiveOrMoreVehicleAvailable = ormorevehiclesavailable)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(TotalRent = Renteroccupied)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(NoRentVehicleAvailable = Novehicleavailable.1)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(OneRentVehicleAvailable = vehicleavailable.1)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(TwoRentVehicleAvailable = vehiclesavailable.3)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(ThreeRentVehicleAvailable = vehiclesavailable.4)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(FourRentVehicleAvailable = vehiclesavailable.5)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(FiveOrMoreRentVehicleAvailable = ormorevehiclesavailable.1)
+Vehicle_transposed2020 <- Vehicle_transposed2020 %>% rename(TotalNumVehicles = Total)
+
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Vehicle_transposed2020 <- Vehicle_transposed2020[!grepl("Margin.of.Error", rownames(Vehicle_transposed2020)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Vehicle_transposed2020) <- gsub("\\.\\.Estimate", "", rownames(Vehicle_transposed2020))
+
+Vehicle_transposed2020$State <- gsub("\\.\\.Estimate", "", Vehicle_transposed2020$State)
+
+```
+
+```{r}
+Vehicle_transposed2020$State <- gsub("District.of.Columbia", "District of Columbia", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("Puerto.Rico", "Puerto Rico", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("West.Virginia", "West Virginia", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("New.Hampshire", "New Hampshire", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("North.Carolina", "North Carolina", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("South.Carolina", "South Carolina", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("Rhode.Island", "Rhode Island", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("North.Dakota", "North Dakota", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("South.Dakota", "South Dakota", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("New.Mexico", "New Mexico", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("New.Jersey", "New Jersey", Vehicle_transposed2020$State)
+Vehicle_transposed2020$State <- gsub("New.York", "New York", Vehicle_transposed2020$State)
+```
+
+### Merging all the Vehicle transposed data
+```{r}
+# Remove 2024 from TelehealthandPopulation before merging
+TelehealthandPopulation <- TelehealthandPopulation %>%
+  filter(Year != 2024)
+```
+
+
+```{r}
+# Create a list of the vehicle datasets
+vehicle_data <- list(
+  "2020" = Vehicle_transposed2020,
+  "2021" = Vehicle_transposed2021,
+  "2022" = Vehicle_transposed2022,
+  "2023" = Vehicle_transposed2023
+)
+
+# Convert each year’s vehicle data into a long format and combine
+Vehicle_long <- bind_rows(
+  lapply(names(vehicle_data), function(year) {
+    vehicle_data[[year]] %>%
+      mutate(Year = as.numeric(year)) # Add the year as a column
+  })
+)
+
+# Merge the reshaped Vehicle dataset with TelehealthandPopulation on State and Year
+TelehealthandPopulation_Vehicle <- merge(TelehealthandPopulation, Vehicle_long, by = c("State", "Year"), all = TRUE)
+
+```
+
+## Cleaning Internet Datasets
+
+### Internet 2023
+
+```{r}
+InternetSubs2023 <- read.csv("Presence and Types of Internet Subscriptions_2023.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Internet_transposed2023 <- InternetSubs2023 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Internet_transposed2023 <- Internet_transposed2023 %>%
+  mutate(Original_Column_Names = rownames(Internet_transposed2023))
+
+# Set first row as column names
+colnames(Internet_transposed2023) <- Internet_transposed2023[1, ]
+
+# Remove the first row, keeping the new column names
+Internet_transposed2023 <- Internet_transposed2023[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Internet_transposed2023) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed2023))
+
+colnames(Internet_transposed2023) <- make.unique(colnames(Internet_transposed2023))
+
+```
+
+```{r}
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(State = LabelGrouping)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(WithInternet = WithanInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(BroadBandAnyType = Broadbandofanytype)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(CellularData = Cellulardataplan)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(SatelliteInternet = SatelliteInternetservice)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(InternetAccessNoSubscription = Internetaccesswithoutasubscription)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(NoInternet = NoInternetaccess)
+Internet_transposed2023 <- Internet_transposed2023 %>% rename(TotalWithInternet = Total)
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Internet_transposed2023 <- Internet_transposed2023[!grepl("Margin.of.Error", rownames(Internet_transposed2023)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Internet_transposed2023) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed2023))
+
+Internet_transposed2023$State <- gsub("\\.\\.Estimate", "", Internet_transposed2023$State)
+```
+
+```{r}
+Internet_transposed2023$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("West.Virginia", "West Virginia", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("North.Carolina", "North Carolina", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("South.Carolina", "South Carolina", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("North.Dakota", "North Dakota", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("South.Dakota", "South Dakota", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("New.Mexico", "New Mexico", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("New.Jersey", "New Jersey", Internet_transposed2023$State)
+Internet_transposed2023$State <- gsub("New.York", "New York", Internet_transposed2023$State)
+```
+
+### Internet 2022
+
+```{r}
+InternetSubs2022 <- read.csv("Presence and Types of Internet Subscriptions_2022.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Internet_transposed2022 <- InternetSubs2022 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Internet_transposed2022 <- Internet_transposed2022 %>%
+  mutate(Original_Column_Names = rownames(Internet_transposed2022))
+
+# Set first row as column names
+colnames(Internet_transposed2022) <- Internet_transposed2022[1, ]
+
+# Remove the first row, keeping the new column names
+Internet_transposed2022 <- Internet_transposed2022[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Internet_transposed2022) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed2022))
+
+colnames(Internet_transposed2022) <- make.unique(colnames(Internet_transposed2022))
+
+```
+
+```{r}
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(State = LabelGrouping)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(WithInternet = WithanInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(BroadBandAnyType = Broadbandofanytype)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(CellularData = Cellulardataplan)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(SatelliteInternet = SatelliteInternetservice)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(InternetAccessNoSubscription = Internetaccesswithoutasubscription)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(NoInternet = NoInternetaccess)
+Internet_transposed2022 <- Internet_transposed2022 %>% rename(TotalWithInternet = Total)
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Internet_transposed2022 <- Internet_transposed2022[!grepl("Margin.of.Error", rownames(Internet_transposed2022)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Internet_transposed2022) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed2022))
+
+Internet_transposed2022$State <- gsub("\\.\\.Estimate", "", Internet_transposed2022$State)
+```
+
+```{r}
+Internet_transposed2022$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("West.Virginia", "West Virginia", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("North.Carolina", "North Carolina", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("South.Carolina", "South Carolina", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("North.Dakota", "North Dakota", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("South.Dakota", "South Dakota", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("New.Mexico", "New Mexico", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("New.Jersey", "New Jersey", Internet_transposed2022$State)
+Internet_transposed2022$State <- gsub("New.York", "New York", Internet_transposed2022$State)
+```
+
+### Internet 2021
+
+```{r}
+InternetSubs2021 <- read.csv("Presence and Types of Internet Subscriptions_2021.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Internet_transposed2021 <- InternetSubs2021 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Internet_transposed2021 <- Internet_transposed2021 %>%
+  mutate(Original_Column_Names = rownames(Internet_transposed2021))
+
+# Set first row as column names
+colnames(Internet_transposed2021) <- Internet_transposed2021[1, ]
+
+# Remove the first row, keeping the new column names
+Internet_transposed2021 <- Internet_transposed2021[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Internet_transposed2021) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed2021))
+
+colnames(Internet_transposed2021) <- make.unique(colnames(Internet_transposed2021))
+
+```
+
+```{r}
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(State = LabelGrouping)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(WithInternet = WithanInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(BroadBandAnyType = Broadbandofanytype)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(CellularData = Cellulardataplan)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(SatelliteInternet = SatelliteInternetservice)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(InternetAccessNoSubscription = Internetaccesswithoutasubscription)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(NoInternet = NoInternetaccess)
+Internet_transposed2021 <- Internet_transposed2021 %>% rename(TotalWithInternet = Total)
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Internet_transposed2021 <- Internet_transposed2021[!grepl("Margin.of.Error", rownames(Internet_transposed2021)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Internet_transposed2021) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed2021))
+
+Internet_transposed2021$State <- gsub("\\.\\.Estimate", "", Internet_transposed2021$State)
+```
+
+```{r}
+Internet_transposed2021$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("West.Virginia", "West Virginia", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("North.Carolina", "North Carolina", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("South.Carolina", "South Carolina", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("North.Dakota", "North Dakota", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("South.Dakota", "South Dakota", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("New.Mexico", "New Mexico", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("New.Jersey", "New Jersey", Internet_transposed2021$State)
+Internet_transposed2021$State <- gsub("New.York", "New York", Internet_transposed2021$State)
+```
+
+### Internet 2020
+
+```{r}
+InternetSubs2020 <- read.csv("Presence and Types of Internet Subscriptions_2020.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Internet_transposed2020 <- InternetSubs2020 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Internet_transposed2020 <- Internet_transposed2020 %>%
+  mutate(Original_Column_Names = rownames(Internet_transposed2020))
+
+# Set first row as column names
+colnames(Internet_transposed2020) <- Internet_transposed2020[1, ]
+
+# Remove the first row, keeping the new column names
+Internet_transposed2020 <- Internet_transposed2020[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Internet_transposed2020) <- gsub("[^A-Za-z]", "", colnames(Internet_transposed2020))
+
+colnames(Internet_transposed2020) <- make.unique(colnames(Internet_transposed2020))
+
+```
+
+```{r}
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(State = LabelGrouping)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(WithInternet = WithanInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(DialUpNoInternetSubs = DialupwithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(BroadBandAnyType = Broadbandofanytype)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(CellularData = Cellulardataplan)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(CellularDataAndAnotherType = CellulardataplanwithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(CableFiberOrDSL = BroadbandsuchascablefiberopticorDSL)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(CableFiberOrDSLOnly = BroadbandsuchascablefiberopticorDSLwithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(SatelliteInternet = SatelliteInternetservice)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(SatelliteInternetOnly = SatelliteInternetservicewithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(OtherServiceOnly = OtherservicewithnoothertypeofInternetsubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(InternetAccessNoSubscription = Internetaccesswithoutasubscription)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(NoInternet = NoInternetaccess)
+Internet_transposed2020 <- Internet_transposed2020 %>% rename(TotalWithInternet = Total)
+```
+
+```{r}
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Internet_transposed2020 <- Internet_transposed2020[!grepl("Margin.of.Error", rownames(Internet_transposed2020)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Internet_transposed2020) <- gsub("\\.\\.Estimate", "", rownames(Internet_transposed2020))
+
+Internet_transposed2020$State <- gsub("\\.\\.Estimate", "", Internet_transposed2020$State)
+```
+
+```{r}
+Internet_transposed2020$State <- gsub("District.of.Columbia", "District of Columbia", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("Puerto.Rico", "Puerto Rico", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("West.Virginia", "West Virginia", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("New.Hampshire", "New Hampshire", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("North.Carolina", "North Carolina", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("South.Carolina", "South Carolina", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("Rhode.Island", "Rhode Island", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("North.Dakota", "North Dakota", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("South.Dakota", "South Dakota", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("New.Mexico", "New Mexico", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("New.Jersey", "New Jersey", Internet_transposed2020$State)
+Internet_transposed2020$State <- gsub("New.York", "New York", Internet_transposed2020$State)
+```
+
+## Merging all the Internet transposed data
+
+```{r}
+# Create a list of the vehicle datasets
+Internet_data <- list(
+  "2020" = Internet_transposed2020,
+  "2021" = Internet_transposed2021,
+  "2022" = Internet_transposed2022,
+  "2023" = Internet_transposed2023
+)
+
+# Convert each year’s vehicle data into a long format and combine
+Internet_long <- bind_rows(
+  lapply(names(Internet_data), function(year) {
+    Internet_data[[year]] %>%
+      mutate(Year = as.numeric(year)) # Add the year as a column
+  })
+)
+
+# Merge the reshaped Internet dataset with TelehealthandPopulation_Vehicle on State and Year
+TelehealthandPopulation_VehicleInternet <- merge(TelehealthandPopulation_Vehicle, Internet_long, by = c("State", "Year"), all = TRUE)
+```
+
+### Convert new columns to numeric 
+
+```{r}
+# Convert columns from character to numeric
+columns_to_convert <- c("POP", "TotalNumVehicles", "TotalOwned", 
+                        "NoVehicleAvailable", "OneVehicleAvailable", 
+                        "TwoVehicleAvailable", "ThreeVehicleAvailable", 
+                        "FourVehicleAvailable", "FiveOrMoreVehicleAvailable", 
+                        "TotalRent", "NoRentVehicleAvailable", 
+                        "OneRentVehicleAvailable", "TwoRentVehicleAvailable", 
+                        "ThreeRentVehicleAvailable", "FourRentVehicleAvailable", 
+                        "FiveOrMoreRentVehicleAvailable", "TotalWithInternet", 
+                        "WithInternet", "DialUpNoInternetSubs", 
+                        "BroadBandAnyType", "CellularData", 
+                        "CellularDataAndAnotherType", "CableFiberOrDSL", 
+                        "CableFiberOrDSLOnly", "SatelliteInternet", 
+                        "SatelliteInternetOnly", "OtherServiceOnly", 
+                        "InternetAccessNoSubscription", "NoInternet")
+
+# Apply gsub to clean each column before conversion
+TelehealthandPopulation_VehicleInternet[columns_to_convert] <- lapply(TelehealthandPopulation_VehicleInternet[columns_to_convert], function(x) {
+  # Remove non-numeric characters
+  cleaned_x <- gsub("[^0-9.-]", "", x)
+  # Convert to numeric
+  as.numeric(cleaned_x)
+})
+
+```
+
+### Vehicles per Capita variables
+
+```{r}
+#Create a new variable for TotalNumVehicles per capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TotalNumVehiclesPerCapita = TotalNumVehicles / POP  # Normalize per person (per capita)
+  )
+
+#Create a new variable for TotalOwned per capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TotalOwnedPerCapita = (TotalNumVehicles / POP)
+  )
+
+#Create a new variable for NoVehicleAvailable per capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    NoVehicleAvailablePerCapita = (NoVehicleAvailable / POP)
+  )
+
+#Create a new variable for OneVehicleAvailable per capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    OneVehicleAvailablePerCapita = (OneVehicleAvailable / POP)
+  )
+
+#Create a new variable for TwoVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TwoVehicleAvailablePerCapita = (TwoVehicleAvailable / POP)
+  )
+
+#Create a new variable for ThreeVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    ThreeVehicleAvailablePerCapita = (ThreeVehicleAvailable / POP)
+  )
+
+#Create a new variable for FourVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    FourVehicleAvailablePerCapita = (FourVehicleAvailable / POP) 
+  )
+
+#Create a new variable for FiveOrMoreVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    FiveOrMoreVehicleAvailablePerCapita = (FiveOrMoreVehicleAvailable / POP)
+  )
+
+#Create a new variable for TotalRent per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TotalRentPerCapita = (TotalRent / POP)
+  )
+
+#Create a new variable for NoRentVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    NoRentVehicleAvailablePerCapita = (NoRentVehicleAvailable / POP)
+  )
+
+#Create a new variable for OneRentVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    OneRentVehicleAvailablePerCapita = (OneRentVehicleAvailable / POP)
+  )
+
+#Create a new variable for TwoRentVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    TwoRentVehicleAvailablePerCapita = (TwoRentVehicleAvailable / POP) 
+  )
+
+#Create a new variable for ThreeRentVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    ThreeRentVehicleAvailablePerCapita = (ThreeRentVehicleAvailable / POP)
+  )
+
+#Create a new variable for FourRentVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    FourRentVehicleAvailablePerCapita = (FourRentVehicleAvailable / POP)
+  )
+
+#Create a new variable for FiveOrMoreRentVehicleAvailable per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    FiveOrMoreRentVehicleAvailablePerCapita = (FiveOrMoreRentVehicleAvailable / POP)
+  )
+
+```
+
+### Internet per Capita variables
+```{r}
+
+#Create a new variable for WithInternet per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    WithInternetPerCapita = (WithInternet / POP)
+  )
+
+#Create a new variable for DialUpNoInternetSubs per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    DialUpNoInternetSubsPerCapita = (DialUpNoInternetSubs / POP)
+  )
+
+#Create a new variable for BroadBandAnyType per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+    BroadBandAnyTypePerCapita = (BroadBandAnyType / POP) 
+  )
+
+#Create a new variable for CellularData per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   CellularDataPerCapita = (CellularData / POP)
+  )
+
+#Create a new variable for CellularDataAndAnotherType per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   CellularDataAndAnotherTypePerCapita = (CellularDataAndAnotherType / POP)
+  )
+
+#Create a new variable for CableFiberOrDSL per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   CableFiberOrDSLPerCapita = (CableFiberOrDSL / POP)
+  )
+
+#Create a new variable for SatelliteInternet per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   SatelliteInternetPerCapita = (SatelliteInternet / POP)
+  )
+
+#Create a new variable for SatelliteInternetOnly per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   SatelliteInternetOnlyPerCapita = (SatelliteInternetOnly / POP)
+  )
+
+#Create a new variable for OtherServiceOnly per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   OtherServiceOnlyPerCapita = (OtherServiceOnly / POP) 
+  )
+
+#Create a new variable for InternetAccessNoSubscrition per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   InternetAccessNoSubscriptionPerCapita = (InternetAccessNoSubscription / POP)
+  )
+
+#Create a new variable for NoInternet per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   NoInternetPerCapita = (NoInternet / POP)
+  )
+
+```
+
+### Telehealth and Eligible per Capita variables
+
+```{r}
+#Create a new variable for TelehealthVisits per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   TelehealthVisitsPerCapita = (TelehealthVisits / POP)
+  )
+
+
+#Create a new variable for EligibleServicesCount per Capita
+TelehealthandPopulation_VehicleInternet <- TelehealthandPopulation_VehicleInternet %>%
+  mutate(
+   EligibleServicesCountPerCapita = (EligibleServicesCount / POP)
+  )
+
+```
+
+## Cleaning Hospital Dataset
+
+```{r}
+Hospitals <- read.csv("CentersForMedicareAndMedicaidServicesFacilities Hospitals.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Remove all non-letter characters from column names
+colnames(Hospitals) <- gsub("[^A-Za-z]", "", colnames(Hospitals))
+
+# Removing Columns that are NA 
+Hospitals <- dplyr::select(Hospitals, -NoofBeds, -NoofCertifiedBeds, -NoofMedicaidNursingBeds, -NoofSkilledNursingBeds, -NoofICFMRBeds, - NoofPhysicianAssistants, -NoofNursePractitioners, -NoofDirectCarePersonnel, -NoofOtherPersonnel, -EmployeeCount, -FederallyFundedHealthCenterIndicator, -RuralHealthCenterProviderNumber, -RuralHealthClinicIndicator)
+
+# Removing Columns that are Not Needed 
+Hospitals <- dplyr::select(Hospitals, -Telephone, -ZIPCode, -StreetAddress, - ProviderNo)
+
+```
+
+```{r}
+# Remove rows where State is one of the specified territories
+Hospitals <- Hospitals %>%
+  filter(!State %in% c("U.S. Virgin Islands", "American Samoa", "Guam", "Northern Mariana Islands"))
+```
+
+### Create Hospital Count by State
+
+```{r}
+
+#Hospital count
+Hospitals$hospital_count <- table(Hospitals$State)[Hospitals$State]
+
+# Select the 'State' and 'hospital_count' columns from Hospitals
+hospital_count_df <- Hospitals %>%
+  group_by(State) %>%
+  summarize(hospital_count = n())
+
+
+# Merge the Hospital dataset with TelehealthandPopulation_VehicleInternet on State
+TelehealthandPopulation_VehicleInternetHospital <- merge(TelehealthandPopulation_VehicleInternet, hospital_count_df, by = c("State"), all = TRUE)
+
+```
+
+### Hospital Count Per Capita
+
+```{r}
+#Create a new variable for Hospital Count per Capita
+TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_VehicleInternetHospital %>%
+  mutate(
+   HospitalCountPerCapita = (hospital_count / POP)
+  )
+
+```
+
+### Sum the number of physicians per state
+
+```{r}
+physician_sum_df <- Hospitals %>%
+  group_by(State) %>%
+  summarize(NoofPhysicians = sum(NoofPhysicians, na.rm = TRUE), .groups = "drop")
+
+TelehealthandPopulation_VehicleInternetHospital <- merge(TelehealthandPopulation_VehicleInternetHospital, physician_sum_df, by = c("State"), all = TRUE)
+
+```
+
+### Number of Physicans Per Capita
+
+```{r}
+#Create a new variable for Hospital Count per Capita
+TelehealthandPopulation_VehicleInternetHospital <- TelehealthandPopulation_VehicleInternetHospital %>%
+  mutate(
+   NoofPhysiciansPerCapita = (NoofPhysicians / POP)
+  )
+
+```
+
+## GDP and UNRATE Data
+
+```{r}
+# Load the data
+GDP <- read.csv("GDP.csv", header = TRUE, sep = ",")
+UNRATE <- read.csv("UNRATE.csv", header = TRUE, sep = ",")
+
+```
+
+```{r}
+GDP <- GDP %>%
+    mutate(Year = year(as.Date(observation_date)))
+
+UNRATE <- UNRATE %>%
+    mutate(Year = year(as.Date(observation_date)))
+
+GDP <- dplyr::select(GDP, -observation_date)
+UNRATE <- dplyr::select(UNRATE, -observation_date)
+
+```
+
+```{r}
+# Merge only on Year and keep only GDP and UNRATE
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE <- TelehealthandPopulation_VehicleInternetHospital %>%
+    inner_join(GDP, by = "Year") %>%
+    inner_join(UNRATE, by = "Year")
+```
+
+```{r}
+# Convert from billions to trillions
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$GDP_trillions <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$GDP / 1000  
+```
+
+```{r}
+# Convert from percentage to proportion
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$UNRATE_prop <- TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE$UNRATE / 100  
+```
+
+
+### Transit spending per capita
+```{r}
+Transit <- read.csv("Transit Report Card.csv", header = TRUE, sep = ",")
+Transit <- Transit %>% rename(State = States, TransitSpendingPerCapita = Transit.spending.per.capita, TransitSpendingScore = Transit.spending.score, LegalRestrictionCategory = Legal.restrictions.on.transit.funding, LegalRestrictionScore = Legal.restrictions.score, VMTPerCapita = VMT.per.capita..2019., VMTScore = VMT.score, TransitAccessScore = Transit.access.score, OverallTransitScore = Overall.score)
+
+# Merge datasets on 'state'
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit <- merge(Transit, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE, by = "State", all = TRUE)
+
+```
+
+### Saved merged data as an excel
+
+```{r}
+library(writexl)
+
+# Export the data frame to an Excel file
+write_xlsx(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit, 
+           path = "TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit.xlsx")
+
+```
+
+
+# Exploration
+
+### By Race
+```{r}
+# Create bar plot
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+    filter(Race != "All") %>%
+  ggplot(aes(x = Race, y = TelehealthVisitsPerCapita, fill = Race)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Telehealth Visits by Race Category",
+       x = "Race Category",
+       y = "Number of Telehealth Visits (Per Capita)") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+  # Rotates x-axis labels
+    theme(legend.position = "none")  # Remove the legend
+```
+### By Enrollment Status
+
+```{r}
+# Create bar plot
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  filter(EnrollmentStatus != "All") %>%
+  ggplot(aes(x = EnrollmentStatus, y = TelehealthVisitsPerCapita, fill = EnrollmentStatus)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Telehealth Visits by Enrollment Status",
+       x = "Enrollment Status",
+       y = "Number of Telehealth Visits (Per Capita)") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
+
+```
+### Telehealth Visits By Year
+
+```{r}
+# Create bar plot
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  ggplot(aes(x = Year, y = TelehealthVisitsPerCapita, fill = factor(Year))) +  # Assign unique color per year
+  geom_bar(stat = "identity") +
+  labs(x = "Year",
+       y = "Number of Telehealth Visits (Per Capita)") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal()+
+  theme(legend.position = "none")  # Remove the legend
+
+
+```
+
+### Eligible Services By Year
+
+```{r}
+# Create bar plot
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  ggplot(aes(x = Year, y = EligibleServicesCountPerCapita, fill = factor(Year))) +
+  geom_bar(stat = "identity") +
+  labs(x = "Year",
+       y = "Number of Eligible Services (Per Capita)") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(legend.position = "none")  # Remove the legend
+
+```
+### By State
+
+```{r}
+# Create bar plot
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  arrange(desc(TelehealthVisitsPerCapita)) %>%  # Arrange in descending order
+  ggplot(aes(x = fct_reorder(State, TelehealthVisitsPerCapita, .desc = TRUE), y = TelehealthVisitsPerCapita, fill = State)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Telehealth Visits by State",
+       x = "State",
+       y = "Number of Telehealth Visits (per Capita)") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
+```
+
+
+```{r}
+# Create bar plot of number of hospitals by state
+TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
+  arrange(desc(HospitalCountPerCapita)) %>%  # Arrange in descending order
+  ggplot(aes(x = fct_reorder(State, HospitalCountPerCapita, .desc = TRUE), y = HospitalCountPerCapita, fill = State)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of Hospitals by State",
+       x = "State",
+       y = "Number of Hospitals (per Capita)") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
+
+```
+
+### Internet
+
+```{r}
+# Count people with each internet access type
+internet_counts <- TelehealthandPopulation_VehicleInternet %>%
+  summarise(
+    WithInternet = sum(WithInternet, na.rm = TRUE),
+    DialUpNoInternetSubs = sum(DialUpNoInternetSubs, na.rm = TRUE),
+    BroadBandAnyType = sum(BroadBandAnyType, na.rm = TRUE),
+    CellularData = sum(CellularData, na.rm = TRUE),
+    CellularDataAndAnotherType = sum(CellularDataAndAnotherType, na.rm = TRUE),
+    CableFiberOrDSL = sum(CableFiberOrDSL, na.rm = TRUE),
+    CableFiberOrDSLOnly = sum(CableFiberOrDSLOnly, na.rm = TRUE),
+    SatelliteInternet = sum(SatelliteInternet, na.rm = TRUE),
+    SatelliteInternetOnly = sum(SatelliteInternetOnly, na.rm = TRUE),
+    OtherServiceOnly = sum(OtherServiceOnly, na.rm = TRUE),
+    InternetAccessNoSubscription = sum(InternetAccessNoSubscription, na.rm = TRUE),
+    NoInternet = sum(NoInternet, na.rm = TRUE)
+  )
+
+# Reshape the data to long format for ggplot
+internet_counts_long <- internet_counts %>%
+  gather(key = "InternetAccessType", value = "Count")  # Reshapes the data
+
+# Create a bar plot
+ggplot(internet_counts_long, aes(x = reorder(InternetAccessType, Count), y = Count, fill = InternetAccessType)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Count of People with Different Internet Access Types",
+       x = "Internet Access Type",
+       y = "Count") +
+  scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+  # Rotates x-axis labels for readability
+  theme(legend.position = "none")  # Remove the legend
+
+```
+
+### Rural or Urban
+
+```{r}
+TelehealthandPopulation_VehicleInternetHospital %>%
+    filter(RuralUrban != "All") %>%
+    ggplot(aes(x = RuralUrban, y = TelehealthVisitsPerCapita, fill = RuralUrban)) +
+    geom_bar(stat = "identity") +
+    labs(x = "Category of State", 
+         y = "Number of Telehealth Visits (Per Capita)") +
+    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas+
+    theme_minimal() +
+    theme(legend.position = "none")
+
+```
+
+# Fixed Effect
+
+## Multivariable
+
+```{r}
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop,TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # without State/Year fixed effects
+
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State fixed effects
+
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + CableFiberOrDSLPerCapita + SatelliteInternetOnlyPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
+           "TransitSpendingScore" = "Transit Spending Per Capita",
+           "WithInternetPerCapita" = "With Internet",
+           "CableFiberOrDSLPerCapita" = "Cable Fiber Or DSL",
+           "SatelliteInternetOnlyPerCapita" = "Satellite Internet Only",
+           "HospitalCountPerCapita" = "Hospitals Count",
+           "NoofPhysiciansPerCapita" = "Number of Physicians",
+           "GDP_trillions" = "GDP",
+           "UNRATE_prop" = "Unemployment Rate")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = TRUE, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(24, 25)
+
+modelsummary(regz,
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz)
+
+```
+
+### Multivariable with less multicolinearity
+
+```{r}
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # without State/Year fixed effects
+
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State fixed effects
+
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
+           "TransitSpendingScore" = "Transit Spending Per Capita",
+           "WithInternetPerCapita" = "With Internet",
+           "HospitalCountPerCapita" = "Hospitals Count",
+           "NoofPhysiciansPerCapita" = "Number of Physicians",
+           "GDP_trillions" = "GDP",
+           "UNRATE_prop" = "Unemployement Rate")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = TRUE, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(21, 22)
+
+modelsummary(regz,
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz)
+
+```
+
+
+## VIF Calculation
+
+```{r}
+# Load necessary package
+library(car)  
+library(knitr)
+
+# Fit the model (excluding fixed effects for accurate VIF calculation)
+vif_model <- lm(
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit
+)
+
+# Calculate VIF
+vif_values <- vif(vif_model)
+
+# Format VIF output into a data frame
+vif_df <- data.frame(
+  Variable = names(vif_values),
+  VIF = round(vif_values, 2)  # Round to 2 decimal places
+) %>%
+  arrange(desc(VIF))  # Sort in descending order
+
+# Remove redundant variable names in the Variable column
+vif_df$Variable <- gsub(".*", "", vif_df$Variable)  # Clean up redundant text
+
+# Print formatted VIF values using kable for a neat table
+kable(vif_df, col.names = c("Variable", "VIF"), caption = " ", format = "markdown", digits = 2)
+
+```
+
+VIF < 5: Low multicollinearity (good)
+
+VIF 5-10: Moderate multicollinearity
+
+VIF > 10: High multicollinearity (problematic)
+
+* The unemployment rate and GDP are correlated
+
+### Robustness Check
+
+#### Fixed Effect
+
+```{r}
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # without State/Year fixed effects
+
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State fixed effects
+
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State and Year fixed effects
+
+regz <- list(`No Fixed Effect` = model1,
+             `State Fixed Effect` = model2,
+             `State and Year Fixed Effect` = model3)
+
+coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
+           "TransitSpendingScore" = "Transit Spending Per Capita",
+           "WithInternetPerCapita" = "With Internet",
+           "HospitalCountPerCapita" = "Hospitals Count",
+           "NoofPhysiciansPerCapita" = "Number of Physicians")
+
+gofz <- c("nobs", "r.squared")
+
+rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
+                               "Year Fixed Effects", "No", "No", "Yes"),
+                             byrow = TRUE, nrow = 2)) # 2 rows
+attr(rowz, 'position') <- c(12, 13)
+
+modelsummary(regz,
+             estimate = "{estimate}{stars}",
+             gof_map = gofz,
+             add_rows = rowz,
+             coef_map = coefz)
+```
+
+#### VIF
+
+```{r}
+# Fit the model (excluding fixed effects for accurate VIF calculation)
+vif_model <- lm(
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit
+)
+
+# Calculate VIF
+vif_values <- vif(vif_model)
+
+# Format VIF output into a data frame
+vif_df <- data.frame(
+  Variable = names(vif_values),
+  VIF = round(vif_values, 2)  # Round to 2 decimal places
+) %>%
+  arrange(desc(VIF))  # Sort in descending order
+
+# Remove redundant variable names in the Variable column
+vif_df$Variable <- gsub(".*", "", vif_df$Variable)  # Clean up redundant text
+
+# Print formatted VIF values using kable for a neat table
+kable(vif_df, col.names = c("Variable", "VIF"), caption = " ", format = "markdown", digits = 2)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(viridis)
+library(dplyr)
+
+# Define numeric columns
+numeric_columns <- c("TelehealthVisitsPerCapita", "TotalOwnedPerCapita", "TransitSpendingScore", "WithInternetPerCapita", "HospitalCountPerCapita", "NoofPhysiciansPerCapita", "GDP_trillions", "UNRATE_prop")
+
+# Compute correlation matrix
+cor_matrix <- cor(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit[numeric_columns], use = "pairwise.complete.obs")
+
+# Convert correlation matrix to a long format dataframe
+cor_df <- as.data.frame(as.table(cor_matrix)) %>%
+  mutate(row = as.numeric(factor(Var1, levels = numeric_columns)),
+         col = as.numeric(factor(Var2, levels = numeric_columns))) %>%
+  filter(row > col)  # Keep only lower triangle elements
+
+# Create correlation heatmap
+ggplot(data = cor_df, aes(Var1, Var2, fill = Freq)) +
+  geom_tile() +
+  geom_text(aes(label = round(Freq, 2)), color = "white", size = 3) +
+  scale_fill_viridis(option = "D") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = " ",
+       x = "Features",
+       y = "Features",
+       fill = "Correlation")
+
+```
+
