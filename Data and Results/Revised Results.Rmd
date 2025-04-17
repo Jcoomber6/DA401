@@ -1132,16 +1132,325 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit <- merge(Trans
 
 ```
 
+## Cleaning Income Level Datasets
+
+### Income 2023 
+
+```{r}
+Income2023 <- read.csv("Mean Income in the past 12 months (Inflation-Adjusted Dollars)_2023.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Income_transposed2023 <- Income2023 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Income_transposed2023 <- Income_transposed2023 %>%
+  mutate(Original_Column_Names = rownames(Income_transposed2023))
+
+# Set first row as column names
+colnames(Income_transposed2023) <- Income_transposed2023[1, ]
+
+# Remove the first row, keeping the new column names
+Income_transposed2023 <- Income_transposed2023[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Income_transposed2023) <- gsub("[^A-Za-z]", "", colnames(Income_transposed2023))
+
+colnames(Income_transposed2023) <- make.unique(colnames(Income_transposed2023))
+
+Income_transposed2023 <- Income_transposed2023 %>% rename(State = LabelGrouping)
+
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Income_transposed2023 <- Income_transposed2023[!grepl("Margin.of.Error", rownames(Income_transposed2023)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Income_transposed2023) <- gsub("\\.\\.Estimate", "", rownames(Income_transposed2023))
+
+Income_transposed2023$State <- gsub("\\.\\.Estimate", "", Income_transposed2023$State)
+
+Income_transposed2023 <- Income_transposed2023[, c("State", "Total", "Medianincomedollars", "Meanincomedollars")]
+
+Income_transposed2023 <- Income_transposed2023 %>%
+  rename(TotalIncome = Total)
+```
+
+```{r}
+# Separate the State values into 2 columns
+Income_transposed2023 <- Income_transposed2023 %>%
+  separate(col = State, into = c("State", "type_of_home"), sep = "\\.\\.", remove = FALSE)
+```
+
+
+```{r}
+Income_transposed2023$State <- gsub("District.of.Columbia", "District of Columbia", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("Puerto.Rico", "Puerto Rico", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("West.Virginia", "West Virginia", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("New.Hampshire", "New Hampshire", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("North.Carolina", "North Carolina", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("South.Carolina", "South Carolina", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("Rhode.Island", "Rhode Island", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("North.Dakota", "North Dakota", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("South.Dakota", "South Dakota", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("New.Mexico", "New Mexico", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("New.Jersey", "New Jersey", Income_transposed2023$State)
+Income_transposed2023$State <- gsub("New.York", "New York", Income_transposed2023$State)
+```
+
+### Income 2022
+
+```{r}
+Income2022 <- read.csv("Mean Income in the past 12 months (Inflation-Adjusted Dollars)_2022.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Income_transposed2022 <- Income2022 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Income_transposed2022 <- Income_transposed2022 %>%
+  mutate(Original_Column_Names = rownames(Income_transposed2022))
+
+# Set first row as column names
+colnames(Income_transposed2022) <- Income_transposed2022[1, ]
+
+# Remove the first row, keeping the new column names
+Income_transposed2022 <- Income_transposed2022[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Income_transposed2022) <- gsub("[^A-Za-z]", "", colnames(Income_transposed2022))
+
+colnames(Income_transposed2022) <- make.unique(colnames(Income_transposed2022))
+
+Income_transposed2022 <- Income_transposed2022 %>% rename(State = LabelGrouping)
+
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Income_transposed2022 <- Income_transposed2022[!grepl("Margin.of.Error", rownames(Income_transposed2022)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Income_transposed2022) <- gsub("\\.\\.Estimate", "", rownames(Income_transposed2022))
+
+Income_transposed2022$State <- gsub("\\.\\.Estimate", "", Income_transposed2022$State)
+
+Income_transposed2022 <- Income_transposed2022[, c("State", "Total", "Medianincomedollars", "Meanincomedollars")]
+
+Income_transposed2022 <- Income_transposed2022 %>%
+  rename(TotalIncome = Total)
+
+```
+
+```{r}
+# Separate the State values into 2 columns
+Income_transposed2022 <- Income_transposed2022 %>%
+  separate(col = State, into = c("State", "type_of_home"), sep = "\\.\\.", remove = FALSE)
+```
+
+
+```{r}
+Income_transposed2022$State <- gsub("District.of.Columbia", "District of Columbia", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("Puerto.Rico", "Puerto Rico", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("West.Virginia", "West Virginia", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("New.Hampshire", "New Hampshire", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("North.Carolina", "North Carolina", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("South.Carolina", "South Carolina", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("Rhode.Island", "Rhode Island", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("North.Dakota", "North Dakota", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("South.Dakota", "South Dakota", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("New.Mexico", "New Mexico", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("New.Jersey", "New Jersey", Income_transposed2022$State)
+Income_transposed2022$State <- gsub("New.York", "New York", Income_transposed2022$State)
+```
+
+### Income 2021
+
+```{r}
+Income2021 <- read.csv("Mean Income in the past 12 months (Inflation-Adjusted Dollars)_2021.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Income_transposed2021 <- Income2021 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Income_transposed2021 <- Income_transposed2021 %>%
+  mutate(Original_Column_Names = rownames(Income_transposed2021))
+
+# Set first row as column names
+colnames(Income_transposed2021) <- Income_transposed2021[1, ]
+
+# Remove the first row, keeping the new column names
+Income_transposed2021 <- Income_transposed2021[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Income_transposed2021) <- gsub("[^A-Za-z]", "", colnames(Income_transposed2021))
+
+colnames(Income_transposed2021) <- make.unique(colnames(Income_transposed2021))
+
+Income_transposed2021 <- Income_transposed2021 %>% rename(State = LabelGrouping)
+
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Income_transposed2021 <- Income_transposed2021[!grepl("Margin.of.Error", rownames(Income_transposed2021)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Income_transposed2021) <- gsub("\\.\\.Estimate", "", rownames(Income_transposed2021))
+
+Income_transposed2021$State <- gsub("\\.\\.Estimate", "", Income_transposed2021$State)
+
+Income_transposed2021 <- Income_transposed2021[, c("State", "Total", "Medianincomedollars", "Meanincomedollars")]
+
+Income_transposed2021 <- Income_transposed2021 %>%
+  rename(TotalIncome = Total)
+
+
+```
+
+```{r}
+# Separate the State values into 2 columns
+Income_transposed2021 <- Income_transposed2021 %>%
+  separate(col = State, into = c("State", "type_of_home"), sep = "\\.\\.", remove = FALSE)
+```
+
+```{r}
+Income_transposed2021$State <- gsub("District.of.Columbia", "District of Columbia", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("Puerto.Rico", "Puerto Rico", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("West.Virginia", "West Virginia", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("New.Hampshire", "New Hampshire", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("North.Carolina", "North Carolina", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("South.Carolina", "South Carolina", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("Rhode.Island", "Rhode Island", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("North.Dakota", "North Dakota", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("South.Dakota", "South Dakota", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("New.Mexico", "New Mexico", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("New.Jersey", "New Jersey", Income_transposed2021$State)
+Income_transposed2021$State <- gsub("New.York", "New York", Income_transposed2021$State)
+```
+
+### Income 2020
+
+```{r}
+Income2020 <- read.csv("Mean Income in the past 12 months (Inflation-Adjusted Dollars)_2020.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# Transpose using pivot_longer and pivot_wider
+Income_transposed2020 <- Income2020 %>%
+  t() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+# Store original column names as a new column
+Income_transposed2020 <- Income_transposed2020 %>%
+  mutate(Original_Column_Names = rownames(Income_transposed2020))
+
+# Set first row as column names
+colnames(Income_transposed2020) <- Income_transposed2020[1, ]
+
+# Remove the first row, keeping the new column names
+Income_transposed2020 <- Income_transposed2020[-1, ] 
+
+# Remove all non-letter characters from column names
+colnames(Income_transposed2020) <- gsub("[^A-Za-z]", "", colnames(Income_transposed2020))
+
+colnames(Income_transposed2020) <- make.unique(colnames(Income_transposed2020))
+
+Income_transposed2020 <- Income_transposed2020 %>% rename(State = LabelGrouping)
+
+# Keep only rows with "Estimate" and remove "Margin.of.Error"
+Income_transposed2020 <- Income_transposed2020[!grepl("Margin.of.Error", rownames(Income_transposed2020)), ]
+
+# Rename row names by removing "..Estimate"
+rownames(Income_transposed2020) <- gsub("\\.\\.Estimate", "", rownames(Income_transposed2020))
+
+Income_transposed2020$State <- gsub("\\.\\.Estimate", "", Income_transposed2020$State)
+
+Income_transposed2020 <- Income_transposed2020[, c("State", "Total", "Medianincomedollars", "Meanincomedollars")]
+
+Income_transposed2020 <- Income_transposed2020 %>%
+  rename(TotalIncome = Total)
+
+```
+
+```{r}
+# Separate the State values into 2 columns
+Income_transposed2020 <- Income_transposed2020 %>%
+  separate(col = State, into = c("State", "type_of_home"), sep = "\\.\\.", remove = FALSE)
+```
+
+```{r}
+Income_transposed2020$State <- gsub("District.of.Columbia", "District of Columbia", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("Puerto.Rico", "Puerto Rico", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("West.Virginia", "West Virginia", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("New.Hampshire", "New Hampshire", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("North.Carolina", "North Carolina", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("South.Carolina", "South Carolina", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("Rhode.Island", "Rhode Island", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("North.Dakota", "North Dakota", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("South.Dakota", "South Dakota", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("New.Mexico", "New Mexico", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("New.Jersey", "New Jersey", Income_transposed2020$State)
+Income_transposed2020$State <- gsub("New.York", "New York", Income_transposed2020$State)
+```
+
+## Merging all the Income transposed data
+
+```{r}
+# Create a list of the vehicle datasets
+Income_data <- list(
+  "2020" = Income_transposed2020,
+  "2021" = Income_transposed2021,
+  "2022" = Income_transposed2022,
+  "2023" = Income_transposed2023
+)
+
+# Convert each year’s vehicle data into a long format and combine
+Income_long <- bind_rows(
+  lapply(names(Income_data), function(year) {
+    Income_data[[year]] %>%
+      mutate(Year = as.numeric(year)) # Add the year as a column
+  })
+)
+
+# Merge the reshaped Internet dataset with TelehealthandPopulation_Vehicle on State and Year
+TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit <- merge(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit, Income_long, by = c("State", "Year"), all = TRUE)
+```
+
+
 ### Saved merged data as an excel
 
 ```{r}
 library(writexl)
 
 # Export the data frame to an Excel file
-write_xlsx(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit, 
-           path = "TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit.xlsx")
+write_xlsx(TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit, 
+           path = "TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit.xlsx")
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Exploration
