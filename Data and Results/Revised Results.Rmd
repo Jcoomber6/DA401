@@ -491,7 +491,7 @@ TelehealthandPopulation_Vehicle <- merge(TelehealthandPopulation, Vehicle_long, 
 ### Internet 2023
 
 ```{r}
-InternetSubs2023 <- read.csv("Presence and Types of Internet Subscriptions_2023.csv", header = TRUE, sep = ",")
+InternetSubs2023 <- read.csv("Internet Datasets/Presence and Types of Internet Subscriptions_2023.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
@@ -562,7 +562,7 @@ Internet_transposed2023$State <- gsub("New.York", "New York", Internet_transpose
 ### Internet 2022
 
 ```{r}
-InternetSubs2022 <- read.csv("Presence and Types of Internet Subscriptions_2022.csv", header = TRUE, sep = ",")
+InternetSubs2022 <- read.csv("Internet Datasets/Presence and Types of Internet Subscriptions_2022.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
@@ -633,7 +633,7 @@ Internet_transposed2022$State <- gsub("New.York", "New York", Internet_transpose
 ### Internet 2021
 
 ```{r}
-InternetSubs2021 <- read.csv("Presence and Types of Internet Subscriptions_2021.csv", header = TRUE, sep = ",")
+InternetSubs2021 <- read.csv("Internet Datasets/Presence and Types of Internet Subscriptions_2021.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
@@ -704,7 +704,7 @@ Internet_transposed2021$State <- gsub("New.York", "New York", Internet_transpose
 ### Internet 2020
 
 ```{r}
-InternetSubs2020 <- read.csv("Presence and Types of Internet Subscriptions_2020.csv", header = TRUE, sep = ",")
+InternetSubs2020 <- read.csv("Internet Datasets/Presence and Types of Internet Subscriptions_2020.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
