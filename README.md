@@ -77,4 +77,7 @@
 * The variables include: the number of vehicles owned, transit spending per capita, having internet access, number of hospitals, number of physicians, Poverty Level, GDP, and unemployment rate.
 * Variance Inflation Factor (VIF) analysis is used to test for multicollinearity which could lead to unreliable coefficient estimates and impact the interpretation.
 
-
+### Output
+EXPLORATION VISUALS
+FIXED EFFECT
+VIF
