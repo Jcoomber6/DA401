@@ -102,7 +102,7 @@ library(MASS)
 # Telehealth Data Cleaning
 
 # Load the data
-Telehealth <- read.csv("Medicare Telehealth Trends.csv", header = TRUE, sep = ",")
+Telehealth <- read.csv("Telehealth Dataset/Medicare Telehealth Trends.csv", header = TRUE)
 # Remove all rows with any missing (NA) values
 Telehealth <- na.omit(Telehealth)
 
@@ -128,7 +128,7 @@ Telehealth <- Telehealth %>% rename(PercentTelehealthPartB = Pct_Telehealth)
 
 ```{r}
 # Load the data
-Population <- read.csv("Annual Estimates of the Resident Population for the United States.csv", header = TRUE, sep = ",")
+Population <- read.csv("Population Dataset/Annual Estimates of the Resident Population for the United States.csv", header = TRUE, sep = ",")
 
 # Remove leading dots from state names in both datasets
 Population$State <- gsub("^\\.+", "", Population$State)
@@ -170,7 +170,7 @@ TelehealthandPopulation <- dplyr::select(TelehealthandPopulation, -BasePopulatio
 ### Vehicle 2023 
 
 ```{r}
-Vehicle2023 <- read.csv("Tenure by Vehicles Available_2023.csv", header = TRUE, sep = ",")
+Vehicle2023 <- read.csv("Vehicle Datasets/Tenure by Vehicles Available_2023.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
@@ -242,7 +242,7 @@ Vehicle_transposed2023$State <- gsub("New.York", "New York", Vehicle_transposed2
 ### Vehicle 2022
 
 ```{r}
-Vehicle2022 <- read.csv("Tenure by Vehicles Available_2022.csv", header = TRUE, sep = ",")
+Vehicle2022 <- read.csv("Vehicle Datasets/Tenure by Vehicles Available_2022.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
@@ -315,7 +315,7 @@ Vehicle_transposed2022$State <- gsub("New.York", "New York", Vehicle_transposed2
 ### Vehicle 2021
 
 ```{r}
-Vehicle2021 <- read.csv("Tenure by Vehicles Available_2021.csv", header = TRUE, sep = ",")
+Vehicle2021 <- read.csv("Vehicle Datasets/Tenure by Vehicles Available_2021.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
@@ -387,7 +387,7 @@ Vehicle_transposed2021$State <- gsub("New.York", "New York", Vehicle_transposed2
 ### Vehicle 2020
 
 ```{r}
-Vehicle2020 <- read.csv("Tenure by Vehicles Available_2020.csv", header = TRUE, sep = ",")
+Vehicle2020 <- read.csv("Vehicle Datasets/Tenure by Vehicles Available_2020.csv", header = TRUE, sep = ",")
 ```
 
 ```{r}
