@@ -13,47 +13,68 @@
 
 ## Data and Results Folder
 
-### Preliminary Results RMD and Preliminary Results HTML
+### Files - Final Results RMD and Final Results HTML
 
-* This HTML and Rmd were used for initial results. This document is updated into the Results Draft documents.
+* * This HTML file includes the data cleaning, data exploration, prediction forecasting, and interpretations.
 
-### Results Draft RMD and Results Draft HTML
+* * The Rmd file that was used to create the HTML file is also included. An individual will need to have an R studio installed to run this file.
 
-* This HTML file includes the data cleaning, data exploration, prediction forecasting, and interpretations.
+### Dataset Folders found within the "Data and Results Folder"
 
-* The Rmd file that was used to create the HTML file is also included. An individual will need to have an R studio installed to run this file.
-
-### Data 
-
+### Telehealth Dataset
 #### 1. Medicare Telehealth Trends.csv
-* Data from the U.S. Department of Health & Human Services which is publicly available through Data.gov. Used to assess telehelath utilization for Medicare and Medicaid members.
+* Data from the U.S. Department of Health & Human Services which is publicly available through Data.gov.
+* Used to assess telehelath utilization for Medicare and Medicaid members.
 * Variable definitions were found in the Medicare Telehealth Trends Data Dictionary file
 
+### Vehicles Datasets
 #### 2. Tenure by Vehicles Available_2020.csv (_2021.csv, _2022.csv, _2023.csv, _2024.csv)
-* Publicly available data from the US Census Bureau to assess vehicle access. Merged with Medicare Telehealth Trends.csv based on state and year.
+* Publicly available data from the US Census Bureau to assess vehicle access.
+* Owning vehicles is the variable that is used to represent higher economic status.
+* Merged with Medicare Telehealth Trends.csv based on state and year.
 
+### Internet Datasets
 #### 3. Presence and Types of Internet Subscriptions_2020.csv (_2021.csv, _2022.csv, _2023.csv, _2024.csv)
-* Publicly available data from the US Census Bureau to assess internate access. Merged with Medicare Telehealth Trends.csv based on state and year.
+* Publicly available data from the US Census Bureau to assess internate access.
+* Internet Access Variable is used to represent higher socioeconomic status.
+* Merged with Medicare Telehealth Trends.csv based on state and year.
+* 
+### Poverty Datasets
+#### 4. Poverty Status in the past 12 months_2020.csv (_2021.csv, _2022.csv, _2023.csv, _2024.csv)
+* Publicly available data from the US Census Bureau on percent below poverty level.
+* The percentage below the poverty level definied by the US Census is the variable that is used to represent poverty level.
+* Merged with Medicare Telehealth Trends.csv based on state and year.
 
-#### 4. CentersForMedicareAndMedicaidServicesFacilities Hospitals.csv
-* Data from the Health Resources and Services Administration (HRSA) to assess the number of hospitals and providers. Merged with Medicare Telehealth Trends.csv based on state.
+### Hospital Dataset
+#### 5. CentersForMedicareAndMedicaidServicesFacilities Hospitals.csv
+* Data from the Health Resources and Services Administration (HRSA) to assess the number of hospitals and providers.
+* The number of hospitals is important in relation to provider access and telehealth use.
+* Merged with Medicare Telehealth Trends.csv based on state.
 
-#### 5. Annual Estimates of the Resident Population for the United States.csv
+### Tranportation Dataset
+#### 6. Transit Report Card.csv
+* Transportation for America to capture individuals public transportation spending.
+* Higher transport spending is typical in urban areas. Urban and rural areas face many differences which could impact telehealth use.
+* Merged with Medicare Telehealth Trends.csv based on state.
+
+### Economics Datasets
+#### 7. UNRATE.csv and GDP.csv
+* Federal Reserve Economic Data (FRED) annual GDP in billions and unemployment rate as a percentage.
+* GDP and UNRATE are used to understand aspects of the US economic situation during the years of interest in the telehealth dataset.
+* Merged to the Medicare Telehealth Trends dataset based on year
+
+### Population Dataset
+#### 8. Annual Estimates of the Resident Population for the United States.csv
 * Publicly available data from the US Census Bureau to merge population size by state.
 * This variable is used to convert other variables into per capita format.
 
-#### 6. Transit Report Card.csv
-* Transportation for America to capture individuals public transportation spending. Merged with Medicare Telehealth Trends.csv based on state.
-
-#### 7. UNRATE.csv and GDP.csv
-* Federal Reserve Economic Data (FRED) annual GDP in billions and unemployment rate as a percentage. Merged to the Medicare Telehealth Trends dataset based on year
-
-#### 8. TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit.xlsx
+### Merged Dataset
+#### 9. TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit.xlsx
 * This is the excel file exported from R, of the merged data from all the csv files listed above.
 
 ### Methodology
-* 7 variables have been chosen for the multivariable fixed effect model in relation to telehealth visits. 
-* The variables include: the number of vehicles owned, transit spending per capita, having internet access, number of hospitals, number of physicians, GDP, and unemployment rate.
+* 8 variables have been chosen for the multivariable fixed effect model in relation to telehealth visits. 
+* The variables include: the number of vehicles owned, transit spending per capita, having internet access, number of hospitals, number of physicians, Poverty Level, GDP, and unemployment rate.
 * Variance Inflation Factor (VIF) analysis is used to test for multicollinearity which could lead to unreliable coefficient estimates and impact the interpretation.
 
 
