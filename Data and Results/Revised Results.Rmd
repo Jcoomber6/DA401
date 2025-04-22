@@ -1416,32 +1416,23 @@ Poverty_long <- bind_rows(
 
 
 ```{r}
+Poverty_long <- Poverty_long %>%
+  mutate(
+    Populationforwhompovertystatusisdetermined = str_remove(Populationforwhompovertystatusisdetermined, "%"),
+    Populationforwhompovertystatusisdetermined = as.numeric(Populationforwhompovertystatusisdetermined) / 100
+  )
+
+Poverty_long <- Poverty_long %>%
+  rename(PercentPoverty = Populationforwhompovertystatusisdetermined)
+
+```
+
+```{r}
 # Merge the reshaped Internet dataset with TelehealthandPopulation_Vehicle on State and Year
 TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit <- merge(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit, Poverty_long, by = c("State", "Year"), all = TRUE)
 
 ```
 
-
-```{r}
-#Create a new variable for TotalIncome per Capita
-TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit <- TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit %>%
-  mutate(
-   TotalIncomePerCapita = (TotalIncome_Mean / POP)
-  )
-
-#Create a new variable for Medianincomedollars per Capita
-TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit <- TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit %>%
-  mutate(
-   MedianincomedollarsPerCapita = (Medianincomedollars_Mean / POP)
-  )
-
-#Create a new variable for Meanincomedollars per Capita
-TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit <- TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit %>%
-  mutate(
-   MeanincomedollarsPerCapita = (Meanincomedollars_Mean / POP)
-  )
-
-```
 
 ### Saved merged data as an excel
 
@@ -1449,12 +1440,10 @@ TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit <- Teleh
 library(writexl)
 
 # Export the data frame to an Excel file
-write_xlsx(TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit, 
-           path = "TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit.xlsx")
+write_xlsx(TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit, 
+           path = "TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit.xlsx")
 
 ```
-
-
 
 
 # Exploration
@@ -1722,14 +1711,14 @@ VIF > 10: High multicollinearity (problematic)
 
 
 
-### Multivariable including Income
+### Multivariable including Poverty
 
 ```{r}
-model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + TotalIncomePerCapita + GDP_trillions + UNRATE_prop, TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit) # without State/Year fixed effects
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + PercentPoverty + GDP_trillions + UNRATE_prop, TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit) # without State/Year fixed effects
 
-model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + TotalIncomePerCapita + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit) # with State fixed effects
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + PercentPoverty + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit) # with State fixed effects
 
-model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + TotalIncomePerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit) # with State and Year fixed effects
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + PercentPoverty + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
@@ -1740,7 +1729,7 @@ coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
            "WithInternetPerCapita" = "With Internet",
            "HospitalCountPerCapita" = "Hospitals Count",
             "NoofPhysiciansPerCapita" = "Number of Physicians",
-           "TotalIncomePerCapita" = "Total Household Income",
+           "PercentPoverty" = "Percent Below Poverty Level ",
            "GDP_trillions" = "GDP",
            "UNRATE_prop" = "Unemployement Rate")
 
@@ -1769,7 +1758,7 @@ library(knitr)
 
 # Fit the model (excluding fixed effects for accurate VIF calculation)
 vif_model <- lm(
-  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + TotalIncomePerCapita + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + PercentPoverty + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit
 )
 
 # Calculate VIF
@@ -1797,11 +1786,11 @@ kable(vif_df, col.names = c("Variable", "VIF"), caption = " ", format = "markdow
 #### Fixed Effect
 
 ```{r}
-model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + TotalIncomePerCapita + GDP_trillions, TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit) # without State/Year fixed effects
+model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + PercentPoverty + GDP_trillions, TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit) # without State/Year fixed effects
 
-model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + TotalIncomePerCapita + GDP_trillions + State, TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit) # with State fixed effects
+model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + PercentPoverty + GDP_trillions + State, TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit) # with State fixed effects
 
-model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + TotalIncomePerCapita + GDP_trillions + State + Year, TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit) # with State and Year fixed effects
+model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + PercentPoverty + GDP_trillions + State + Year, TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit) # with State and Year fixed effects
 
 regz <- list(`No Fixed Effect` = model1,
              `State Fixed Effect` = model2,
@@ -1812,8 +1801,7 @@ coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
            "WithInternetPerCapita" = "With Internet",
            "HospitalCountPerCapita" = "Hospitals Count",
            "NoofPhysiciansPerCapita" = "Number of Physicians",
-           "TotalIncomePerCapita" = "Total Income Per Capita",
-           "GDP_trillions" = "GDP")
+           "PercentPoverty" = "Percent Under Poverty Level")
 
 gofz <- c("nobs", "r.squared")
 
@@ -1834,7 +1822,7 @@ modelsummary(regz,
 ```{r}
 # Fit the model (excluding fixed effects for accurate VIF calculation)
 vif_model <- lm(
-  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + TotalIncomePerCapita + GDP_trillions, data = TelehealthandPopulation_VehicleInternetHospitalIncome_GDPUNRATE_Transit
+  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + PercentPoverty, data = TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit
 )
 
 # Calculate VIF
