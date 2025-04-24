@@ -1460,8 +1460,13 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit %>%
        y = "Sum of Number of Telehealth Visits (Per Capita)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))+  # Rotates x-axis labels
-    theme(legend.position = "none")  # Remove the legend
+    theme(legend.position = "none")+  # Remove the legend
+    theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 9),  # Increased font size
+    axis.title.x = element_text(size = 12),  # Larger x-axis title
+    axis.title.y = element_text(size = 12)  # Larger y-axis title
+  )
+
 ```
 ### By Enrollment Status
 
