@@ -24,19 +24,19 @@
 ### Telehealth Dataset
 #### 1. Medicare Telehealth Trends.csv
 * Data from the U.S. Department of Health & Human Services which is publicly available through Data.gov.
-* Used to assess telehelath utilization for Medicare and Medicaid members.
-* Variable definitions were found in the Medicare Telehealth Trends Data Dictionary file
+* Used to assess telehealth utilization for Medicare and Medicaid members.
+* Variable definitions were found in the Medicare Telehealth Trends Data Dictionary file, also included in this folder.
 
 ### Vehicles Datasets
 #### 2. Tenure by Vehicles Available_2020.csv (_2021.csv, _2022.csv, _2023.csv, _2024.csv)
 * Publicly available data from the US Census Bureau to assess vehicle access.
-* Owning vehicles is the variable that is used to represent higher economic status.
+* Owning vehicles is the variable that is used to represent economic status.
 * Merged with Medicare Telehealth Trends.csv based on state and year.
 
 ### Internet Datasets
 #### 3. Presence and Types of Internet Subscriptions_2020.csv (_2021.csv, _2022.csv, _2023.csv, _2024.csv)
-* Publicly available data from the US Census Bureau to assess internate access.
-* Internet Access Variable is used to represent higher socioeconomic status.
+* Publicly available data from the US Census Bureau to assess internet access.
+* Internet Access Variable is also used to represent socioeconomic status.
 * Merged with Medicare Telehealth Trends.csv based on state and year.
 * 
 ### Poverty Datasets
@@ -48,7 +48,7 @@
 ### Hospital Dataset
 #### 5. CentersForMedicareAndMedicaidServicesFacilities Hospitals.csv
 * Data from the Health Resources and Services Administration (HRSA) to assess the number of hospitals and providers.
-* The number of hospitals is important in relation to provider access and telehealth use.
+* The number of hospitals is important in relation to accessible resources.
 * Merged with Medicare Telehealth Trends.csv based on state.
 
 ### Tranportation Dataset
@@ -56,12 +56,6 @@
 * Transportation for America to capture individuals public transportation spending.
 * Higher transport spending is typical in urban areas. Urban and rural areas face many differences which could impact telehealth use.
 * Merged with Medicare Telehealth Trends.csv based on state.
-
-### Economics Datasets
-#### 7. UNRATE.csv and GDP.csv
-* Federal Reserve Economic Data (FRED) annual GDP in billions and unemployment rate as a percentage.
-* GDP and UNRATE are used to understand aspects of the US economic situation during the years of interest in the telehealth dataset.
-* Merged to the Medicare Telehealth Trends dataset based on year
 
 ### Population Dataset
 #### 8. Annual Estimates of the Resident Population for the United States.csv
@@ -71,13 +65,14 @@
 ### Merged Dataset
 #### 9. TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Transit.xlsx
 * This is the excel file exported from R, of the merged data from all the csv files listed above.
+* This is the dataset used for the fixed effect analysis.
 
 ### Methodology
-* 8 variables have been chosen for the multivariable fixed effect model in relation to telehealth visits. 
-* The variables include: the number of vehicles owned, transit spending per capita, having internet access, number of hospitals, number of physicians, Poverty Level, GDP, and unemployment rate.
+* 6 variables have been chosen for the multivariable fixed effect model in relation to telehealth visits. 
+* The variables include: the number of vehicles owned, transit spending per capita, having internet access, number of hospitals, number of physicians, and poverty Level,.
 * Variance Inflation Factor (VIF) analysis is used to test for multicollinearity which could lead to unreliable coefficient estimates and impact the interpretation.
 
 ### Output
-EXPLORATION VISUALS
-FIXED EFFECT
-VIF
+* There are bar graph visualizations to explore the telehealth dataset including telehealth visits by rural/urban status, by race, and by year.
+* The Fixed Effect model is used to display the assocation of selected factors on teh number of telehealth visits, while controling for state and year fixed effects.
+* The VIF table checks for multicolinearity, confirming the interpretability of the fixed effect model.
