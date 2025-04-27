@@ -1450,23 +1450,32 @@ write_xlsx(TelehealthandPopulation_VehicleInternetHospitalPoverty_GDPUNRATE_Tran
 
 ### By Race
 ```{r}
-# Create bar plot
+# Define cute color palette for Race
+race_colors <- c(
+  "American Indian/Alaska Native" = "#A6CEE3",  # light blue
+  "Asian/Pacific Islander" = "#F28D8D",  # light pink
+  "Black/African American" = "#A8D08D", #green
+  "Hispanic" = "#F4C318", # light yellow
+  "Non-Hispanic White" = "#D1A9E2"  # light lavender
+)
+
+# Create bar plot for Telehealth Visits by Race
 TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit %>%
-    filter(Race != "All") %>%
+  filter(Race != "All") %>%
   ggplot(aes(x = Race, y = TelehealthVisitsPerCapita, fill = Race)) +
   geom_bar(stat = "identity") +
   labs(title = " ",
        x = "Race Category",
        y = "Sum of Number of Telehealth Visits (Per Capita)") +
-    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  scale_fill_manual(values = race_colors) +  # Apply color palette
   theme_minimal() +
-    theme(legend.position = "none")+  # Remove the legend
-    theme(
+  theme(legend.position = "none") +
+  theme(
     axis.text.x = element_text(angle = 45, hjust = 1, size = 9),  # Increased font size
     axis.title.x = element_text(size = 12),  # Larger x-axis title
     axis.title.y = element_text(size = 12)  # Larger y-axis title
   )
-
 ```
 ### By Enrollment Status
 
@@ -1487,15 +1496,24 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
 ### Telehealth Visits By Year
 
 ```{r}
-# Create bar plot
+# Define color palette for Year
+year_colors <- c(
+  "2020" = "#A6CEE3",  # light blue
+  "2021" = "#F28D8D",  # light pink
+  "2022" = "#A8D08D",   # light green
+  "2023" = "#F4C318"
+)
+
+# Create bar plot for Telehealth Visits Per Capita by Year
 TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   ggplot(aes(x = Year, y = TelehealthVisitsPerCapita, fill = factor(Year))) +  # Assign unique color per year
   geom_bar(stat = "identity") +
   labs(x = "Year",
        y = "Sum of Number of Telehealth Visits (Per Capita)") +
-    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
-  theme_minimal()+
-  theme(legend.position = "none")  # Remove the legend
+  scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  scale_fill_manual(values = year_colors) +  # Apply color palette
+  theme_minimal() +
+  theme(legend.position = "none")
 
 
 ```
@@ -1503,6 +1521,14 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
 ### Eligible Services By Year
 
 ```{r}
+# Define color palette for Year
+year_colors <- c(
+  "2020" = "#A6CEE3",  # light blue
+  "2021" = "#F28D8D",  # light pink
+  "2022" = "#A8D08D",   # light green
+  "2023" = "#F4C318"
+)
+
 # Create bar plot
 TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   ggplot(aes(x = Year, y = EligibleServicesCountPerCapita, fill = factor(Year))) +
@@ -1510,6 +1536,7 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   labs(x = "Year",
        y = "Sum of Number of Eligible Services (Per Capita)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  scale_fill_manual(values = year_colors) +  # Apply color palette
   theme_minimal() +
   theme(legend.position = "none")  # Remove the legend
 
@@ -1586,15 +1613,22 @@ ggplot(internet_counts_long, aes(x = reorder(InternetAccessType, Count), y = Cou
 ### Rural or Urban
 
 ```{r}
+colors <- c(
+  "Rural" = "#A6CEE3",
+  "Urban" = "#F28D8D"   
+)
+
+# Create bar plot for Rural vs Urban Telehealth Visits
 TelehealthandPopulation_VehicleInternetHospital %>%
-    filter(RuralUrban != "All") %>%
-    ggplot(aes(x = RuralUrban, y = TelehealthVisitsPerCapita, fill = RuralUrban)) +
-    geom_bar(stat = "identity") +
-    labs(x = "Category of State", 
-         y = "Sum of Number of Telehealth Visits (Per Capita)") +
-    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas+
-    theme_minimal() +
-    theme(legend.position = "none")
+  filter(RuralUrban != "All") %>%
+  ggplot(aes(x = RuralUrban, y = TelehealthVisitsPerCapita, fill = RuralUrban)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Category of State", 
+       y = "Sum of Number of Telehealth Visits (Per Capita)") +
+  scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  scale_fill_manual(values = colors) +  # Apply color palette
+  theme_minimal() +
+  theme(legend.position = "none")
 
 ```
 
@@ -1637,83 +1671,6 @@ modelsummary(regz,
              coef_map = coefz)
 
 ```
-
-### Multivariable with less multicolinearity
-
-```{r}
-model1 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # without State/Year fixed effects
-
-model2 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + + GDP_trillions + UNRATE_prop + State, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State fixed effects
-
-model3 <- lm(TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop + State + Year, TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit) # with State and Year fixed effects
-
-regz <- list(`No Fixed Effect` = model1,
-             `State Fixed Effect` = model2,
-             `State and Year Fixed Effect` = model3)
-
-coefz <- c("TotalOwnedPerCapita" = "Vehicles Owned",
-           "TransitSpendingScore" = "Transit Spending Per Capita",
-           "WithInternetPerCapita" = "With Internet",
-           "HospitalCountPerCapita" = "Hospitals Count",
-           "NoofPhysiciansPerCapita" = "Number of Physicians",
-           "GDP_trillions" = "GDP",
-           "UNRATE_prop" = "Unemployement Rate")
-
-gofz <- c("nobs", "r.squared")
-
-rowz <- as.data.frame(matrix(c('State Fixed Effects', "No", "Yes", "Yes",
-                               "Year Fixed Effects", "No", "No", "Yes"),
-                             byrow = TRUE, nrow = 2)) # 2 rows
-attr(rowz, 'position') <- c(21, 22)
-
-modelsummary(regz,
-             estimate = "{estimate}{stars}",
-             gof_map = gofz,
-             add_rows = rowz,
-             coef_map = coefz)
-
-```
-
-
-## VIF Calculation
-
-```{r}
-# Load necessary package
-library(car)  
-library(knitr)
-
-# Fit the model (excluding fixed effects for accurate VIF calculation)
-vif_model <- lm(
-  TelehealthVisitsPerCapita ~ TotalOwnedPerCapita + TransitSpendingScore + WithInternetPerCapita + HospitalCountPerCapita + NoofPhysiciansPerCapita + GDP_trillions + UNRATE_prop, data = TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit
-)
-
-# Calculate VIF
-vif_values <- vif(vif_model)
-
-# Format VIF output into a data frame
-vif_df <- data.frame(
-  Variable = names(vif_values),
-  VIF = round(vif_values, 2)  # Round to 2 decimal places
-) %>%
-  arrange(desc(VIF))  # Sort in descending order
-
-# Remove redundant variable names in the Variable column
-vif_df$Variable <- gsub(".*", "", vif_df$Variable)  # Clean up redundant text
-
-# Print formatted VIF values using kable for a neat table
-kable(vif_df, col.names = c("Variable", "VIF"), caption = " ", format = "markdown", digits = 2)
-
-```
-
-VIF < 5: Low multicollinearity (good)
-
-VIF 5-10: Moderate multicollinearity
-
-VIF > 10: High multicollinearity (problematic)
-
-* The unemployment rate and GDP are correlated
-
-
 
 
 ### Multivariable including Poverty
@@ -1784,8 +1741,6 @@ kable(vif_df, col.names = c("Variable", "VIF"), caption = " ", format = "markdow
 
 ```
 
-
-
 ### Robustness Check
 
 #### Fixed Effect
@@ -1847,39 +1802,3 @@ vif_df$Variable <- gsub(".*", "", vif_df$Variable)  # Clean up redundant text
 kable(vif_df, col.names = c("Variable", "VIF"), caption = " ", format = "markdown", digits = 2)
 
 ```
-
-
-
-
-```{r}
-# Load necessary libraries
-library(ggplot2)
-library(viridis)
-library(dplyr)
-
-# Define numeric columns
-numeric_columns <- c("TelehealthVisitsPerCapita", "TotalOwnedPerCapita", "TransitSpendingScore", "WithInternetPerCapita", "HospitalCountPerCapita", "NoofPhysiciansPerCapita", "GDP_trillions", "UNRATE_prop")
-
-# Compute correlation matrix
-cor_matrix <- cor(TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit[numeric_columns], use = "pairwise.complete.obs")
-
-# Convert correlation matrix to a long format dataframe
-cor_df <- as.data.frame(as.table(cor_matrix)) %>%
-  mutate(row = as.numeric(factor(Var1, levels = numeric_columns)),
-         col = as.numeric(factor(Var2, levels = numeric_columns))) %>%
-  filter(row > col)  # Keep only lower triangle elements
-
-# Create correlation heatmap
-ggplot(data = cor_df, aes(Var1, Var2, fill = Freq)) +
-  geom_tile() +
-  geom_text(aes(label = round(Freq, 2)), color = "white", size = 3) +
-  scale_fill_viridis(option = "D") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = " ",
-       x = "Features",
-       y = "Features",
-       fill = "Correlation")
-
-```
-
