@@ -1480,18 +1480,26 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE_Transit %>%
 ### By Enrollment Status
 
 ```{r}
+
+colors <- c(
+  "Medicare & Medicaid" = "#A6CEE3",
+  "Medicare Only" = "#F28D8D"   
+)
+
 # Create bar plot
 TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   filter(EnrollmentStatus != "All") %>%
   ggplot(aes(x = EnrollmentStatus, y = TelehealthVisitsPerCapita, fill = EnrollmentStatus)) +
   geom_bar(stat = "identity") +
-  labs(title = "Telehealth Visits by Enrollment Status",
+  labs(title = " ",
        x = "Enrollment Status",
-       y = "Number of Telehealth Visits (Per Capita)") +
+       y = "Sum of Number of Number of Telehealth Visits (Per Capita)") +
     scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
+  scale_fill_manual(values = colors) +  # Apply color palette
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotates x-axis labels
-
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+  # Rotates x-axis labels
+  theme(legend.position = "none")
+  
 ```
 ### Telehealth Visits By Year
 
