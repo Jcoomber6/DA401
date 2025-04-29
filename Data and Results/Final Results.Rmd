@@ -1549,37 +1549,7 @@ TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
   theme(legend.position = "none")  # Remove the legend
 
 ```
-### By State
 
-```{r}
-# Create bar plot
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  arrange(desc(TelehealthVisitsPerCapita)) %>%  # Arrange in descending order
-  ggplot(aes(x = fct_reorder(State, TelehealthVisitsPerCapita, .desc = TRUE), y = TelehealthVisitsPerCapita, fill = State)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Telehealth Visits by State",
-       x = "State",
-       y = "Number of Telehealth Visits (per Capita)") +
-    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
-```
-
-
-```{r}
-# Create bar plot of number of hospitals by state
-TelehealthandPopulation_VehicleInternetHospital_GDPUNRATE %>%
-  arrange(desc(HospitalCountPerCapita)) %>%  # Arrange in descending order
-  ggplot(aes(x = fct_reorder(State, HospitalCountPerCapita, .desc = TRUE), y = HospitalCountPerCapita, fill = State)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Number of Hospitals by State",
-       x = "State",
-       y = "Number of Hospitals (per Capita)") +
-    scale_y_continuous(labels = scales::comma) +  # Format y-axis with full numbers and commas
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")  # Rotates x-axis labels and removes legend
-
-```
 
 ### Internet
 
